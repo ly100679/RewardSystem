@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'rewardSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rs',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'NAME': 'rewardSystem',
+        'USER': 'mysql',
+        'PASSWORD': 'mypassword',
+        'HOST': '49.234.65.233',
         'PORT': '3306',
     }
 }
