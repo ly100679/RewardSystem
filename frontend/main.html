@@ -13,7 +13,7 @@
 				height:80%;
 				margin:10px;
 				border:solid 1px #ccc;
-				background:#ffffff;
+				background:#D9D9D9;
 				border-radius:5px;
 			}
 			.menu{
@@ -29,29 +29,80 @@
 				cursor:pointer;
 				color:#8aa4be;
 			}
+      #mainContent{
+        height: 500px;
+        width: 75%;
+        margin: 0px 20px 20px 20px;
+        border:solid 1px #ccc;
+        background:white;
+        border-radius:5px;
+        float: right;
+      }
+      #navgation{
+        height: 25px;
+        width: 75%;
+
+        margin: 20px 20px 0px 20px;
+        border:solid 1px #ccc;
+        background:white;
+        border-radius:5px;
+        float: right;
+      }
 		</style>
 	</head>
+
 	<body style="background-color: #eeeeee;">
-		<ul class="layui-nav layui-bg-green" lay-filter="">
+		<ul class="layui-nav layui-bg-green">
 			<li class="layui-nav-item layui-this"><a href="">主页</a></li>
+      <li class="layui-nav-item layui-this layui-layout-right id=acc-info">
+        <a href="javascript:;">解决方案</a>
+        <dl class="layui-nav-child"> <!-- 二级菜单 -->
+          <dd><a href="" >presonal information</a></dd>
+          <dd><a href="" >logout</a></dd>
+        </dl>
+      </li>
 		</ul>
+
 		<div id="buttonBox">
+        <div id="headPhoto" style="height: 120px;width: 100%;text-align: center;">
+          img.jpg
+        </div>
+        <div id="headName" style="height: 20px;width: 100%;text-align: center;">
+          name
+        </div>
+        <div style="height: 1px;width:50%;background: #8aa4be;text-align: center;margin:0 auto;"></div>
+
     		<div class="menu">
 		    	 个人信息
 		    </div>
 		    <div class="menu">
 		    	 作品列表
 		    </div>
+        <div class="menu">
+          上传作品
+       </div>
+    </div>
+
+    <div id="navgation">
+    </div>
+    <div id="mainContent" >
+      <div style="height: 500px;width: 100%;">
+      </div>
+    </div>
+
 	</body>
 	<script>
-		layui.use('element', function(){
-			var element = layui.element;
-		  
-			//监听提交
-			form.on('submit(register)', function(data){
-				layer.msg(JSON.stringify(data.field));
-				return false;
-			});
-		});
+    $(function () {
+      layui.use('element', function(){
+        var element = layui.element;
+
+        //监听提交
+        form.on('submit(register)', function(data){
+          layer.msg(JSON.stringify(data.field));
+          return false;
+        });
+
+      });
+    })
 	</script>
 </html>
