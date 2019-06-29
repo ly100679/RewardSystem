@@ -78,7 +78,7 @@
 			//监听提交
 			form.on('submit(login)', function(data){
 				//layer.msg(JSON.stringify(data.field));
-				
+				var user={account:data.field.account};
 				$.ajax({
 					type:"POST",
 					url: hostIP+"login/"+data.field.identity,
@@ -88,7 +88,16 @@
 					success:function(data){
 						if(data.status){
 							layer.msg("登录成功",{time:1000,icon:6});
+							sessionStorage.setItem("user",JSON.stringify(user));
 							window.location.href="main.html";
+						}
+						else{
+							if(data.errorCode==undefined)
+								layer.msg("登录失败",{time:1000,icon:5});
+							if(data.errorCode==1)
+								layer.msg("账号不存在",{time:1000,icon:5});
+							if(data.errorCode==2)
+								layer.msg("密码错误",{time:1000,icon:5});
 						}
 					}
 				});
