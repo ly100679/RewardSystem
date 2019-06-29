@@ -8,56 +8,77 @@ import json
 #unfinish
 
 def login(request):
+	ans = {
+		'user': None,
+		'errorCode': 2
+	}
 	if request.method == 'POST':
 		body = json.loads(request.body)
 		name = body.get('account', None)
 		password = body.get('password', None)
+		try:
+			User.objects.get(username=name)
+		except:
+			ans['errorCode'] = 1
 		user = authenticate(username=name, password=password)
 		if user is not None:
 			auth.login(request, user)
-			return user
+			ans['user'] = user
+			return ans
 		else:
-			return None
+			return ans
 	else:
-		return None
+		return ans
 
 def loginStudent(request):
 	resp = {
-		'status': False
+		'status': False,
+		'errorCode': 2
 	}
 	user = login(request)
-	if user is not None:
+	resp['errorCode'] = user['errorCode']
+	if user['user'] is not None:
 		try:
-			user = Student.objects.get(pk=user.id)
+			user = Student.objects.get(pk=user['user'].id)
 			resp['status'] = True
 		except:
 			resp['status'] = False
+			resp['errorCode'] = 1
+			auth.logout(request)
 	return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def loginExpert(request):
 	resp = {
-		'status': False
+		'status': False,
+		'errorCode': 2
 	}
 	user = login(request)
-	if user is not None:
+	resp['errorCode'] = user['errorCode']
+	if user['user'] is not None:
 		try:
-			user = Expert.objects.get(pk=user.id)
+			user = Expert.objects.get(pk=user['user'].id)
 			resp['status'] = True
 		except:
 			resp['status'] = False
+			resp['errorCode'] = 1
+			auth.logout(request)
 	return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def loginCommittee(request):
 	resp = {
-		'status': False
+		'status': False,
+		'errorCode': 2
 	}
 	user = login(request)
-	if user is not None:
+	resp['errorCode'] = user['errorCode']
+	if user['user'] is not None:
 		try:
-			user = Committee.objects.get(pk=user.id)
+			user = Committee.objects.get(pk=user['user'].id)
 			resp['status'] = True
 		except:
 			resp['status'] = False
+			resp['errorCode'] = 1
+			auth.logout(request)
 	return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def register(request):
@@ -74,7 +95,7 @@ def register(request):
 			return HttpResponse(json.dumps(resp), content_type='application/json')
 		# new_student = Student.objects.get(pk=new_student.id)
 		new_student.name = body['name']
-		new_student.student_id = body['student_id']
+		new_student.student_id = int(body['account'])
 		new_student.enroll_year = int(body['inYear'])
 		new_student.tel = body['phoneNumber']
 		new_student.email = body['email']
