@@ -2,27 +2,63 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from .models import Student, School, Major
+from .models import *
 import json
 
 #unfinish
-def loginStudent(request):
+
+def login(request):
 	if request.method == 'POST':
-		resp = {
-			'status': True
-		}
 		body = json.loads(request.body)
 		name = body.get('account', None)
 		password = body.get('password', None)
 		user = authenticate(username=name, password=password)
 		if user is not None:
 			auth.login(request, user)
-			resp['status'] = True
+			return user
 		else:
-			resp['status'] = False
-		return HttpResponse(json.dumps(resp), content_type="application/json")
+			return None
 	else:
-		return HttpResponse(json.dumps({'status': False}), content_type="application/json")
+		return None
+
+def loginStudent(request):
+	resp = {
+		'status': False
+	}
+	user = login(request)
+	if user is not None:
+		try:
+			user = Student.objects.get(pk=user.id)
+			resp['status'] = True
+		except:
+			resp['status'] = False
+	return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def loginExpert(request):
+	resp = {
+		'status': False
+	}
+	user = login(request)
+	if user is not None:
+		try:
+			user = Expert.objects.get(pk=user.id)
+			resp['status'] = True
+		except:
+			resp['status'] = False
+	return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def loginCommittee(request):
+	resp = {
+		'status': False
+	}
+	user = login(request)
+	if user is not None:
+		try:
+			user = Committee.objects.get(pk=user.id)
+			resp['status'] = True
+		except:
+			resp['status'] = False
+	return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def register(request):
 	if request.method == 'POST':
