@@ -44,4 +44,18 @@
   
   url: "/register"
 
+# 参赛者个人作品列表获取：
 
+  method: GET
+
+  上传:无
+  
+  接收:
+  
+    [{
+      projectName:作品名(string),
+      projectID:作品代码(string)，
+      projectPeriod:作品所处阶段(string)
+    },...]	
+  
+  url: "/studentProjectList?studentID=学号(int)"
