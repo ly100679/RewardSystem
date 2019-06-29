@@ -12,7 +12,7 @@
   接收:
   
     {
-      status:表示验证是否成功的布尔值
+      status:数字，0表示成功，1表示账号不存在，2表示密码错误
     }	
   
   url: "/login/student", "/login/expert", "/login/school"
