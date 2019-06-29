@@ -9,11 +9,13 @@ class Major(models.Model):
     name = models.CharField(max_length=200)
 
 class Student(User):
+    def __name__(self):
+        return 'Student'
     student_id = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-    major = models.ForeignKey(Major, on_delete=models.CASCADE)
-    enroll_year = models.IntegerField()
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True)
+    major = models.ForeignKey(Major, on_delete=models.CASCADE, null=True)
+    enroll_year = models.IntegerField(null=True)
     tel = models.CharField(max_length=50, null=True, blank=True)
     birth_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     education = models.CharField(
