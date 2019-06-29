@@ -51,9 +51,9 @@
 						</div>
 						<div class="layui-form-item">
 							<div class="layui-input-block">
-							    <input type="radio" name="identity" value="学生" title="学生" checked>
-							    <input type="radio" name="identity" value="专家" title="专家">
-								<input type="radio" name="identity" value="校团委" title="校团委">	
+							    <input type="radio" name="identity" value="student" title="学生" checked>
+							    <input type="radio" name="identity" value="expert" title="专家">
+								<input type="radio" name="identity" value="school" title="校团委">	
 							</div>
 						</div>
 				</div>
@@ -78,9 +78,7 @@
 			//监听提交
 			form.on('submit(login)', function(data){
 				//layer.msg(JSON.stringify(data.field));
-				/*var updateData={
-					account:data.field.account,
-					password:data.field.password};*/
+				
 				$.ajax({
 					type:"POST",
 					url: hostIP+"login/"+data.field.identity,
