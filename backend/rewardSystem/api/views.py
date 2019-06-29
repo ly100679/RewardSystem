@@ -16,10 +16,6 @@ def login(request):
 		body = json.loads(request.body)
 		name = body.get('account', None)
 		password = body.get('password', None)
-		try:
-			User.objects.get(username=name)
-		except:
-			ans['errorCode'] = 1
 		user = authenticate(username=name, password=password)
 		if user is not None:
 			auth.login(request, user)
@@ -35,6 +31,15 @@ def loginStudent(request):
 		'status': False,
 		'errorCode': 2
 	}
+	body = json.loads(request.body)
+	name = body.get('account', None)
+	# check if account exist & account type right
+	try:
+		Student.objects.get(username=name)
+	except:
+		resp['errorCode'] = 1
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	# try login
 	user = login(request)
 	resp['errorCode'] = user['errorCode']
 	if user['user'] is not None:
@@ -52,6 +57,15 @@ def loginExpert(request):
 		'status': False,
 		'errorCode': 2
 	}
+	body = json.loads(request.body)
+	name = body.get('account', None)
+	# check if account exist & account type right
+	try:
+		Expert.objects.get(username=name)
+	except:
+		resp['errorCode'] = 1
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	# try login
 	user = login(request)
 	resp['errorCode'] = user['errorCode']
 	if user['user'] is not None:
@@ -69,6 +83,15 @@ def loginCommittee(request):
 		'status': False,
 		'errorCode': 2
 	}
+	body = json.loads(request.body)
+	name = body.get('account', None)
+	# check if account exist & account type right
+	try:
+		Committee.objects.get(username=name)
+	except:
+		resp['errorCode'] = 1
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	# try login
 	user = login(request)
 	resp['errorCode'] = user['errorCode']
 	if user['user'] is not None:
