@@ -17,7 +17,7 @@
   
   url: "/login/student", "/login/expert", "/login/school"
   
-# 注册验证	
+# 注册验证：
 
   method: POST
 
