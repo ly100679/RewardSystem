@@ -1,0 +1,86 @@
+<!DOCTYPE >
+<html>
+	<head>
+		<script src="./layui/layui.js"></script>
+		<link href="./layui/css/layui.css"  rel="stylesheet"/>
+		
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		
+		<style>
+			.layui-row{
+				margin:30px 0 30px 0;
+			}
+			.loginBox{
+				border: 1px solid #dddddd;
+				border-radius: 15px;
+				position: relative; 
+				transform:translate(-50%);
+				left:50%;
+			}
+			.layui-form-item{
+				margin:30px 20px 30px 10px;
+			}
+			.layui-form-label{
+				padding:9px 0 0 0;
+				width:10%;
+			}
+			.layui-input-block{
+				margin-left: 13%;
+			}
+		</style>
+	</head>
+	<body>
+		<div  style="top:25%;position: relative;">
+			<h1 style="text-align: center;">科技竞赛申报平台</h1>
+			<form class="layui-form">
+			<div class="layui-row">	
+				<div class="layui-col-md3 loginBox">
+						<div class="layui-form-item">
+							<label class="layui-form-label">账号</label>
+							<div class="layui-input-block">
+								<input type="text" name="account" required lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">密码</label>
+							<div class="layui-input-block">
+								<input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+							    <input type="radio" name="identity" value="学生" title="学生" checked>
+							    <input type="radio" name="identity" value="专家" title="专家">
+								<input type="radio" name="identity" value="校团委" title="校团委">	
+							</div>
+						</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-md2 layui-col-md-offset5">
+					<button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="login" style="width:100%">登录</button>
+				</div>
+			</div>
+			</form>
+			<div class="layui-row">
+				<div class="layui-col-md2 layui-col-md-offset5" style="text-align: center;">
+					<button class="layui-btn layui-btn-radius layui-btn-primary" id="register" style="width:60%">注册</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		layui.use('form', function(){
+			var form = layui.form;
+		  
+			//监听提交
+			form.on('submit(login)', function(data){
+				layer.msg(JSON.stringify(data.field));
+				return false;
+			});
+		});
+		$("#register").click(function(){
+			window.location.href="register.html";
+		});
+	</script>
+</html>
