@@ -4,6 +4,8 @@
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
 		
+		<script src="./host.js"></script>
+		
 		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 		
 		<style>
@@ -109,7 +111,7 @@
 				}
 				$.ajax({
 					type:"POST",
-					url: "/register",
+					url: hostIP+"register",
 					dataType:"json",
 					contentType:"application/json", // 指定这个协议很重要
 					data:JSON.stringify(data.field), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
