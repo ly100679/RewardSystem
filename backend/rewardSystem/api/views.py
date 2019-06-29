@@ -61,9 +61,17 @@ def loginCommittee(request):
 	return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def register(request):
+	resp = {
+		'status': False,
+		'errorCode': 2
+	}
 	if request.method == 'POST':
 		body = json.loads(request.body)
-		new_student = Student.objects.create_user(username=body['account'], password=body['password'], email=body['email'])
+		try:
+			new_student = Student.objects.create_user(username=body['account'], password=body['password'], email=body['email'])
+		except:
+			resp['errorCode'] = 1
+			return HttpResponse(json.dumps(resp), content_type='application/json')
 		# new_student = Student.objects.get(pk=new_student.id)
 		new_student.name = body['name']
 		new_student.student_id = body['student_id']
@@ -83,4 +91,6 @@ def register(request):
 		new_student.school = school
 		new_student.major = major
 		new_student.save()
-		return HttpResponse(json.dumps(body), content_type='application/json')
+		resp['status'] = True
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	return HttpResponse(json.dumps(resp), content_type='application/json')
