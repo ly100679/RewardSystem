@@ -174,6 +174,10 @@ def project(request):
 		except:
 			return HttpResponse(json.dumps({}), content_type='application/json')
 		projects = Project.objects.filter(author=student, competition=competition)
+		project_id = request.GET.get('id', None)
+		if project_id is not None:
+			projects = []
+			projects.append(Project.objects.get(pk=project_id))
 		resp = {}
 		data = []
 		for project in projects:
