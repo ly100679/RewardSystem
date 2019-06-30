@@ -239,6 +239,7 @@
   接收:
    
     {
+      id:竞赛id(int)
       competitionName:赛事名称(string)
       acronym:赛事简称(string)
       startDate:开始日期(yyyy-mm-dd)
