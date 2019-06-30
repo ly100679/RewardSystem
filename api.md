@@ -104,7 +104,7 @@
 
   上传:
   
-  {
+    {
       nameOfWork:作品名称(string)
       classificationOfWork:作品类别(string)
       declarationOfWork:申报作品情况(string)
@@ -132,7 +132,7 @@
   
   接收:
    
-   {
+    {
       status:保存是否成功(bool)
     }	
   
