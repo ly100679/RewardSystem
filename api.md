@@ -85,7 +85,6 @@
   
     {
       account:账号,
-      password:密码,
       name:姓名,
       department:学院,
       major:专业,
