@@ -113,27 +113,48 @@
                 </div>
             </div>
 
+
+            <div class="layui-form-item">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline style="width: 60%;"> 
+                <input type="text" class="layui-input time" name="startDate" autocomplete="off">
+            </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">提交截至</label>
+                <div class="layui-input-inline style="width: 60%;"> 
+                    <input type="text" class="layui-input time" name="submitDDL" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+              <label class="layui-form-label">初审截至</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="checkDDL" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">评审截至</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="reviewDDL" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">结果公布</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="endDate" autocomplete="off">
+              </div>
+            </div>
+            
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">赛事描述</label>
                 <div class="layui-input-inline style="width: 60%;"> 
                     <textarea class="layui-input" name="description" autocomplete="off" style="width:300px;height:100px"></textarea>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-            <label class="layui-form-label">提交周期</label>
-            <div class="layui-input-inline style="width: 60%;"> 
-                <input type="text" class="layui-input" id="date1" name="startDate">
-            </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">评审周期</label>
-                <div class="layui-input-inline style="width: 60%;"> 
-                    <input type="text" class="layui-input" id="date2" name="submitDDL">
-                </div>
-            </div>
-
         </div>
         </div>
         <div class="layui-row">
@@ -145,26 +166,16 @@
       </div>
     </div>
     <script>
-            layui.use('laydate', function(){
-              var laydate = layui.laydate;
-              //执行一个laydate实例
+      layui.use('laydate',function(){
+            var laydate=layui.laydate;
+            lay('.time').each(function(){
               laydate.render({
-                elem: '#date1',//指定元
-                range: '~',
-                format:'yyyy/M/d'
+                elem:this
+                ,format:'yyyy/M/d'
               });
             });
-            layui.use('laydate', function(){
-              var laydate = layui.laydate;
-              //执行一个laydate实例
-              laydate.render({
-                elem: '#date2',//指定元
-                range: '~',
-                format:'yyyy/M/d'
-              });
-            });
+      });
     </script>
-
 	</body>
 	<script>
       layui.use('element', function(){
