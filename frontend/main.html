@@ -4,6 +4,8 @@
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
 		
+		<script src="./host.js"></script>
+		
 		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 		
 		<style>
@@ -30,16 +32,17 @@
 				color:#ffffff;
 			}
       #mainContent{
-        height: 85%;
         width: 81%;
+				height:85%;
         margin: 10px 20px 20px 0;
         border:solid 1px #ccc;
         background:white;
         border-radius:5px;
         float: right;
+				overflow: auto;
       }
 			.icon{
-				border-radius: 100px; 
+				border-radius: 200px; 
 				margin:auto;
 			}
 			.buttonIcon{
@@ -49,6 +52,12 @@
 			}
 			.buttonText{
 				text-align: center;
+			}
+			.layui-form-label{
+				width:110px;
+			}
+			.layui-input-block{
+				margin-left: 140px;
 			}
 		</style>
 	</head>
@@ -66,52 +75,652 @@
 		</ul>
 
 		<div id="buttonBox">
-        <div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+        <div id="headPhoto" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
           
         </div>
-        <div id="headName" style="height: 20px;width: 100%;text-align: center;">
+        <div id="headName" style="font-size: 30px;width: 100%;text-align: center; margin: 10px 0;">
           name
         </div>
         <div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
 
-    		<div class="menu">
+    		<div class="menu" id="userInfo">
 					<div  class="icon buttonIcon">
-		    	<i class="layui-icon layui-icon-username"></i>
+		    	<i class="layui-icon layui-icon-username bigIcon"></i>
 					</div>
 					<div class="buttonText">个人信息</div>
 		    </div>
 				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-		    <div class="menu">
+		    <div class="menu" id="projectList">
 		    	 <div  class="icon buttonIcon">
-		    	 <i class="layui-icon layui-icon-read"></i>
+		    	 <i class="layui-icon layui-icon-read bigIcon"></i>
 		    	 </div>
 		    	 <div class="buttonText">作品列表</div>
 		    </div>
 				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-        <div class="menu">
+        <div class="menu" id="projectInfo">
           <div  class="icon buttonIcon">
-          <i class="layui-icon layui-icon-edit"></i>
+          <i class="layui-icon layui-icon-edit bigIcon"></i>
           </div>
           <div class="buttonText">新建作品</div>
        </div>
     </div>
 
     <div id="mainContent" >
-      <div style="height: 500px;width: 100%;">
-      </div>
-    </div>
+			<div id="studentProjectBox"  style="display: none; margin:20px;position: relative;top: 10%;">
+				<h1 style="text-align: center;">参赛作品表</h1>
+				<table id="studentProjectTable" lay-filter="test">
+				</table>
+			</div>
+			<div class="layui-row" id="userInfoBox" style="position: relative;top: 20%; display: none;">	
+				<div class="layui-col-md10 layui-col-md-offset1">
+						<div class="layui-form-item">
+							<label class="layui-form-label">学号</label>
+							<div class="layui-input-inline" style="width: 80%;">
+								<input type="text" name="account" id="account" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-inline" style="width: 80%;">
+								<input type="text" name="name" id="name" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">院系</label>
+							<div class="layui-input-inline" style="width:80%">
+								<input type="text" name="department" id="department" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">专业</label>
+							<div class="layui-input-inline" style="width:80%">
+								<input type="text" name="major" id="major" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">入学年份</label>
+							<div class="layui-input-inline" style="width:80%">
+								<input type="text" name="inYear" id="inYear" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">联系电话</label>
+							<div class="layui-input-inline" style="width:80%">
+								<input type="text" name="phoneNumber" id="phoneNumber" disabled class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">邮箱</label>
+							<div class="layui-input-inline" style="width: 80%;">
+								<input type="text" name="email" id="email" disabled class="layui-input">
+							</div>
+						</div>
+				</div>
+			</div>
+			<div style="margin: 20px;display: none;" id="projectInfoBox">
+				<div class="layui-form-item">
+				  <label class="layui-form-label">作品代码</label>
+				  <div class="layui-input-block" style="width: 200px; ">
+				    <input type="text" name="projectID" disabled class="layui-input">
+				  </div>
+				</div>
+			  <form class="layui-form">
+			
+			    <div class="layui-form-item" style="height: 20px;margin:15px 0px 10px 25px;">1.申报作品情况</div>
+			
+			    <div class="layui-form-item">
+			      <label class="layui-form-label">作品名称</label>
+			      <div class="layui-input-block" style="width: 200px; ">
+			        <input type="text" name="nameOfWork" required  lay-verify="required" autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item">
+			      <label class="layui-form-label">作品类别</label>
+			      <div class="layui-input-block" id="classificationOfWork">
+			        <input type="radio" name="classificationOfWork" value="0" title="科技发明制作"checked>
+			        <input type="radio" name="classificationOfWork" value="1" title="调查报告和学术论文" >
+			      </div>
+			    </div>
+			
+			
+			    <div class="layui-form-item">
+			      <label class="layui-form-label">作品分类</label>
+			      <div class="layui-input-block">
+			        <input type="radio" name="declarationOfWork" value="A" title="A.机械与控制（包括机械、仪器仪表、自动化控"checked>
+			        <input type="radio" name="declarationOfWork" value="B" title="B.信息技术（包括计算机、电信、通讯、电子等）" >
+			        <input type="radio" name="declarationOfWork" value="C" title="C.数理（包括数学、物理、地球与空间科学等）" >
+			        <input type="radio" name="declarationOfWork" value="D" title="D.生命科学(包括生物､农学､药学､医学､健康､卫生､食品等)" >
+			        <input type="radio" name="declarationOfWork" value="E" title="E.能源化工（包括能源、材料、石油、化学、化工、生态、环保等）">
+			        <input type="radio" name="declarationOfWork" value="F" title="F.哲学社会科学（包括哲学、经济、社会、法律、教育、管理）" >
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item layui-form-text" style="width: 60%;">
+			      <label class="layui-form-label">作品总体情况说明(不超过800字)</label>
+			      <div class="layui-input-block">
+			        <textarea name="overallDescriptionOfWork"  placeholder="请输入内容" class="layui-textarea"></textarea>
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item layui-form-text" style="width: 60%;">
+			      <label class="layui-form-label">创新点</label>
+			      <div class="layui-input-block">
+			        <textarea name="innovationPoint"  placeholder="（1-5条作品创意的创新点）" class="layui-textarea"></textarea>
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item layui-form-text" style="width: 60%;">
+			      <label class="layui-form-label">关键词</label>
+			      <div class="layui-input-block">
+			        <textarea name="keyWord" placeholder="（4-7个体现作品核心技术和问题的关键词）" class="layui-textarea"></textarea>
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="height: 20px;margin:0px 0px 0px 25px;">2.申报者情况</div>
+			    <div class="layui-form-item" style="height: 1px;background:dimgrey;width: 80%;margin: 30px 10% 30px 10%"></div>
+			
+			      <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-block" style="width: 200px;">
+			          <input type="text" name="name" disabled class="layui-input">
+			        </div>
+			      </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			        <label class="layui-form-label">学号</label>
+			        <div class="layui-input-block" style="width: 200px;">
+			          <input type="text" name="account" disabled class="layui-input">
+			        </div>
+			      </div>
+			
+			    <div class="layui-form-item" style="width: 100%;display: inline-block;" >
+			      <label class="layui-form-label">出生年月</label>
+			      <div class="layui-input-block" style="width: 400px;">
+			        <input type="text" name="dateOfBirth" id="date" lay-verify="date|required" autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">专业</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="major" disabled class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">入学年份</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="inYear" disabled class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">作品全称</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="fullNameOfwork" required  lay-verify="required"  autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">通讯地址</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="postalAddress" required  lay-verify="required"  autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">联系电话</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="phoneNumber" disabled class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+			      <label class="layui-form-label">邮箱</label>
+			      <div class="layui-input-block" style="width: 200px;">
+			        <input type="text" name="email" disabled class="layui-input">
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="width: 50%;">
+			      <label class="layui-form-label">现学历</label>
+			      <div class="layui-input-block">
+			        <select name="currentEducation" lay-verify="required">
+			          <option value=""></option>
+			          <option value="0">大专</option>
+			          <option value="1">大学本科</option>
+			          <option value="2">硕士研究生</option>
+			          <option value="3">博士研究生</option>
+			        </select>
+			      </div>
+			    </div>
+			
+			    <div class="layui-form-item" style="height: 20px;margin:0px 0px 0px 25px;">3.合作者情况（最多填四个）</div>
+			    <div class="layui-form-item" style="height: 1px;background:dimgrey;width: 80%;margin: 30px 10% 30px 10%"></div>
+			
+			    <div class="layui-form-item" style="width: 100%;">
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="nameOfPartner1" autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">学号</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="studentIDOfPartner1"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">联系电话</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="phoneOfPartner1"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">邮箱</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="emailOfPartner1"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 20%;display: inline-block;">
+			        <label class="layui-form-label">现学历</label>
+			        <div class="layui-input-block">
+			          <select name="currenteducationOfPartner1">
+			            <option value=""></option>
+			            <option value="0">大专</option>
+			            <option value="1">大学本科</option>
+			            <option value="2">硕士研究生</option>
+			            <option value="3">博士研究生</option>
+			          </select>
+			        </div>
+			      </div>
+			    </div>
+			
+			
+			
+			    <div class="layui-form-item" style="width: 100%;">
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="nameOfPartner2" autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">学号</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="studentIDOfPartner2"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">联系电话</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="phoneOfPartner2"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">邮箱</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="emailOfPartner2"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 20%;display: inline-block;">
+			        <label class="layui-form-label">现学历</label>
+			        <div class="layui-input-block">
+			          <select name="currenteducationOfPartner2">
+			            <option value=""></option>
+			            <option value="0">大专</option>
+			            <option value="1">大学本科</option>
+			            <option value="2">硕士研究生</option>
+			            <option value="3">博士研究生</option>
+			          </select>
+			        </div>
+			      </div>
+			    </div>
+			
+			
+			    <div class="layui-form-item" style="width: 100%;">
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="nameOfPartner3" autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">学号</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="studentIDOfPartner3"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">联系电话</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="phoneOfPartner3"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">邮箱</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="emailOfPartner3"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 20%;display: inline-block;">
+			        <label class="layui-form-label">现学历</label>
+			        <div class="layui-input-block">
+			          <select name="currenteducationOfPartner3">
+			            <option value=""></option>
+			            <option value="0">大专</option>
+			            <option value="1">大学本科</option>
+			            <option value="2">硕士研究生</option>
+			            <option value="3">博士研究生</option>
+			          </select>
+			        </div>
+			      </div>
+			    </div>
+			
+			
+			    <div class="layui-form-item" style="width: 100%;">
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="nameOfPartner4" autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">学号</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="studentIDOfPartner4"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">联系电话</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="phoneOfPartner4"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 17%;display: inline-block;" >
+			        <label class="layui-form-label">邮箱</label>
+			        <div class="layui-input-block">
+			          <input type="text" name="emailOfPartner4"  autocomplete="off" class="layui-input">
+			        </div>
+			      </div>
+			      <div class="layui-form-item" style="width: 20%;display: inline-block;">
+			        <label class="layui-form-label">现学历</label>
+			        <div class="layui-input-block" >
+			          <select name="currenteducationOfPartner4">
+			            <option value=""></option>
+			            <option value="0">大专</option>
+			            <option value="1">大学本科</option>
+			            <option value="2">硕士研究生</option>
+			            <option value="3">博士研究生</option>
+			          </select>
+			        </div>
+			      </div>
+			    </div>
+			
+			
+			    <div class="layui-form-item" style="height: 1px;background:dimgrey;width: 80%;margin: 30px 10% 30px 10%"></div>
+			    <div class="layui-form-item">
+						<div class="layui-input-block">
+			        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+			        <button class="layui-btn  layui-btn-primary" lay-submit lay-filter="cache">保存</button>
+						</div>
+			    </div>
+			  </form>
+			</div>
+		</div>
 
 	</body>
 	<script>
-      layui.use('element', function(){
-        var element = layui.element;
+		var projectID;
+    layui.use(['element','form','table','laydate'], function(){
+      var element = layui.element;
 
-      });
 			$("#headPhoto").height($("#headPhoto").width());
 			$(".buttonIcon").width($(".buttonIcon").height());
-			$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
+			$(".bigIcon").css("font-size",$(".buttonIcon").height()*0.7);
 			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
 			var user=JSON.parse(sessionStorage.getItem("user"));
-			console.log(user);
+			$("#headName").html(user.account);
+			
+			var index = layer.load(1, {
+				shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+			$.ajax({
+					type:"GET",
+					url: hostIP+"/studentInfo?studentID="+user.account,
+					dataType:"json",
+					contentType:"application/json",
+					success:function(data){
+							layer.close(index);
+							$("[name='account']").val(data.account);
+							$("[name='name']").val(data.name);
+							$("[name='department']").val(data.department);
+							$("[name='major']").val(data.major);
+							$("[name='inYear']").val(data.inYear);	
+							$("[name='phoneNumber']").val(data.phoneNumber);
+							$("[name='email']").val(data.email);
+					}
+			});
+			
+			$("#projectList").click(function(){
+					$("#userInfoBox").css("display","none");
+					$("#projectInfoBox").css("display","none");
+					$("#studentProjectBox").css("display","block");
+					$.ajax({
+							type:"GET",
+							url: hostIP+"/studentProject?studentID="+user.account,
+							dataType:"json",
+							contentType:"application/json", 
+							success:function(data){
+											var table=layui.table;
+											$("h1").html(data.competitionName+"参赛作品列表");
+											table.render({
+													elem: "#studentProjectTable",
+													cols: [[ //标题栏
+															{field: 'projectPeriod', width:150, title: '阶段',sort:true},
+															{field: 'projectID', title: '作品代码',sort:true},
+															{field: 'projectName', title: '作品名',sort:true},
+															{field: 'id', title: '数据库编号',hide:true},
+															{title:'操作', toolbar: '#TableBar', width:150 }
+													]]
+													,data:data.data
+													//,size:'sm'
+													// ,even: true
+													,page: true
+											});
+											table.on('tool(test)', function(obj){
+													var data = obj.data;
+													if(obj.event==='del'){
+															layer.confirm('确定删除 “'+data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
+																	$.ajax({
+																			type:"DELETE",
+																			url: hostIP+"/studentProject?id="+data.id,
+																			dataType:"json",
+																			contentType:"application/json", 
+																			success:function(data){
+																					if(data.status){
+																							obj.del();
+																							layer.close(index);
+																					}
+																			},
+																	});
+															});
+													}
+													if(obj.event==='edit'){
+															var data = obj.data;
+															console.log(data);
+															$.ajax({
+																	type:"GET",
+																	url: hostIP+"/studentProject?studentID="+user.account+"&id="+data.id,
+																	dataType:"json",
+																	contentType:"application/json", 
+																	success:function(data){
+																			projectID=data.data[0].id;
+																			$("#studentProjectBox").css("display","none");
+																			$("#projectInfoBox").css("display","block");
+																			$("[name='projectID']").val(data.data[0].projectID);
+																			$("[name='nameOfWork']").val(data.data[0].nameOfWork);
+																			$("[name='classificationOfWork']").val(data.data[0].classificationOfWork);
+																			$("[name='declarationOfWork']").val(data.data[0].declarationOfWork);
+																			$("[name='overallDescriptionOfWork']").val(data.data[0].overallDescriptionOfWork);
+																			$("[name='innovationPoint']").val(data.data[0].innovationPoint);
+																			$("[name='keyWord']").val(data.data[0].keyWord);
+																			$("[name='dateOfBirth']").val(data.data[0].dateOfBirth);
+																			$("[name='fullNameOfwork']").val(data.data[0].fullNameOfwork);
+																			$("[name='postalAddress']").val(data.data[0].postalAddress);
+																			$("[name='currentEducation']").val(data.data[0].currentEducation);
+																			for(let i=1;i<=4;i++){
+																				$("[name='nameOfPartner"+i+"']").val(data.data[0].partner[i-1].nameOfPartner);
+																				$("[name='studentIDOfPartner"+i+"']").val(data.data[0].partner[i-1].studentIDOfPartner);
+																				$("[name='phoneOfPartner"+i+"']").val(data.data[0].partner[i-1].phoneOfPartner);
+																				$("[name='emailOfPartner"+i+"']").val(data.data[0].partner[i-1].emailOfPartner);
+																				$("[name='currenteducationOfPartner"+i+"']").val(data.data[0].partner[i-1].currenteducationOfPartner);
+																			}
+																	},
+															});	
+													}
+											});
+							},
+							error:function(){
+									layer.msg("网络问题无法获得数据",{time:1000,icon:5});
+							}
+					});
+			});
+			
+			$("#userInfo").click(function(){
+					$("#studentProjectBox").css("display","none");
+					$("#projectInfoBox").css("display","none");
+					$("#userInfoBox").css("display","block");
+			});
+			
+			$("#projectInfo").click(function(){
+					projectID=undefined;
+					$("#studentProjectBox").css("display","none");
+					$("#userInfoBox").css("display","none");
+					$("#projectInfoBox").css("display","block");
+					
+					$("[name='projectID']").val("");
+					$("[name='nameOfWork']").val("");
+					$("[name='classificationOfWork']").val(0);
+					$("[name='declarationOfWork']").val("A");
+					$("[name='overallDescriptionOfWork']").val("");
+					$("[name='innovationPoint']").val("");
+					$("[name='keyWord']").val("");
+					$("[name='dateOfBirth']").val("");
+					$("[name='fullNameOfwork']").val("");
+					$("[name='postalAddress']").val("");
+					$("[name='currentEducation']").val("");
+					for(let i=1;i<=4;i++){
+						$("[name='nameOfPartner"+i+"']").val("");
+						$("[name='studentIDOfPartner"+i+"']").val("");
+						$("[name='phoneOfPartner"+i+"']").val("");
+						$("[name='emailOfPartner"+i+"']").val("");
+						$("[name='currenteducationOfPartner"+i+"']").val("");
+					}
+			});
+			
+			var form = layui.form;
+			var laydate = layui.laydate;
+			
+			laydate.render({
+				elem: '#date'
+			});
+			//监听提交
+			form.on('submit(submit)', function(data){
+				data.field.partner=new Array();
+				for(let i=1;i<=4;i++){
+					data.field.partner.push({
+							nameOfPartner:data.field["nameOfPartner"+i],
+							studentIDOfPartner:data.field["studentIDOfPartner"+i],
+							phoneOfPartner:data.field["phoneOfPartner"+i],
+							emailOfPartner:data.field["emailOfPartner"+i],
+							currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
+					});
+				}
+				data.field.status="已提交";
+			  console.log(data.field);
+				if(projectID)
+					put(data.field);
+				else
+					post(data.field);
+			  return false;
+			});
+			form.on('submit(cache)', function(data){
+				data.field.partner=new Array();
+				for(let i=1;i<=4;i++){
+					data.field.partner.push({
+							nameOfPartner:data.field["nameOfPartner"+i],
+							studentIDOfPartner:data.field["studentIDOfPartner"+i],
+							phoneOfPartner:data.field["phoneOfPartner"+i],
+							emailOfPartner:data.field["emailOfPartner"+i],
+							currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
+					});
+				}
+				data.field.status="未提交";
+				if(projectID)
+					put(data.field);
+				else
+					post(data.field);
+			  return false;
+			});
+		});
+		function post(data){
+			/*$.ajax({
+					type:"POST",
+					url: hostIP+"/studentProject?studentID="+user.account,
+					dataType:"json",
+					contentType:"application/json", 
+					data:data,
+					success:function(data){
+						if(data.status){
+							layer.msg("保存成功",{time:1000,icon:6});
+							//setTimeout("$('#projectList').trigger('click');",2000);
+						}
+						else{
+							layer.msg("保存失败",{time:1000,icon:5});
+						}
+					}
+			});*/
+			$.ajax({
+					type:"GET",
+					url: hostIP+"/studentInfo?studentID="+user.account,
+					dataType:"json",
+					contentType:"application/json",
+					success:function(data){
+							layer.close(index);
+							$("[name='account']").val(data.account);
+							$("[name='name']").val(data.name);
+							$("[name='department']").val(data.department);
+							$("[name='major']").val(data.major);
+							$("[name='inYear']").val(data.inYear);	
+							$("[name='phoneNumber']").val(data.phoneNumber);
+							$("[name='email']").val(data.email);
+					}
+			});
+		}
+		function put(data){
+			$.ajax({
+					type:"PUT",
+					url: hostIP+"/studentProject?studentID="+user.account+"&id="+projectID,
+					dataType:"json",
+					contentType:"application/json", 
+					data:data,
+					success:function(data){
+						if(data.status){
+							layer.msg("保存成功",{time:1000,icon:6});
+							//setTimeout("$('#projectList').trigger('click');",2000);
+						}
+						else{
+							layer.msg("保存失败",{time:1000,icon:5});
+						}
+					}
+			});
+		}
+	</script>
+	<script type="text/html" id="TableBar">
+			<a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
 </html>

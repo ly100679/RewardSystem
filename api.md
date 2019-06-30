@@ -123,13 +123,14 @@
   
   url: "/studentInfo?studentID=学号(int)"
   
-  # 6 新建作品信息：
+  # 6 新建页保存or提交作品信息：
 
   method: POST
 
   上传:
   
     {
+      status:作品状态(string)
       nameOfWork:作品名称(string)
       classificationOfWork:作品类别(0-1)
       declarationOfWork:作品分类（A-F）
@@ -158,18 +159,19 @@
   接收:
    
     {
-      status:保存是否成功(bool)
+      status:操作是否成功(bool)
     }	
   
   url: "/studentProject?studentID=学号(int)"
   
-  # 7 修改作品信息：
+  # 7 修改页保存or提交作品信息：
 
   method: PUT
 
   上传:
   
     {
+      status:作品状态(string)
       nameOfWork:作品名称(string)
       classificationOfWork:作品类别(0-1)
       declarationOfWork:作品分类（A-F）
@@ -198,8 +200,54 @@
   接收:
    
     {
-      status:修改是否成功(bool)
+      status:操作是否成功(bool)
     }	
   
   url: "/studentProject?id=作品id(int)"
 
+  # 8 新建比赛赛程：
+
+  method: POST
+
+  上传:
+  
+    {
+      competitionName:赛事名称(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+    }	
+  
+  接收:
+   
+    {
+      status:操作是否成功(bool)
+    }	
+  
+  url: "/competition"
+  
+  # 9 查看竞赛列表：
+
+  method: GET
+
+  上传:无
+  
+  接收:
+   
+    {
+      id:竞赛id(int)
+      competitionName:赛事名称(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+    }	
+  
+  url: "/competition"
