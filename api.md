@@ -97,3 +97,43 @@
     }	
   
   url: "/studentInfo?studentID=学号(int)"
+  
+  # 6 暂存参赛者个人信息：
+
+  method: POST
+
+  上传:
+  
+  {
+      nameOfWork:作品名称(string)
+      classificationOfWork:作品类别(string)
+      declarationOfWork:申报作品情况(string)
+      overallDescriptionOfWork:作品总体情况说明(string)
+      innovationPoint:创新点(string)
+      keyWord:关键词(string)
+      name:姓名(string)
+      StudentID:学号(int)
+      dateOfBirth:出生年月(yyyy-mm-dd)
+      major:专业(string)
+      inYear:入学年份(int)
+      fullNameOfwork:作品全称(string)
+      postalAddress:通讯地址(string)
+      phoneNumber:联系电话(int)
+      email:邮箱(string)
+      currentEducation:现学历(string)
+      partner:[{
+        nameOfPartner:姓名(string)
+        studentIDOfPartner:学号(int)
+        phoneOfPartner:联系电话(int)
+        emailOfPartner:邮箱(string)
+        currenteducationOfPartner:现学历(string)
+      },..]
+    }	
+  
+  接收:
+   
+   {
+      status:保存是否成功(bool)
+    }	
+  
+  url: "/studentInfo?studentID=学号(int)"
