@@ -106,8 +106,8 @@
   
     {
       nameOfWork:作品名称(string)
-      classificationOfWork:作品类别(string)
-      declarationOfWork:申报作品情况(string)
+      classificationOfWork:作品类别(0-1)
+      declarationOfWork:作品分类（A-F）
       overallDescriptionOfWork:作品总体情况说明(string)
       innovationPoint:创新点(string)
       keyWord:关键词(string)
@@ -120,13 +120,13 @@
       postalAddress:通讯地址(string)
       phoneNumber:联系电话(int)
       email:邮箱(string)
-      currentEducation:现学历(string)
+      currentEducation:现学历(0-3)
       partner:[{
         nameOfPartner:姓名(string)
         studentIDOfPartner:学号(int)
         phoneOfPartner:联系电话(int)
         emailOfPartner:邮箱(string)
-        currenteducationOfPartner:现学历(string)
+        currenteducationOfPartner:现学历(0-3)
       },..]
     }	
   
