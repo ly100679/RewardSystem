@@ -278,6 +278,7 @@ def setProjectAuthorInfo(student, body):
 	birth_date = datetime.strptime(body['dateOfBirth'],'%Y-%m-%d')
 	student.birth_date = birth_date
 	student.contact_address = body['postalAddress']
+	student.education = body['currentEducation']
 	student.save()
 
 def setProjectInfo(project, body, student, competition):
