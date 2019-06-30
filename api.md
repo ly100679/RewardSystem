@@ -53,16 +53,17 @@
   接收:
   
     [{
+      id:作品id(int),
       projectName:作品名(string),
       projectID:作品代码(string)，
       projectPeriod:作品所处阶段(string)
     },...]	
   
-  url: "/studentProjectList?studentID=学号(int)"
+  url: "/studentProject?studentID=学号(int)"
   
   # 在作品列表中删除作品：
 
-  method: GET
+  method: DELETE
 
   上传:无
   
@@ -72,4 +73,4 @@
       status:删除是否成功(bool)
     }	
   
-  url: "/studentProjectListDelete?projectID=作品代码(string)"
+  url: "/studentProject?id=作品id(int)"
