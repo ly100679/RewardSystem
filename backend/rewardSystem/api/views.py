@@ -349,8 +349,8 @@ def competition(request):
 			competition = Competition()
 			competition.name = body['competitionName']
 			competition.acronym = body['acronym']
-			competition.startDate = datetime.strptime(body['startDate'], '%Y-%m-%d')
-			competition.pre_review = datetime.strptime(body['pre_review'], '%Y-%m-%d')
+			competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
+			competition.pre_review = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
 			competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
 			competition.oral_defense = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
 			competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
