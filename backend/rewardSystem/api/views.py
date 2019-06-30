@@ -221,7 +221,7 @@ def project(request):
 		try:
 			competition = Competition.objects.order_by('-start')[0]
 		except:
-			return HttpResponse(json.dumps({{'status': False}}), content_type='application/json')
+			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 		# if student exist
 		student_id = request.GET.get('studentID')
 		try:
@@ -247,7 +247,7 @@ def project(request):
 		try:
 			competition = Competition.objects.order_by('-start')[0]
 		except:
-			return HttpResponse(json.dumps({{'status': False}}), content_type='application/json')
+			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 		# if project exist
 		try:
 			project = Project.objects.get(pk=request.GET.get('id'))
