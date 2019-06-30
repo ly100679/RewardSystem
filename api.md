@@ -52,12 +52,15 @@
   
   接收:
   
-    [{
-      id:作品id(int),
-      projectName:作品名(string),
-      projectID:作品代码(string)，
-      projectPeriod:作品所处阶段(string)
-    },...]	
+    {
+      competitionName:当前的竞赛名(string),
+      data:[{
+        id:作品id(int),
+        projectName:作品名(string),
+        projectID:作品代码(string),
+        projectPeriod:作品所处阶段(string)
+      },...](只传当前竞赛的作品)
+    }	
   
   url: "/studentProject?studentID=学号(int)"
   
