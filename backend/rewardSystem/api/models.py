@@ -33,6 +33,7 @@ class Committee(User):
 
 class Competition(models.Model):
     name = models.CharField(max_length=200)
+    acronym = models.CharField(max_length=10, null=True, blank=True)
     start = models.DateField(auto_now=False, auto_now_add=False)
     pre_review = models.DateField(auto_now=False, auto_now_add=False)
     review = models.DateField(auto_now=False, auto_now_add=False)
@@ -50,14 +51,15 @@ class Project(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
     project_type = models.CharField(
         max_length=10,
-        choices=[(t, t.value) for t in ProjectType],
+        choices=[(t.value, t.name) for t in ProjectType],
         null=True, blank=True
     )
     author = models.ForeignKey(Student, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50)
     video = models.FileField(upload_to='project_video/', null=True, blank=True)
     category = models.CharField(
         max_length=200,
-        choices=[(t, t.value) for t in Category],
+        choices=[(t.value, t.name) for t in Category],
         null=True, blank=True
     )
     description = models.TextField(null=True, blank=True)
@@ -76,7 +78,6 @@ class CoAuthor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class FormalProject(models.Model):
-    status = models.CharField(max_length=50)
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
     expert = models.ManyToManyField(
         Expert,

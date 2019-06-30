@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['*']
 
 APPEND_SLASH = False
 
+DEFAULT_CHARSET = 'utf-8'
+
 
 # Application definition
 

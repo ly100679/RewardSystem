@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from .models import *
@@ -138,3 +138,42 @@ def register(request):
 		resp['status'] = True
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def getProjectID(project):
+	competition = project.competition
+	competition_id = str(competition.id).rjust(5, '1')
+	project_id = str(project.id).rjust(8, '1')
+	competition_acronym = competition.acronym
+	return competition_acronym + competition_id + project_id
+
+def project(request):
+	if request.method == 'DELETE':
+		resp = {
+			'status': False
+		}
+		project_id = request.GET.get('id')
+		print(233)
+		try:
+			project = Project.objects.get(pk=project_id)
+			project.delete()
+			resp['status'] = True
+		except:
+			pass
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	if request.method == 'GET':
+		student_id = request.GET.get('studentID')
+		try:
+			student = Student.objects.get(student_id=student_id)
+		except:
+			return []
+		projects = Project.objects.filter(author=student)
+		resp = []
+		for project in projects:
+			tem = {
+				'id': project.id,
+				'projectName': project.name,
+				'projectID': getProjectID(project),
+				'projectPeriod': project.status
+			}
+			resp.append(tem)
+		return HttpResponse(json.dumps(resp), content_type='application/json')
