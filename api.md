@@ -228,7 +228,7 @@
       status:操作是否成功(bool)
     }	
   
-  url: "/createCompetition"
+  url: "/competition"
   
   # 9 查看竞赛列表：
 
@@ -249,4 +249,4 @@
       description:赛事描述(string)
     }	
   
-  url: "/competitionList"
+  url: "/competition"
