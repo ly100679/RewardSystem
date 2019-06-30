@@ -123,13 +123,14 @@
   
   url: "/studentInfo?studentID=学号(int)"
   
-  # 6 新建作品信息：
+  # 6 新建页保存or提交作品信息：
 
   method: POST
 
   上传:
   
     {
+      status:作品状态(string)
       nameOfWork:作品名称(string)
       classificationOfWork:作品类别(0-1)
       declarationOfWork:作品分类（A-F）
@@ -163,13 +164,14 @@
   
   url: "/studentProject?studentID=学号(int)"
   
-  # 7 修改作品信息：
+  # 7 修改页保存or提交作品信息：
 
   method: PUT
 
   上传:
   
     {
+      status:作品状态(string)
       nameOfWork:作品名称(string)
       classificationOfWork:作品类别(0-1)
       declarationOfWork:作品分类（A-F）
@@ -202,4 +204,3 @@
     }	
   
   url: "/studentProject?id=作品id(int)"
-
