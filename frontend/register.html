@@ -34,28 +34,30 @@
 	</head>
 	<body>
 		<div  style="top:8%;position: relative;">
-			<h1 style="text-align: center;">注 册</h1>
+			<h1 style="text-align: center;">参 赛 者 注 册</h1>
 			<form class="layui-form">
 			<div class="layui-row">	
 				<div class="layui-col-md5 loginBox">
 						<div class="layui-form-item">
 							<label class="layui-form-label">学号</label>
 							<div class="layui-input-inline style="width: 60%;">
-								<input type="text" name="account" required lay-verify="required" autocomplete="off" class="layui-input">
+								<input type="text" name="account" required lay-verify="required|number" autocomplete="off" class="layui-input">
 							</div>
 							<div class="layui-form-mid layui-word-aux">这将是你的账号</div>
 						</div>
 						<div class="layui-form-item">
 							<label class="layui-form-label">密码</label>
-							<div class="layui-input-inline" style="width: 80%;">
-								<input type="password" name="password" required lay-verify="required" autocomplete="off" class="layui-input">
+							<div class="layui-input-inline" style="width: 50%;">
+								<input type="password" name="password" required lay-verify="required|pass" autocomplete="off" class="layui-input">
 							</div>
+							<div class="layui-form-mid layui-word-aux">密码6-12位,不允许空格</div>
 						</div>
 						<div class="layui-form-item">
 							<label class="layui-form-label">确认密码</label>
-							<div class="layui-input-inline" style="width: 80%;">
+							<div class="layui-input-inline" style="width: 50%;">
 								<input type="password" name="passwordCheck" required lay-verify="required" autocomplete="off" class="layui-input">
 							</div>
+							<div class="layui-form-mid layui-word-aux">请再输入一遍密码</div>
 						</div>
 						<div class="layui-form-item">
 							<label class="layui-form-label">姓名</label>
@@ -80,13 +82,13 @@
 							</div>
 							<label class="layui-form-label">联系电话</label>
 							<div class="layui-input-inline" style="width:35%">
-								<input type="text" name="phoneNumber" required lay-verify="required" autocomplete="off" class="layui-input">
+								<input type="text" name="phoneNumber" required lay-verify="required|phone" autocomplete="off" class="layui-input">
 							</div>
 						</div>
 						<div class="layui-form-item">
 							<label class="layui-form-label">邮箱</label>
 							<div class="layui-input-inline" style="width: 80%;">
-								<input type="text" name="email" required lay-verify="required" autocomplete="off" class="layui-input">
+								<input type="text" name="email" required lay-verify="required|email" autocomplete="off" class="layui-input">
 							</div>
 						</div>
 				</div>
@@ -119,8 +121,8 @@
 					success:function(data){
 						console.log(data);
 						if(data.status){
-							layer.msg("注册成功",{time:1000,icon:6});
-							window.location.href="index.html";
+							layer.msg("注册成功,2s跳转至登录页",{time:1000,icon:6});
+							setTimeout("location.href = 'index.html'",2000);
 						}
 						else{
 							if(data.errorCode==1){
@@ -134,6 +136,13 @@
 				});
 				return false;
 			});
+			
+			form.verify({
+				pass: [
+					/^[\S]{6,12}$/
+					,'密码必须6到12位，且不能出现空格'
+				] 
+			});   
 		});
 	</script>
 </html>
