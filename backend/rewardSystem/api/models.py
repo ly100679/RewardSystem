@@ -39,6 +39,7 @@ class Competition(models.Model):
     review = models.DateField(auto_now=False, auto_now_add=False)
     oral_defense = models.DateField(auto_now=False, auto_now_add=False)
     end = models.DateField(auto_now=False, auto_now_add=False)
+    description = models.TextField(null=True, blank=True)
 
 class ExpertList(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)

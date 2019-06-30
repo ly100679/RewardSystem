@@ -320,9 +320,37 @@ def student(request):
 		except:
 			return HttpResponse(json.dumps({}), content_type='application/json')
 
-def test(request):
-	competition = Competition.objects.all()[0]
-	competition = {
-		'start': competition.start.strftime('%Y-%m-%d')
-	}
-	return HttpResponse(json.dumps(competition), content_type='application/json')
+def competition(request):
+	if request.method == 'GET':
+		competitions = Competition.objects.all()
+		competition_list = []
+		for competition in competitions:
+			data = {
+				'id': competition.id,
+				'competitionName': competition.name,
+				'acronym': competition.acronym,
+				'startDate': competition.start.strftime('%Y-%m-%d'),
+				'pre_review': competition.pre_review.strftime('%Y-%m-%d'),
+				'checkDDL': competition.review.strftime('%Y-%m-%d'),
+				'reviewDDL': competition.oral_defense.strftime('%Y-%m-%d'),
+				'endDate': competition.end.strftime('%Y-%m-%d'),
+				'description': competition.description
+			}
+			competition_list.append(data)
+		return HttpResponse(json.dumps(competition_list), content_type='application/json')
+	if request.method == 'POST':
+		try:
+			body = json.loads(request.body)
+			competition = Competition()
+			competition.name = body['competitionName']
+			competition.acronym = body['acronym']
+			competition.startDate = datetime.strptime(body['startDate'], '%Y-%m-%d')
+			competition.pre_review = datetime.strptime(body['pre_review'], '%Y-%m-%d')
+			competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
+			competition.oral_defense = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
+			competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
+			competition.description = body['description']
+			competition.save()
+			return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+		except:
+			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
