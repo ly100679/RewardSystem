@@ -102,14 +102,14 @@
             <div class="layui-form-item">
             <label class="layui-form-label">赛事名称</label>
             <div class="layui-input-inline style="width: 60%;"> 
-                <input type="text" class="layui-input" name="title" autocomplete="off">
+                <input type="text" class="layui-input" name="competitionName" required  lay-verify="required" autocomplete="off">
             </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">赛事简称</label>
                 <div class="layui-input-inline style="width: 60%;"> 
-                    <input type="text" class="layui-input" name="title" autocomplete="off">
+                    <input type="text" class="layui-input" name="acronym" required  lay-verify="required" autocomplete="off">
                 </div>
             </div>
 
@@ -117,35 +117,35 @@
             <div class="layui-form-item">
             <label class="layui-form-label">开始时间</label>
             <div class="layui-input-inline style="width: 60%;"> 
-                <input type="text" class="layui-input time" name="startDate" autocomplete="off">
+                <input type="text" class="layui-input" id="startDate" name="startDate" required  lay-verify="required|date" autocomplete="off">
             </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">提交截至</label>
                 <div class="layui-input-inline style="width: 60%;"> 
-                    <input type="text" class="layui-input time" name="submitDDL" autocomplete="off">
+                    <input type="text" class="layui-input time" id="submitDDL" name="submitDDL" required  lay-verify="required|date" autocomplete="off">
                 </div>
             </div>
             
             <div class="layui-form-item">
               <label class="layui-form-label">初审截至</label>
               <div class="layui-input-inline style="width: 60%;"> 
-                  <input type="text" class="layui-input time" name="checkDDL" autocomplete="off">
+                  <input type="text" class="layui-input time" id="checkDDL" name="checkDDL" required  lay-verify="required|date" autocomplete="off">
               </div>
             </div>
 
             <div class="layui-form-item">
               <label class="layui-form-label">评审截至</label>
               <div class="layui-input-inline style="width: 60%;"> 
-                  <input type="text" class="layui-input time" name="reviewDDL" autocomplete="off">
+                  <input type="text" class="layui-input time" id="reviewDDL" name="reviewDDL" required  lay-verify="required|date" autocomplete="off">
               </div>
             </div>
 
             <div class="layui-form-item">
               <label class="layui-form-label">结果公布</label>
               <div class="layui-input-inline style="width: 60%;"> 
-                  <input type="text" class="layui-input time" name="endDate" autocomplete="off">
+                  <input type="text" class="layui-input time" id="endDate" name="endDate" required  lay-verify="required|date" autocomplete="off">
               </div>
             </div>
             
@@ -198,10 +198,28 @@
             });
     </script>
     <script>
-        layui.use('form',function(){
-            var form=layui.form;
-            form.on('submit(newContest)',function(data){
-                //缺少对表单的检查及提交
+        layui.use(['form','laydate'], function(){
+            var form = layui.form;
+            var laydate=layui.laydate;
+            laydate.render({
+                elem: '#startDate'
+            });
+            laydate.render({
+                elem: '#submitDDL'
+            });
+            laydate.render({
+                elem: '#checkDDL'
+            });
+            laydate.render({
+                elem: '#reviewDDL'
+            });
+            laydate.render({
+                elem: '#endDate'
+            });
+            //监听提交
+            form.on('submit(newContest)', function(data){
+                layer.msg(JSON.stringify(data.field));
+                return false;
             });
         });
     </script>

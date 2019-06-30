@@ -600,8 +600,25 @@
 					$("#studentProjectBox").css("display","none");
 					$("#userInfoBox").css("display","none");
 					$("#projectInfoBox").css("display","block");
-					$("#projectID").val("");
 					
+					$("[name='projectID']").val("");
+					$("[name='nameOfWork']").val("");
+					$("[name='classificationOfWork']").val(0);
+					$("[name='declarationOfWork']").val("A");
+					$("[name='overallDescriptionOfWork']").val("");
+					$("[name='innovationPoint']").val("");
+					$("[name='keyWord']").val("");
+					$("[name='dateOfBirth']").val("");
+					$("[name='fullNameOfwork']").val("");
+					$("[name='postalAddress']").val("");
+					$("[name='currentEducation']").val("");
+					for(let i=1;i<=4;i++){
+						$("[name='nameOfPartner"+i+"']").val("");
+						$("[name='studentIDOfPartner"+i+"']").val("");
+						$("[name='phoneOfPartner"+i+"']").val("");
+						$("[name='emailOfPartner"+i+"']").val("");
+						$("[name='currenteducationOfPartner"+i+"']").val("");
+					}
 			});
 			
 			var form = layui.form;
@@ -641,8 +658,7 @@
 							currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
 					});
 				}
-				data.field.status="";
-			  console.log(JSON.stringify(data.field));
+				data.field.status="未提交";
 				if(projectID)
 					put(data.field);
 				else
@@ -651,7 +667,7 @@
 			});
 		});
 		function post(data){
-			$.ajax({
+			/*$.ajax({
 					type:"POST",
 					url: hostIP+"/studentProject?studentID="+user.account,
 					dataType:"json",
@@ -660,11 +676,27 @@
 					success:function(data){
 						if(data.status){
 							layer.msg("保存成功",{time:1000,icon:6});
-							setTimeout("$('#projectList').trigger('click');",2000);
+							//setTimeout("$('#projectList').trigger('click');",2000);
 						}
 						else{
 							layer.msg("保存失败",{time:1000,icon:5});
 						}
+					}
+			});*/
+			$.ajax({
+					type:"GET",
+					url: hostIP+"/studentInfo?studentID="+user.account,
+					dataType:"json",
+					contentType:"application/json",
+					success:function(data){
+							layer.close(index);
+							$("[name='account']").val(data.account);
+							$("[name='name']").val(data.name);
+							$("[name='department']").val(data.department);
+							$("[name='major']").val(data.major);
+							$("[name='inYear']").val(data.inYear);	
+							$("[name='phoneNumber']").val(data.phoneNumber);
+							$("[name='email']").val(data.email);
 					}
 			});
 		}
@@ -678,7 +710,7 @@
 					success:function(data){
 						if(data.status){
 							layer.msg("保存成功",{time:1000,icon:6});
-							setTimeout("$('#projectList').trigger('click');",2000);
+							//setTimeout("$('#projectList').trigger('click');",2000);
 						}
 						else{
 							layer.msg("保存失败",{time:1000,icon:5});
