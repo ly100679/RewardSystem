@@ -159,7 +159,7 @@
   接收:
    
     {
-      status:保存是否成功(bool)
+      status:操作是否成功(bool)
     }	
   
   url: "/studentProject?studentID=学号(int)"
@@ -200,7 +200,7 @@
   接收:
    
     {
-      status:修改是否成功(bool)
+      status:操作是否成功(bool)
     }	
   
   url: "/studentProject?id=作品id(int)"
