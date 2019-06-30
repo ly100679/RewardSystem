@@ -74,3 +74,24 @@
     }	
   
   url: "/studentProject?id=作品id(int)"
+  
+  # 获取参赛者个人信息：
+
+  method: GET
+
+  上传:无
+  
+  接收:
+  
+    {
+      account:账号,
+      password:密码,
+      name:姓名,
+      department:学院,
+      major:专业,
+      inYear:入学年份,
+      phoneNumber:电话号码,
+      email:邮箱
+    }	
+  
+  url: "/studentInfo?studentID=学号(int)"
