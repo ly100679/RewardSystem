@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.contrib.auth import authenticate
 from .models import *
 import json
+from datetime import datetime
 
 #unfinish
 
@@ -176,16 +177,130 @@ def project(request):
 		resp = {}
 		data = []
 		for project in projects:
+			author = project.author
 			tem = {
 				'id': project.id,
 				'projectName': project.name,
 				'projectID': getProjectID(project),
-				'projectPeriod': project.status
+				'projectPeriod': project.status,
+				'nameOfWork': project.name,
+				'classificationOfWork': project.project_type,
+				'declarationOfWork': project.category,
+				'overallDescriptionOfWork': project.description,
+				'innovationPoint': project.innovation,
+				'keyWord': project.keyword,
+				'name': author.name,
+				'account': author.student_id,
+				'dateOfBirth': author.birth_date.strftime('%Y-%m-%d'),
+				'major': author.major.name,
+				'inYear': author.enroll_year,
+				'fullNameOfwork': project.full_name,
+				'postalAddress': author.contact_address,
+				'phoneNumber': author.tel,
+				'email': author.email,
+				'currentEducation': author.education
 			}
+			partner = []
+			co_authors = CoAuthor.objects.filter(project=project)
+			for co_author in co_authors:
+				tem_info = {
+					'nameOfPartner': co_author.name,
+					'studentIDOfPartner': co_author.student_id,
+					'phoneOfPartner': co_author.tel,
+					'emailOfPartner': co_author.email,
+					'currenteducationOfPartner': co_author.education
+				}
+				partner.append(tem_info)
+			tem['partner'] = partner
 			data.append(tem)
 		resp['competitionName'] = competition.name
 		resp['data'] = data
 		return HttpResponse(json.dumps(resp), content_type='application/json')
+	if request.method == 'POST':
+		# if at least one competition
+		try:
+			competition = Competition.objects.order_by('-start')[0]
+		except:
+			return HttpResponse(json.dumps({{'status': False}}), content_type='application/json')
+		# if student exist
+		student_id = request.GET.get('studentID')
+		try:
+			student = Student.objects.get(student_id=student_id)
+		except:
+			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+		body = json.loads(request.body)
+		# add author info
+		setProjectAuthorInfo(student, body)
+		# add project info
+		project = Project()
+		setProjectInfo(project, body, student, competition)
+		# add coauthor info
+		setProjectCoAuthorInfo(project, body)
+		# if project submit
+		if body['status'] != '未提交':
+			formal_project = FormalProject()
+			formal_project.project = project
+			formal_project.save()
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+	if request.method == 'PUT':
+		# if at least one competition
+		try:
+			competition = Competition.objects.order_by('-start')[0]
+		except:
+			return HttpResponse(json.dumps({{'status': False}}), content_type='application/json')
+		# if project exist
+		try:
+			project = Project.objects.get(pk=request.GET.get('id'))
+		except:
+			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+		body = json.loads(request.body)
+		student = project.author
+		setProjectAuthorInfo(student, body)
+		setProjectInfo(project, body, student, competition)
+		# remove all coauthor first
+		co_authors = CoAuthor.objects.filter(project=project)
+		for co_author in co_authors:
+			co_author.delete()
+		# add coauthor
+		setProjectCoAuthorInfo(project, body)
+		# if project submit
+		if body['status'] != '未提交':
+			formal_project = FormalProject()
+			formal_project.project = project
+			formal_project.save()
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+
+def setProjectAuthorInfo(student, body):
+	birth_date = datetime.strptime(body['dateOfBirth'],'%Y-%m-%d')
+	student.birth_date = birth_date
+	student.contact_address = body['postalAddress']
+	student.save()
+
+def setProjectInfo(project, body, student, competition):
+	project.name = body['nameOfWork']
+	project.full_name = body['fullNameOfwork']
+	project.competition = competition
+	project.author = student
+	project.project_type = body['classificationOfWork']
+	project.category = body['declarationOfWork']
+	project.description = body['overallDescriptionOfWork']
+	project.innovation = body['innovationPoint']
+	project.keyword = body['keyWord']
+	project.status = body['status']
+	project.save()
+
+def setProjectCoAuthorInfo(project, body):
+	co_authors = body['partner']
+	for co_author in co_authors:
+		if co_author['nameOfPartner'] != '':
+			partner = CoAuthor()
+			partner.student_id = co_author['studentIDOfPartner']
+			partner.name = co_author['nameOfPartner']
+			partner.tel = co_author['phoneOfPartner']
+			partner.email = co_author['emailOfPartner']
+			partner.education = co_author['currenteducationOfPartner']
+			partner.project = project
+			partner.save()
 
 def student(request):
 	if request.method == 'GET':
@@ -204,3 +319,10 @@ def student(request):
 			return HttpResponse(json.dumps(resp), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({}), content_type='application/json')
+
+def test(request):
+	competition = Competition.objects.all()[0]
+	competition = {
+		'start': competition.start.strftime('%Y-%m-%d')
+	}
+	return HttpResponse(json.dumps(competition), content_type='application/json')

@@ -7,5 +7,6 @@ urlpatterns = [
     path('login/school', views.loginCommittee, name='loginCommittee'),
     path('register', views.register, name='register'),
     path('studentProject', views.project, name='project'),
-    path('studentInfo', views.student, name='student')
+    path('studentInfo', views.student, name='student'),
+    path('test', views.test, name='test')
 ]

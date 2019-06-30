@@ -20,7 +20,7 @@ class Student(User):
     birth_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     education = models.CharField(
         max_length=50,
-        choices=[(t, t.value) for t in Education],
+        choices=[(t.value, t.value) for t in Education],
         null=True, blank=True
     )
     contact_address = models.CharField(max_length=500, null=True, blank=True)
@@ -47,23 +47,22 @@ class ExpertList(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
+    full_name = models.CharField(max_length=500, null=True, blank=True)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
+    # school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
     project_type = models.CharField(
-        max_length=10,
-        choices=[(t.value, t.name) for t in ProjectType],
+        max_length=100,
+        choices=[(t.value, t.value) for t in ProjectType],
         null=True, blank=True
     )
     author = models.ForeignKey(Student, on_delete=models.CASCADE)
     status = models.CharField(
-        max_length=50,
-        choices=[(t.value, t.value) for t in ProjectStatus],
-        default=ProjectStatus.A
+        max_length=50
     )
     video = models.FileField(upload_to='project_video/', null=True, blank=True)
     category = models.CharField(
         max_length=200,
-        choices=[(t.value, t.name) for t in Category],
+        choices=[(t.value, t.value) for t in Category],
         null=True, blank=True
     )
     description = models.TextField(null=True, blank=True)
@@ -75,7 +74,7 @@ class CoAuthor(models.Model):
     name = models.CharField(max_length=100)
     education = models.CharField(
         max_length=50,
-        choices=[(t, t.value) for t in Education]
+        choices=[(t.value, t.value) for t in Education]
     )
     tel = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(max_length=254)
