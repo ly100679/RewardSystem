@@ -162,12 +162,19 @@ def project(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	if request.method == 'GET':
 		student_id = request.GET.get('studentID')
+		# if student exist
 		try:
 			student = Student.objects.get(student_id=student_id)
 		except:
-			return []
-		projects = Project.objects.filter(author=student)
-		resp = []
+			return HttpResponse(json.dumps({}), content_type='application/json')
+		# if at least one competition
+		try:
+			competition = Competition.objects.order_by('-start')[0]
+		except:
+			return HttpResponse(json.dumps({}), content_type='application/json')
+		projects = Project.objects.filter(author=student, competition=competition)
+		resp = {}
+		data = []
 		for project in projects:
 			tem = {
 				'id': project.id,
@@ -175,7 +182,9 @@ def project(request):
 				'projectID': getProjectID(project),
 				'projectPeriod': project.status
 			}
-			resp.append(tem)
+			data.append(tem)
+		resp['competitionName'] = competition.name
+		resp['data'] = data
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def student(request):

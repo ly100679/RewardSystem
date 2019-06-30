@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .enum import ProjectType, Education, Category
+from .enum import *
 
 class School(models.Model):
     name = models.CharField(max_length=200)
@@ -55,7 +55,11 @@ class Project(models.Model):
         null=True, blank=True
     )
     author = models.ForeignKey(Student, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50)
+    status = models.CharField(
+        max_length=50,
+        choices=[(t.value, t.value) for t in ProjectStatus],
+        default=ProjectStatus.A
+    )
     video = models.FileField(upload_to='project_video/', null=True, blank=True)
     category = models.CharField(
         max_length=200,
