@@ -1,4 +1,4 @@
-# 登录验证:
+# 1 登录验证:
 
   method: POST
 
@@ -18,7 +18,7 @@
   
   url: "/login/student", "/login/expert", "/login/school"
   
-# 注册验证：
+# 2 注册验证：
 
   method: POST
 
@@ -44,7 +44,7 @@
   
   url: "/register"
 
-# 参赛者个人作品列表获取：
+# 3 参赛者个人作品列表获取：
 
   method: GET
 
@@ -61,7 +61,7 @@
   
   url: "/studentProject?studentID=学号(int)"
   
-  # 在作品列表中删除作品：
+  # 4 在作品列表中删除作品：
 
   method: DELETE
 
@@ -75,7 +75,7 @@
   
   url: "/studentProject?id=作品id(int)"
   
-  # 获取参赛者个人信息：
+  # 5 获取参赛者个人信息：
 
   method: GET
 
