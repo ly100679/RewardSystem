@@ -164,7 +164,7 @@
 				    <input type="text" name="projectID" disabled class="layui-input">
 				  </div>
 				</div>
-			  <form class="layui-form">
+			  <form class="layui-form" lay-filter="projectInfo">
 			
 			    <div class="layui-form-item" style="height: 20px;margin:15px 0px 10px 25px;">1.申报作品情况</div>
 			
@@ -177,7 +177,7 @@
 			
 			    <div class="layui-form-item">
 			      <label class="layui-form-label">作品类别</label>
-			      <div class="layui-input-block" id="classificationOfWork">
+			      <div class="layui-input-block">
 			        <input type="radio" name="classificationOfWork" value="0" title="科技发明制作"checked>
 			        <input type="radio" name="classificationOfWork" value="1" title="调查报告和学术论文" >
 			      </div>
@@ -286,7 +286,7 @@
 			    <div class="layui-form-item" style="width: 50%;">
 			      <label class="layui-form-label">现学历</label>
 			      <div class="layui-input-block">
-			        <select name="currentEducation" lay-verify="required">
+			        <select name="currentEducation">
 			          <option value=""></option>
 			          <option value="0">大专</option>
 			          <option value="1">大学本科</option>
@@ -461,12 +461,15 @@
 			
 			
 			    <div class="layui-form-item" style="height: 1px;background:dimgrey;width: 80%;margin: 30px 10% 30px 10%"></div>
-			    <div class="layui-form-item">
-						<div class="layui-input-block">
+			    <div class="layui-row">
+						<div class="layui-col-md2 layui-col-md-offset4">
 			        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+						</div>
+						<div class="layui-col-md2">
 			        <button class="layui-btn  layui-btn-primary" lay-submit lay-filter="cache">保存</button>
 						</div>
 			    </div>
+					<button type="reset" id="reset" class="layui-btn layui-btn-primary" style="display: none;">重置</button>
 			  </form>
 			</div>
 		</div>
@@ -489,28 +492,29 @@
 			});
 			$.ajax({
 					type:"GET",
-					url: hostIP+"/studentInfo?studentID="+user.account,
+					url: hostIP+"studentInfo?studentID="+user.account,
 					dataType:"json",
 					contentType:"application/json",
 					success:function(data){
 							layer.close(index);
-							$("[name='account']").val(data.account);
-							$("[name='name']").val(data.name);
-							$("[name='department']").val(data.department);
-							$("[name='major']").val(data.major);
-							$("[name='inYear']").val(data.inYear);	
-							$("[name='phoneNumber']").val(data.phoneNumber);
-							$("[name='email']").val(data.email);
+							user=data;
+							$("[name='account']").val(user.account);
+							$("[name='name']").val(user.name);
+							$("[name='department']").val(user.department);
+							$("[name='major']").val(user.major);
+							$("[name='inYear']").val(user.inYear);	
+							$("[name='phoneNumber']").val(user.phoneNumber);
+							$("[name='email']").val(user.email);
 					}
 			});
-			
+		 
 			$("#projectList").click(function(){
 					$("#userInfoBox").css("display","none");
 					$("#projectInfoBox").css("display","none");
 					$("#studentProjectBox").css("display","block");
 					$.ajax({
 							type:"GET",
-							url: hostIP+"/studentProject?studentID="+user.account,
+							url: hostIP+"studentProject?studentID="+user.account,
 							dataType:"json",
 							contentType:"application/json", 
 							success:function(data){
@@ -536,7 +540,7 @@
 															layer.confirm('确定删除 “'+data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
 																	$.ajax({
 																			type:"DELETE",
-																			url: hostIP+"/studentProject?id="+data.id,
+																			url: hostIP+"studentProject?id="+data.id,
 																			dataType:"json",
 																			contentType:"application/json", 
 																			success:function(data){
@@ -550,10 +554,9 @@
 													}
 													if(obj.event==='edit'){
 															var data = obj.data;
-															console.log(data);
 															$.ajax({
 																	type:"GET",
-																	url: hostIP+"/studentProject?studentID="+user.account+"&id="+data.id,
+																	url: hostIP+"studentProject?studentID="+user.account+"&id="+data.id,
 																	dataType:"json",
 																	contentType:"application/json", 
 																	success:function(data){
@@ -561,23 +564,42 @@
 																			$("#studentProjectBox").css("display","none");
 																			$("#projectInfoBox").css("display","block");
 																			$("[name='projectID']").val(data.data[0].projectID);
-																			$("[name='nameOfWork']").val(data.data[0].nameOfWork);
-																			$("[name='classificationOfWork']").val(data.data[0].classificationOfWork);
-																			$("[name='declarationOfWork']").val(data.data[0].declarationOfWork);
-																			$("[name='overallDescriptionOfWork']").val(data.data[0].overallDescriptionOfWork);
-																			$("[name='innovationPoint']").val(data.data[0].innovationPoint);
-																			$("[name='keyWord']").val(data.data[0].keyWord);
-																			$("[name='dateOfBirth']").val(data.data[0].dateOfBirth);
-																			$("[name='fullNameOfwork']").val(data.data[0].fullNameOfwork);
-																			$("[name='postalAddress']").val(data.data[0].postalAddress);
-																			$("[name='currentEducation']").val(data.data[0].currentEducation);
+																			form.val('projectInfo', {
+																				"nameOfWork":data.data[0].nameOfWork,
+																				"classificationOfWork":data.data[0].classificationOfWork+"",
+																				"declarationOfWork":data.data[0].declarationOfWork,
+																				"overallDescriptionOfWork":data.data[0].overallDescriptionOfWork,
+																				"innovationPoint":data.data[0].innovationPoint,
+																				"keyWord":data.data[0].keyWord,
+																				"dateOfBirth":data.data[0].dateOfBirth,
+																				"fullNameOfwork":data.data[0].fullNameOfwork,
+																				"postalAddress":data.data[0].postalAddress,
+																				"currentEducation":data.data[0].currentEducation,
+																				"account": user.account ,
+																				"name": user.name,
+																				"department": user.department,
+																				"major": user.major ,
+																				"inYear": user.inYear ,
+																				"phoneNumber": user.phoneNumber,
+																				"email": user.email
+																			})
 																			for(let i=1;i<=4;i++){
-																				$("[name='nameOfPartner"+i+"']").val(data.data[0].partner[i-1].nameOfPartner);
-																				$("[name='studentIDOfPartner"+i+"']").val(data.data[0].partner[i-1].studentIDOfPartner);
-																				$("[name='phoneOfPartner"+i+"']").val(data.data[0].partner[i-1].phoneOfPartner);
-																				$("[name='emailOfPartner"+i+"']").val(data.data[0].partner[i-1].emailOfPartner);
-																				$("[name='currenteducationOfPartner"+i+"']").val(data.data[0].partner[i-1].currenteducationOfPartner);
+																				if(data.data[0].partner[i-1]){
+																					$("[name='nameOfPartner"+i+"']").val(data.data[0].partner[i-1].nameOfPartner);
+																					$("[name='studentIDOfPartner"+i+"']").val(data.data[0].partner[i-1].studentIDOfPartner);
+																					$("[name='phoneOfPartner"+i+"']").val(data.data[0].partner[i-1].phoneOfPartner);
+																					$("[name='emailOfPartner"+i+"']").val(data.data[0].partner[i-1].emailOfPartner);
+																					$("[name='currenteducationOfPartner"+i+"']").val(data.data[0].partner[i-1].currenteducationOfPartner);
+																				}
+																				else{
+																					$("[name='nameOfPartner"+i+"']").val("");
+																					$("[name='studentIDOfPartner"+i+"']").val("");
+																					$("[name='phoneOfPartner"+i+"']").val("");
+																					$("[name='emailOfPartner"+i+"']").val("");
+																					$("[name='currenteducationOfPartner"+i+"']").val("");
+																				}
 																			}
+																			form.render();
 																	},
 															});	
 													}
@@ -601,24 +623,18 @@
 					$("#userInfoBox").css("display","none");
 					$("#projectInfoBox").css("display","block");
 					
+					$('#reset').trigger('click');
 					$("[name='projectID']").val("");
-					$("[name='nameOfWork']").val("");
-					$("[name='classificationOfWork']").val(0);
-					$("[name='declarationOfWork']").val("A");
-					$("[name='overallDescriptionOfWork']").val("");
-					$("[name='innovationPoint']").val("");
-					$("[name='keyWord']").val("");
-					$("[name='dateOfBirth']").val("");
-					$("[name='fullNameOfwork']").val("");
-					$("[name='postalAddress']").val("");
-					$("[name='currentEducation']").val("");
-					for(let i=1;i<=4;i++){
-						$("[name='nameOfPartner"+i+"']").val("");
-						$("[name='studentIDOfPartner"+i+"']").val("");
-						$("[name='phoneOfPartner"+i+"']").val("");
-						$("[name='emailOfPartner"+i+"']").val("");
-						$("[name='currenteducationOfPartner"+i+"']").val("");
-					}
+					
+					form.val('projectInfo', {
+						"account": user.account 
+						,"name": user.name
+						,"department": user.department
+						,"major": user.major //复选框选中状态
+						,"inYear": user.inYear //开关状态
+						,"phoneNumber": user.phoneNumber
+						,"email": user.email
+					})
 			});
 			
 			var form = layui.form;
@@ -629,95 +645,64 @@
 			});
 			//监听提交
 			form.on('submit(submit)', function(data){
-				data.field.partner=new Array();
-				for(let i=1;i<=4;i++){
-					data.field.partner.push({
-							nameOfPartner:data.field["nameOfPartner"+i],
-							studentIDOfPartner:data.field["studentIDOfPartner"+i],
-							phoneOfPartner:data.field["phoneOfPartner"+i],
-							emailOfPartner:data.field["emailOfPartner"+i],
-							currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
-					});
-				}
-				data.field.status="已提交";
-			  console.log(data.field);
-				if(projectID)
-					put(data.field);
-				else
-					post(data.field);
+				saveProject(data,"已提交");
 			  return false;
 			});
 			form.on('submit(cache)', function(data){
-				data.field.partner=new Array();
-				for(let i=1;i<=4;i++){
-					data.field.partner.push({
-							nameOfPartner:data.field["nameOfPartner"+i],
-							studentIDOfPartner:data.field["studentIDOfPartner"+i],
-							phoneOfPartner:data.field["phoneOfPartner"+i],
-							emailOfPartner:data.field["emailOfPartner"+i],
-							currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
-					});
-				}
-				data.field.status="未提交";
-				if(projectID)
-					put(data.field);
-				else
-					post(data.field);
+				saveProject(data,"未提交");
 			  return false;
 			});
+			
+			function saveProject(data,status){
+					data.field.partner=new Array();
+					for(let i=1;i<=4;i++){
+						data.field.partner.push({
+								nameOfPartner:data.field["nameOfPartner"+i],
+								studentIDOfPartner:data.field["studentIDOfPartner"+i],
+								phoneOfPartner:data.field["phoneOfPartner"+i],
+								emailOfPartner:data.field["emailOfPartner"+i],
+								currenteducationOfPartner:data.field["currenteducationOfPartner"+i]
+						});
+					}
+					data.field.status=status;
+					if(projectID){
+						$.ajax({
+								type:"PUT",
+								url: hostIP+"studentProject?studentID="+user.account+"&id="+projectID,
+								dataType:"json",
+								contentType:"application/json", 
+								data:JSON.stringify(data.field),
+								success:function(data){
+									if(data.status){
+										layer.msg("保存成功",{time:2000,icon:6});
+										setTimeout("$('#projectList').trigger('click');",2000);
+									}
+									else{
+										layer.msg("保存失败",{time:1000,icon:5});
+									}
+								},
+						});
+					}
+					else{
+						$.ajax({
+								type:"POST",
+								url: hostIP+"studentProject?studentID="+user.account,
+								dataType:"json",
+								contentType:"application/json", 
+								data:JSON.stringify(data.field),
+								success:function(data){
+									if(data.status){
+										layer.msg("保存成功",{time:2000,icon:6});
+										setTimeout("$('#projectList').trigger('click');",2000);
+									}
+									else{
+										layer.msg("保存失败",{time:1000,icon:5});
+									}
+								}
+						});
+					}
+			}
 		});
-		function post(data){
-			/*$.ajax({
-					type:"POST",
-					url: hostIP+"/studentProject?studentID="+user.account,
-					dataType:"json",
-					contentType:"application/json", 
-					data:data,
-					success:function(data){
-						if(data.status){
-							layer.msg("保存成功",{time:1000,icon:6});
-							//setTimeout("$('#projectList').trigger('click');",2000);
-						}
-						else{
-							layer.msg("保存失败",{time:1000,icon:5});
-						}
-					}
-			});*/
-			$.ajax({
-					type:"GET",
-					url: hostIP+"/studentInfo?studentID="+user.account,
-					dataType:"json",
-					contentType:"application/json",
-					success:function(data){
-							layer.close(index);
-							$("[name='account']").val(data.account);
-							$("[name='name']").val(data.name);
-							$("[name='department']").val(data.department);
-							$("[name='major']").val(data.major);
-							$("[name='inYear']").val(data.inYear);	
-							$("[name='phoneNumber']").val(data.phoneNumber);
-							$("[name='email']").val(data.email);
-					}
-			});
-		}
-		function put(data){
-			$.ajax({
-					type:"PUT",
-					url: hostIP+"/studentProject?studentID="+user.account+"&id="+projectID,
-					dataType:"json",
-					contentType:"application/json", 
-					data:data,
-					success:function(data){
-						if(data.status){
-							layer.msg("保存成功",{time:1000,icon:6});
-							//setTimeout("$('#projectList').trigger('click');",2000);
-						}
-						else{
-							layer.msg("保存失败",{time:1000,icon:5});
-						}
-					}
-			});
-		}
 	</script>
 	<script type="text/html" id="TableBar">
 			<a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
