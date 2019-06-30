@@ -230,7 +230,7 @@
   
   url: "/createCompetition"
   
-  # 8 新建比赛赛程：
+  # 9 查看竞赛列表：
 
   method: GET
 
