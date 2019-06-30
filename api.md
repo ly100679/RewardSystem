@@ -136,4 +136,4 @@
       status:保存是否成功(bool)
     }	
   
-  url: "/studentInfo?studentID=学号(int)"
+  url: "/studentProject?studentID=学号(int)"
