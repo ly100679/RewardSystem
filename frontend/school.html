@@ -66,37 +66,72 @@
 		</ul>
 
 		<div id="buttonBox">
-        <div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
-          
-        </div>
-        <div id="headName" style="height: 20px;width: 100%;text-align: center;">
-          name
-        </div>
-        <div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-
-    		<div class="menu" id="contestList">
-					<div  class="icon buttonIcon">
-		    	<i class="layui-icon layui-icon-username"></i>
+				<div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+				  
+				</div>
+				<div id="headName" style="height: 20px;width: 100%;text-align: center;">
+				  name
+				</div>
+				<div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+		
+					<div class="menu" id="contestList">
+							<div  class="icon buttonIcon">
+						<i class="layui-icon layui-icon-rate"></i>
+							</div>
+							<div class="buttonText">所有赛事</div>
 					</div>
-					<div class="buttonText">所有赛事</div>
-		    </div>
-				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-		    <div class="menu" id="newContest">
-		    	 <div  class="icon buttonIcon">
-		    	 <i class="layui-icon layui-icon-read"></i>
-		    	 </div>
-		    	 <div class="buttonText">新建赛事</div>
-		    </div>
-				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-        
-    </div>
+						<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+					<div class="menu" id="newContest">
+						 <div  class="icon buttonIcon">
+						 <i class="layui-icon layui-icon-add-1"></i>
+						 </div>
+						 <div class="buttonText">新建赛事</div>
+					</div>
+						<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+				
+		</div>
 
     <div id="mainContent" > <!--主页面默认显示所有赛事概况 可以进入赛事详情页 包括赛事信息和参赛作品-->
-	  <div style="height: 500px;width: 100%;">
-		
-      </div>
-    </div>
+	  <div style="height:500px; width:100%;">
+		<div>
+			<table id="contestTable" lay-filter="contestTable"></table>
+        </div>
+	</div>
+	<script type="text/html" id="Bar">
+		<a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	<script>
+		layui.use('table',function(){
+			var table=layui.table;
+			table.render({
+				elem:'#contestTable'
+				,url:''//数据源
+				,cols:[[
+					{field:'competitionName',title:'竞赛名称',width:200}
+					,{field:'startDate',title:'开始日期',width:150}
+					,{fiexd:'right',width:150,align:'center',toolbar:'#Bar'}
+				]]
+			});
+		});
+	</script>
+	<script>
+		table.on('tool(contestTable)',function(obj){
+			var data=obj.data;
+			var layEvent=obj.event;
+			var tr=obj.tr;
 
+			if(layEvent=='detail'){
+				//详情页
+			}else if(layEvent=='del'){
+				layer.confirm('是否确认删除比赛',function(index){
+					obj.del();
+					layer.close(index);
+					    //服务端删除比赛相关数据
+				});
+			}
+		});
+	</script>
 	</body>
 	<script>
       layui.use('element', function(){
