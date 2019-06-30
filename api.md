@@ -123,7 +123,7 @@
   
   url: "/studentInfo?studentID=学号(int)"
   
-  # 6 暂存参赛者个人信息：
+  # 6 新建作品信息：
 
   method: POST
 
@@ -162,3 +162,44 @@
     }	
   
   url: "/studentProject?studentID=学号(int)"
+  
+  # 7 修改作品信息：
+
+  method: PUT
+
+  上传:
+  
+    {
+      nameOfWork:作品名称(string)
+      classificationOfWork:作品类别(0-1)
+      declarationOfWork:作品分类（A-F）
+      overallDescriptionOfWork:作品总体情况说明(string)
+      innovationPoint:创新点(string)
+      keyWord:关键词(string)
+      name:姓名(string)
+      StudentID:学号(int)
+      dateOfBirth:出生年月(yyyy-mm-dd)
+      major:专业(string)
+      inYear:入学年份(int)
+      fullNameOfwork:作品全称(string)
+      postalAddress:通讯地址(string)
+      phoneNumber:联系电话(int)
+      email:邮箱(string)
+      currentEducation:现学历(0-3)
+      partner:[{
+        nameOfPartner:姓名(string)
+        studentIDOfPartner:学号(int)
+        phoneOfPartner:联系电话(int)
+        emailOfPartner:邮箱(string)
+        currenteducationOfPartner:现学历(0-3)
+      },..]
+    }	
+  
+  接收:
+   
+    {
+      status:修改是否成功(bool)
+    }	
+  
+  url: "/studentProject?id=作品id(int)"
+
