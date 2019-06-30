@@ -177,3 +177,21 @@ def project(request):
 			}
 			resp.append(tem)
 		return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def student(request):
+	if request.method == 'GET':
+		student_id = request.GET.get('studentID')
+		try:
+			student = Student.objects.get(student_id=student_id)
+			resp = {
+				'account': student_id,
+				'name': student.name,
+				'department': student.school.name,
+				'major': student.major.name,
+				'inYear': student.enroll_year,
+				'phoneNumber': student.tel,
+				'email': student.email
+			}
+			return HttpResponse(json.dumps(resp), content_type='application/json')
+		except:
+			return HttpResponse(json.dumps({}), content_type='application/json')
