@@ -59,3 +59,17 @@
     },...]	
   
   url: "/studentProjectList?studentID=学号(int)"
+  
+  # 在作品列表中删除作品：
+
+  method: GET
+
+  上传:无
+  
+  接收:
+  
+    {
+      status:删除是否成功(bool)
+    }	
+  
+  url: "/studentProjectListDelete?projectID=作品代码(string)"
