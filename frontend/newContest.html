@@ -1,0 +1,208 @@
+<!DOCTYPE >
+<html>
+	<head>
+		<script src="./layui/layui.js"></script>
+		<link href="./layui/css/layui.css"  rel="stylesheet"/>
+		
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		
+		<style>
+			#buttonBox{
+				float:left;
+				width:15%;
+				height:80%;
+				margin:10px;
+				border:solid 1px #ccc;
+				background:#00a997;
+				border-radius:5px;
+				margin-right: 0;
+			}
+			.menu{
+				height: 20%;
+				color:#2c3e50;
+				overflow: hidden;
+				padding: 0 10px;
+				z-index:1;
+			}
+			.menu:hover{
+				background:#5fb878;
+				cursor:pointer;
+				color:#ffffff;
+			}
+      #mainContent{
+        height: 85%;
+        width: 81%;
+        margin: 10px 20px 20px 0;
+        border:solid 1px #ccc;
+        background:white;
+        border-radius:5px;
+        float: right;
+      }
+			.icon{
+				border-radius: 100px; 
+				margin:auto;
+			}
+			.buttonIcon{
+				height: 60%;
+				margin-top:5px;
+				text-align: center;
+			}
+			.buttonText{
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: #eeeeee;">
+		<ul class="layui-nav layui-bg-green">
+			<li class="layui-nav-item layui-this"><a href="">主页</a></li>
+      <li class="layui-nav-item layui-this layui-layout-right id=acc-info" style="margin-right:20px;">
+        <a href="">解决方案</a>
+        <dl class="layui-nav-child"> <!-- 二级菜单 -->
+          <dd><a href="" >个人信息</a></dd>
+          <dd><a href="" >登出</a></dd>
+        </dl>
+      </li>
+		</ul>
+
+		<div id="buttonBox">
+        <div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+          
+        </div>
+        <div id="headName" style="height: 20px;width: 100%;text-align: center;">
+          name
+        </div>
+        <div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+
+    		<div class="menu" id="contestList">
+					<div  class="icon buttonIcon">
+		    	<i class="layui-icon layui-icon-rate"></i>
+					</div>
+					<div class="buttonText">所有赛事</div>
+		    </div>
+				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+		    <div class="menu" id="newContest">
+		    	 <div  class="icon buttonIcon">
+		    	 <i class="layui-icon layui-icon-add-1"></i>
+		    	 </div>
+		    	 <div class="buttonText">新建赛事</div>
+		    </div>
+				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
+        
+    </div>
+
+    <div id="mainContent" > 
+      <div style="height: 500px;width: 100%;">
+
+        <form class="layui-form">
+        <div class="layui-row">
+        <div class="layui-col-md5">
+            <div style="height:3%"></div>
+
+            <div class="layui-form-item">
+            <label class="layui-form-label">赛事名称</label>
+            <div class="layui-input-inline style="width: 60%;"> 
+                <input type="text" class="layui-input" name="title" autocomplete="off">
+            </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">赛事简称</label>
+                <div class="layui-input-inline style="width: 60%;"> 
+                    <input type="text" class="layui-input" name="title" autocomplete="off">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline style="width: 60%;"> 
+                <input type="text" class="layui-input time" name="startDate" autocomplete="off">
+            </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">提交截至</label>
+                <div class="layui-input-inline style="width: 60%;"> 
+                    <input type="text" class="layui-input time" name="submitDDL" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+              <label class="layui-form-label">初审截至</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="checkDDL" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">评审截至</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="reviewDDL" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">结果公布</label>
+              <div class="layui-input-inline style="width: 60%;"> 
+                  <input type="text" class="layui-input time" name="endDate" autocomplete="off">
+              </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">赛事描述</label>
+                <div class="layui-input-inline style="width: 60%;"> 
+                    <textarea class="layui-input" name="description" autocomplete="off" style="width:300px;height:100px"></textarea>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="layui-row">
+				<div class="layui-col-md2 layui-col-md-offset1">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="newContest" style="width:100%">保存</button>
+				</div>
+		</div>
+        </form>
+      </div>
+    </div>
+    <script>
+      layui.use('laydate',function(){
+            var laydate=layui.laydate;
+            lay('.time').each(function(){
+              laydate.render({
+                elem:this
+                ,format:'yyyy/M/d'
+              });
+            });
+      });
+    </script>
+	</body>
+	<script>
+      layui.use('element', function(){
+        var element = layui.element;
+
+      });
+			$("#headPhoto").height($("#headPhoto").width());
+			$(".buttonIcon").width($(".buttonIcon").height());
+			$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
+			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
+			var user=JSON.parse(sessionStorage.getItem("user"));
+			console.log(user);
+    </script>
+    <script>
+            $("#newContest").click(function(){
+                window.location.href="newContest.html";
+            });
+            $("#contestList").click(function(){
+                window.location.href="school.html";
+            });
+    </script>
+    <script>
+        layui.use('form',function(){
+            var form=layui.form;
+            form.on('submit(newContest)',function(data){
+                //缺少对表单的检查及提交
+            });
+        });
+    </script>
+</html>

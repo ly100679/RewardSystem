@@ -59,10 +59,35 @@
         projectName:作品名(string),
         projectID:作品代码(string),
         projectPeriod:作品所处阶段(string)
+        nameOfWork:作品名称(string)
+        classificationOfWork:作品类别(0-1)
+        declarationOfWork:作品分类（A-F）
+        overallDescriptionOfWork:作品总体情况说明(string)
+        innovationPoint:创新点(string)
+        keyWord:关键词(string)
+        name:姓名(string)
+        StudentID:学号(int)
+        dateOfBirth:出生年月(yyyy-mm-dd)
+        major:专业(string)
+        inYear:入学年份(int)
+        fullNameOfwork:作品全称(string)
+        postalAddress:通讯地址(string)
+        phoneNumber:联系电话(int)
+        email:邮箱(string)
+        currentEducation:现学历(0-3)
+        partner:[{
+          nameOfPartner:姓名(string)
+          studentIDOfPartner:学号(int)
+          phoneOfPartner:联系电话(int)
+          emailOfPartner:邮箱(string)
+          currenteducationOfPartner:现学历(0-3)
+        },..]
       },...](只传当前竞赛的作品)
+      
+      
     }	
   
-  url: "/studentProject?studentID=学号(int)"
+  url: "/studentProject?studentID=学号(int)&id=作品id(int)"
   
   # 4 在作品列表中删除作品：
 
@@ -97,3 +122,132 @@
     }	
   
   url: "/studentInfo?studentID=学号(int)"
+  
+  # 6 新建页保存or提交作品信息：
+
+  method: POST
+
+  上传:
+  
+    {
+      status:作品状态(string)
+      nameOfWork:作品名称(string)
+      classificationOfWork:作品类别(0-1)
+      declarationOfWork:作品分类（A-F）
+      overallDescriptionOfWork:作品总体情况说明(string)
+      innovationPoint:创新点(string)
+      keyWord:关键词(string)
+      name:姓名(string)
+      StudentID:学号(int)
+      dateOfBirth:出生年月(yyyy-mm-dd)
+      major:专业(string)
+      inYear:入学年份(int)
+      fullNameOfwork:作品全称(string)
+      postalAddress:通讯地址(string)
+      phoneNumber:联系电话(int)
+      email:邮箱(string)
+      currentEducation:现学历(0-3)
+      partner:[{
+        nameOfPartner:姓名(string)
+        studentIDOfPartner:学号(int)
+        phoneOfPartner:联系电话(int)
+        emailOfPartner:邮箱(string)
+        currenteducationOfPartner:现学历(0-3)
+      },..]
+    }	
+  
+  接收:
+   
+    {
+      status:操作是否成功(bool)
+    }	
+  
+  url: "/studentProject?studentID=学号(int)"
+  
+  # 7 修改页保存or提交作品信息：
+
+  method: PUT
+
+  上传:
+  
+    {
+      status:作品状态(string)
+      nameOfWork:作品名称(string)
+      classificationOfWork:作品类别(0-1)
+      declarationOfWork:作品分类（A-F）
+      overallDescriptionOfWork:作品总体情况说明(string)
+      innovationPoint:创新点(string)
+      keyWord:关键词(string)
+      name:姓名(string)
+      StudentID:学号(int)
+      dateOfBirth:出生年月(yyyy-mm-dd)
+      major:专业(string)
+      inYear:入学年份(int)
+      fullNameOfwork:作品全称(string)
+      postalAddress:通讯地址(string)
+      phoneNumber:联系电话(int)
+      email:邮箱(string)
+      currentEducation:现学历(0-3)
+      partner:[{
+        nameOfPartner:姓名(string)
+        studentIDOfPartner:学号(int)
+        phoneOfPartner:联系电话(int)
+        emailOfPartner:邮箱(string)
+        currenteducationOfPartner:现学历(0-3)
+      },..]
+    }	
+  
+  接收:
+   
+    {
+      status:操作是否成功(bool)
+    }	
+  
+  url: "/studentProject?id=作品id(int)"
+
+  # 8 新建比赛赛程：
+
+  method: POST
+
+  上传:
+  
+    {
+      competitionName:赛事名称(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+    }	
+  
+  接收:
+   
+    {
+      status:操作是否成功(bool)
+    }	
+  
+  url: "/competition"
+  
+  # 9 查看竞赛列表：
+
+  method: GET
+
+  上传:无
+  
+  接收:
+   
+    {
+      id:竞赛id(int)
+      competitionName:赛事名称(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+    }	
+  
+  url: "/competition"
