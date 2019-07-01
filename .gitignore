@@ -1,2 +1,7 @@
 *.pyc
 db.json
+*.png
+*.mp3
+*.mp4
+*.pdf
+*.jpg
