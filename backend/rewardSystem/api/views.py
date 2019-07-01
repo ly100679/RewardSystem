@@ -368,11 +368,17 @@ def competition(request):
 
 def getFileInfoJson(path, filetype):
 	filename = re.sub('proje\S*?name', '', path)
+	full_path = PROJECTDIR + path
+	try:
+		datasize = os.path.getsize(full_path)
+		datasize = (float)datasize / 1024
+	except expression as identifier:
+		datasize = 0
 	return {
 		'filename': filename,
 		'path': path,
 		'type': filetype,
-		'datasize': 0
+		'datasize': datasize
 	}
 
 def projectFile(request):
