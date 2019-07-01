@@ -427,7 +427,7 @@ def projectFile(request):
 				os.remove(file_name)
 			else:
 				return HttpResponse(json.dumps({'code': False, 'file_full_path': file_name}), content_type='application/json')
-			return HttpResponse(json.dumps({'code': True}), content_type='application/json')
+			return HttpResponse(json.dumps({'code': True, 'file_full_path': file_name}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
 	if request.method == 'GET':
