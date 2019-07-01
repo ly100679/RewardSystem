@@ -541,8 +541,11 @@ def submitfile(request):
 		email4=data['email4'],
 	)
 	form_path = 'submit_file/%sform1.docx' % str(project.id)
-	document.write(form_path)
 	form_full_path = PROJECTDIR + form_path
+	if platform.system() == 'Windows':
+		document.write(form_path)
+	else:
+		document.write(form_full_path)
 	if platform.system() != 'Windows':
 		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file aa.docx')
 		form_path = 'submit_file/%sform1.pdf' % str(project.id)
