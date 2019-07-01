@@ -3,7 +3,7 @@
 	<head>
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
-		
+		<script src="./host.js"></script>
 		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 		
 		<style>
@@ -39,7 +39,7 @@
         float: right;
       }
 			.icon{
-				border-radius: 100px; 
+				border-radius: 200px; 
 				margin:auto;
 			}
 			.buttonIcon{
@@ -50,6 +50,10 @@
 			.buttonText{
 				text-align: center;
 			}
+			.layui-table-body{overflow-x: hidden;}
+			#username:hover{
+				cursor:pointer
+			}
 		</style>
 	</head>
 
@@ -57,7 +61,7 @@
 		<ul class="layui-nav layui-bg-green">
 			<li class="layui-nav-item layui-this"><a href="">主页</a></li>
       <li class="layui-nav-item layui-this layui-layout-right id=acc-info" style="margin-right:20px;">
-        <a href="">解决方案</a>
+        <a id="userName" >解决方案</a>
         <dl class="layui-nav-child"> <!-- 二级菜单 -->
           <dd><a href="" >个人信息</a></dd>
           <dd><a href="" >登出</a></dd>
@@ -66,10 +70,10 @@
 		</ul>
 
 		<div id="buttonBox">
-				<div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+				<div id="headPhoto" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
 				  
 				</div>
-				<div id="headName" style="height: 20px;width: 100%;text-align: center;">
+				<div id="headName" style="font-size: 30px;width: 100%;text-align: center;margin: 10px 0;">
 				  name
 				</div>
 				<div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
@@ -92,65 +96,76 @@
 		</div>
 
     <div id="mainContent" > <!--主页面默认显示所有赛事概况 可以进入赛事详情页 包括赛事信息和参赛作品-->
-	  <div style="height:500px; width:100%;">
-		<div>
+		<div id="contestListBox"  style="display: none; margin:20px;position: relative;top: 5%;">
+			<h1 style="text-align: center;">竞赛列表</h1>
 			<table id="contestTable" lay-filter="contestTable"></table>
-        </div>
+		</div>
 	</div>
+	
+	</body>
 	<script type="text/html" id="Bar">
 		<a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
-		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		<!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 	</script>
 	<script>
 		layui.use('table',function(){
 			var table=layui.table;
-			table.render({
-				elem:'#contestTable'
-				,url:''//数据源
-				,cols:[[
-					{field:'competitionName',title:'竞赛名称',width:200}
-					,{field:'startDate',title:'开始日期',width:150}
-					,{fiexd:'right',width:150,align:'center',toolbar:'#Bar'}
-				]]
+			$.ajax({
+				type:"GET",
+				url: hostIP+"competition",
+				dataType:"json",
+				contentType:"application/json", 
+				success:function(data){
+					table.render({
+						elem:'#contestTable',
+						data:data,
+						cols:[[
+							{field:'competitionName',title:'竞赛名称'},
+							{field:'acronym',title:'赛事简称',width:150},
+							{field:'startDate',title:'开始日期',width:150,sort:true},
+							{field:'description',title:'赛事描述'},
+							{width:150,title:'操作',toolbar:'#Bar',align:'center'}
+						]],
+						page:true
+					});
+				}
+			});
+			
+			table.on('tool(contestTable)',function(obj){
+				var data=obj.data;
+				var layEvent=obj.event;
+				var tr=obj.tr;
+			
+				if(layEvent=='detail'){
+					console.log(data);
+					sessionStorage.setItem("contest",JSON.stringify(data));
+					window.location.href="newContest.html";
+				}else if(layEvent=='del'){
+					layer.confirm('是否确认删除比赛',function(index){
+						obj.del();
+						layer.close(index);
+						    //服务端删除比赛相关数据
+					});
+				}
 			});
 		});
-	</script>
-	<script>
-		table.on('tool(contestTable)',function(obj){
-			var data=obj.data;
-			var layEvent=obj.event;
-			var tr=obj.tr;
+		layui.use('element', function(){
+			var element = layui.element;
 
-			if(layEvent=='detail'){
-				//详情页
-			}else if(layEvent=='del'){
-				layer.confirm('是否确认删除比赛',function(index){
-					obj.del();
-					layer.close(index);
-					    //服务端删除比赛相关数据
-				});
-			}
 		});
-	</script>
-	</body>
-	<script>
-      layui.use('element', function(){
-        var element = layui.element;
-
-      });
-			$("#headPhoto").height($("#headPhoto").width());
-			$(".buttonIcon").width($(".buttonIcon").height());
-			$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
-			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
-			var user=JSON.parse(sessionStorage.getItem("user"));
-			console.log(user);
-	</script>
-	<script>
+		$("#headPhoto").height($("#headPhoto").width());
+		$(".buttonIcon").width($(".buttonIcon").height());
+		$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
+		$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
+		var user=JSON.parse(sessionStorage.getItem("user"));
+		$("#headName").html(user.account);
+		$("#userName").html(user.account);
 		$("#newContest").click(function(){
+			sessionStorage.setItem("contest",JSON.stringify({}));
 			window.location.href="newContest.html";
 		});
 		$("#contestList").click(function(){
-			window.location.href="school.html";
+			$("#contestListBox").css("display","block");
 		});
 	</script>
 </html>

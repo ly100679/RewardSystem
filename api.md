@@ -159,7 +159,8 @@
   接收:
    
     {
-      status:操作是否成功(bool)
+      status:操作是否成功(bool),
+      id:作品id(int)，
     }	
   
   url: "/studentProject?studentID=学号(int)"
@@ -252,7 +253,7 @@
   
   url: "/competition"
   
-   # 9 测试上传文件：
+   # 9 上传文件：
 
   method: POST
 
@@ -268,4 +269,22 @@
       "code": 上传是否成功(bool)
     }	
   
-  url: "/file"
+  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
+  
+   # 10 删除文件：
+
+  method: DELETE
+
+  上传:
+  
+    {
+      filename:文件名(string)
+    }
+  
+  接收:
+   
+    {
+      "code": 删除是否成功(bool)
+    }	
+  
+  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
