@@ -4,6 +4,7 @@
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
 		
+		<script src="./host.js"></script>
 		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 		
 		<style>
@@ -39,7 +40,7 @@
         float: right;
       }
 			.icon{
-				border-radius: 100px; 
+				border-radius: 200px; 
 				margin:auto;
 			}
 			.buttonIcon{
@@ -50,6 +51,9 @@
 			.buttonText{
 				text-align: center;
 			}
+			#userName:hover{
+				cursor:pointer
+			}
 		</style>
 	</head>
 
@@ -57,7 +61,7 @@
 		<ul class="layui-nav layui-bg-green">
 			<li class="layui-nav-item layui-this"><a href="">主页</a></li>
       <li class="layui-nav-item layui-this layui-layout-right id=acc-info" style="margin-right:20px;">
-        <a href="">解决方案</a>
+        <a id="userName">解决方案</a>
         <dl class="layui-nav-child"> <!-- 二级菜单 -->
           <dd><a href="" >个人信息</a></dd>
           <dd><a href="" >登出</a></dd>
@@ -66,26 +70,26 @@
 		</ul>
 
 		<div id="buttonBox">
-        <div id="headPhoto" class="icon" style="width: 80%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+        <div id="headPhoto" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
           
         </div>
-        <div id="headName" style="height: 20px;width: 100%;text-align: center;">
+        <div id="headName" style="font-size: 30px;width: 100%;text-align: center;margin: 10px 0;">
           name
         </div>
         <div style="height: 0.5px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
 
-    		<div class="menu" id="contestList">
+    		<div class="menu" id="contestInfo">
 					<div  class="icon buttonIcon">
 		    	<i class="layui-icon layui-icon-rate"></i>
 					</div>
-					<div class="buttonText">所有赛事</div>
+					<div class="buttonText">竞赛详情</div>
 		    </div>
 				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
-		    <div class="menu" id="newContest">
+		    <div class="menu" id="projectList">
 		    	 <div  class="icon buttonIcon">
-		    	 <i class="layui-icon layui-icon-add-1"></i>
+		    	 <i class="layui-icon layui-icon-read"></i>
 		    	 </div>
-		    	 <div class="buttonText">新建赛事</div>
+		    	 <div class="buttonText">作品列表</div>
 		    </div>
 				<div style="height: 2px;width:80%;background: #eeeeee;text-align: center;margin:0 auto;"></div>
         
@@ -94,7 +98,7 @@
     <div id="mainContent" > 
       <div style="height: 500px;width: 100%;">
 
-        <form class="layui-form">
+        <form class="layui-form" lay-filter="contestInfo">
         <div class="layui-row">
         <div class="layui-col-md5">
             <div style="height:3%"></div>
@@ -178,26 +182,27 @@
     </script>
 	</body>
 	<script>
-      layui.use('element', function(){
-        var element = layui.element;
+		layui.use('element', function(){
+			var element = layui.element;
 
-      });
-			$("#headPhoto").height($("#headPhoto").width());
-			$(".buttonIcon").width($(".buttonIcon").height());
-			$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
-			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
-			var user=JSON.parse(sessionStorage.getItem("user"));
-			console.log(user);
-    </script>
-    <script>
-            $("#newContest").click(function(){
-                window.location.href="newContest.html";
-            });
-            $("#contestList").click(function(){
-                window.location.href="school.html";
-            });
-    </script>
-    <script>
+		});
+		$("#headPhoto").height($("#headPhoto").width());
+		$(".buttonIcon").width($(".buttonIcon").height());
+		$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
+		$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
+		var contest=JSON.parse(sessionStorage.getItem("contest"));
+		if(contest.competitionName)
+			$("#headName").html(contest.competitionName);
+		else
+			$("#headName").html("no name");
+		var user=JSON.parse(sessionStorage.getItem("user"));
+		$("#userName").html(user.account);
+        $("#newContest").click(function(){
+            window.location.href="newContest.html";
+        });
+        $("#contestList").click(function(){
+            window.location.href="school.html";
+        });
         layui.use(['form','laydate'], function(){
             var form = layui.form;
             var laydate=layui.laydate;
@@ -218,9 +223,35 @@
             });
             //监听提交
             form.on('submit(newContest)', function(data){
-                layer.msg(JSON.stringify(data.field));
-                return false;
+				//console.log(JSON.stringify(data));
+				$.ajax({
+					type:"POST",
+					url: hostIP+"competition",
+					dataType:"json",
+					contentType:"application/json", // 指定这个协议很重要
+					data:JSON.stringify(data.field), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					success:function(data){
+						if(data.status){
+							layer.msg("创建成功",{time:2000,icon:6});
+							setTimeout("location.href='school.html';",2000);
+						}
+						else{
+								layer.msg("创建失败",{time:1000,icon:5});
+						}
+					}
+				});
+				return false;
             });
+			form.val('contestInfo',{
+				"competitionName":contest.competitionName,
+				"acronym":contest.acronym,
+				"startDate":contest.startDate,
+				"submitDDL":contest.submitDDL,
+				"checkDDL":contest.checkDDL,
+				"reviewDDL":contest.reviewDDL,
+				"endDate":contest.endDate,
+				"description":contest.description,
+			})
         });
     </script>
 </html>

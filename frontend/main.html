@@ -59,6 +59,9 @@
 			.layui-input-block{
 				margin-left: 140px;
 			}
+			#userName:hover{
+				cursor:pointer
+			}
 		</style>
 	</head>
 
@@ -66,7 +69,7 @@
 		<ul class="layui-nav layui-bg-green">
 			<li class="layui-nav-item layui-this"><a href="">主页</a></li>
       <li class="layui-nav-item layui-this layui-layout-right id=acc-info" style="margin-right:20px;">
-        <a href="">解决方案</a>
+        <a id="userName">解决方案</a>
         <dl class="layui-nav-child"> <!-- 二级菜单 -->
           <dd><a href="" >个人信息</a></dd>
           <dd><a href="" >登出</a></dd>
@@ -477,6 +480,10 @@
 	</body>
 	<script>
 		var projectID;
+		
+		var user=JSON.parse(sessionStorage.getItem("user"));
+		$("#headName").html(user.account);
+		$("#userName").html(user.account);
     layui.use(['element','form','table','laydate'], function(){
       var element = layui.element;
 
@@ -484,8 +491,6 @@
 			$(".buttonIcon").width($(".buttonIcon").height());
 			$(".bigIcon").css("font-size",$(".buttonIcon").height()*0.7);
 			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
-			var user=JSON.parse(sessionStorage.getItem("user"));
-			$("#headName").html(user.account);
 			
 			var index = layer.load(1, {
 				shade: [0.1,'#fff'] //0.1透明度的白色背景

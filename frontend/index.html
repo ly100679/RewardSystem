@@ -79,9 +79,10 @@
 			form.on('submit(login)', function(data){
 				//layer.msg(JSON.stringify(data.field));
 				var user={account:data.field.account};
+				var enter=data.field.identity;
 				$.ajax({
 					type:"POST",
-					url: hostIP+"login/"+data.field.identity,
+					url: hostIP+"login/"+enter,
 					dataType:"json",
 					contentType:"application/json", // 指定这个协议很重要
 					data:JSON.stringify(data.field), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
@@ -89,7 +90,10 @@
 						if(data.status){
 							layer.msg("登录成功",{time:1000,icon:6});
 							sessionStorage.setItem("user",JSON.stringify(user));
-							window.location.href="main.html";
+							if(enter=="student")
+								window.location.href="main.html";
+							else
+								window.location.href=enter+".html";
 						}
 						else{
 							if(data.errorCode==undefined)
