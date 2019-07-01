@@ -251,3 +251,21 @@
     }	
   
   url: "/competition"
+  
+   # 9 测试上传文件：
+
+  method: POST
+
+  上传:
+  
+    {
+    
+    }
+  
+  接收:
+   
+    {
+      "code": 上传是否成功(bool)
+    }	
+  
+  url: "/file"
