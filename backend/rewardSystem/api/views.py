@@ -9,6 +9,7 @@ from rewardSystem.settings import PROJECTDIR
 import os
 import re
 from mailmerge import MailMerge
+import platform
 
 #unfinish
 
@@ -539,5 +540,10 @@ def submitfile(request):
 		email3=data['email3'],
 		email4=data['email4'],
 	)
-	document.write('submit_file/form1.docx')
-	return HttpResponse(json.dumps({}), content_type='application/json')
+	form_path = 'submit_file/%sform1.docx' % str(project.id)
+	document.write(form_path)
+	form_full_path = PROJECTDIR + form_path
+	if platform.system() != 'Windows':
+		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file aa.docx')
+		form_path = 'submit_file/%sform1.pdf' % str(project.id)
+	return HttpResponse(json.dumps({'path': form_path}), content_type='application/json')
