@@ -243,12 +243,13 @@ def project(request):
 		# add coauthor info
 		setProjectCoAuthorInfo(project, body)
 		# if project submit
-		if body['status'] != '未提交':
-			formal_project = FormalProject()
-			formal_project.project = project
-			formal_project.save()
-		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+		# if body['status'] != '未提交':
+		# 	formal_project = FormalProject()
+		# 	formal_project.project = project
+		# 	formal_project.save()
+		return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
 	if request.method == 'PUT':
+		body = json.loads(request.body)
 		# if at least one competition
 		try:
 			competition = Competition.objects.order_by('-start')[0]
@@ -259,21 +260,23 @@ def project(request):
 			project = Project.objects.get(pk=request.GET.get('id'))
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
-		body = json.loads(request.body)
-		student = project.author
-		setProjectAuthorInfo(student, body)
-		setProjectInfo(project, body, student, competition)
-		# remove all coauthor first
-		co_authors = CoAuthor.objects.filter(project=project)
-		for co_author in co_authors:
-			co_author.delete()
-		# add coauthor
-		setProjectCoAuthorInfo(project, body)
 		# if project submit
 		if body['status'] != '未提交':
+			project.status = body['status']
+			project.save()
 			formal_project = FormalProject()
 			formal_project.project = project
 			formal_project.save()
+		else:
+			student = project.author
+			setProjectAuthorInfo(student, body)
+			setProjectInfo(project, body, student, competition)
+			# remove all coauthor first
+			co_authors = CoAuthor.objects.filter(project=project)
+			for co_author in co_authors:
+				co_author.delete()
+			# add coauthor
+			setProjectCoAuthorInfo(project, body)
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def setProjectAuthorInfo(student, body):
@@ -362,6 +365,14 @@ def competition(request):
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 
+def getFileInfoJson(path, filetype):
+	return {
+		'filename': '233',
+		'path': path,
+		'type': filetype,
+		'datasize': 0
+	}
+
 def projectFile(request):
 	if request.method == 'POST':
 		project_id = request.GET.get('projectID')
@@ -387,37 +398,45 @@ def projectFile(request):
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
 	if request.method == 'DELETE':
-		try:
-			file_type = int(request.GET.get('type'))
-			prefix = 'project_img'
-			if file_type == 1:
-				prefix = 'project_file'
-			elif file_type == 2:
-				prefix = 'project_video'
-			body = json.loads(request.body)
-			file_name = body['filename']
-			project_id = request.GET.get('projectID')
-			project = Project.objects.get(pk=project_id)
-			file_name = '%s/proj%sname%s' % (prefix, str(project.id), file_name)
-			if file_type == 0:
-				img = ProjectImg.objects.get(img=file_name)
-				img.delete()
-			elif file_type == 1:
-				pfile = ProjectFile.objects.get(pdf=file_name)
-				pfile.delete()
-			elif file_type == 2:
-				project.video = None
-				project.save()
-			# delete file from project folder
-			file_name = PROJECTDIR + file_name
-			# if os.path.exists(file_name):
-    		# 	os.remove(file_name)
-			# else:
-    		# 	return HttpResponse(json.dumps({'code': 'noooooo'}), content_type='application/json')
-			if os.path.exists(file_name):
-				os.remove(file_name)
-			else:
-				return HttpResponse(json.dumps({'code': False, 'file_full_path': file_name}), content_type='application/json')
-			return HttpResponse(json.dumps({'code': True}), content_type='application/json')
-		except:
-			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+		# try:
+		file_type = int(request.GET.get('type'))
+		prefix = 'project_img'
+		if file_type == 1:
+			prefix = 'project_file'
+		elif file_type == 2:
+			prefix = 'project_video'
+		body = json.loads(request.body)
+		file_name = body['filename']
+		project_id = request.GET.get('projectID')
+		project = Project.objects.get(pk=project_id)
+		file_name = '%s/proj%sname%s' % (prefix, str(project.id), file_name)
+		if file_type == 0:
+			img = ProjectImg.objects.get(img=file_name)
+			img.delete()
+		elif file_type == 1:
+			pfile = ProjectFile.objects.get(pdf=file_name)
+			pfile.delete()
+		elif file_type == 2:
+			project.video = None
+			project.save()
+		# delete file from project folder
+		file_name = PROJECTDIR + file_name
+		# if os.path.exists(file_name):
+		# 	os.remove(file_name)
+		# else:
+		# 	return HttpResponse(json.dumps({'code': 'noooooo'}), content_type='application/json')
+		if os.path.exists(file_name):
+			os.remove(file_name)
+		else:
+			return HttpResponse(json.dumps({'code': False, 'file_full_path': file_name}), content_type='application/json')
+		return HttpResponse(json.dumps({'code': True}), content_type='application/json')
+		# except:
+		# 	return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+	if request.method == 'GET':
+		project = Project.objects.get(pk=int(request.GET.get('projectID')))
+		resp = {
+			'files': []
+		}
+		if project.video is not None:
+			resp['files'].append(getFileInfoJson(project.video.name, 2))
+		return HttpResponse(json.dumps(resp), content_type='application/json')
