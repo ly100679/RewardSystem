@@ -359,3 +359,14 @@ def competition(request):
 			return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+
+def test(request):
+	if request.method == 'POST':
+		try:
+			tem_file = request.FILES.get('file')
+			p = Project.objects.all()[0]
+			p.video = tem_file
+			p.save()
+			return HttpResponse(json.dumps({'code': True, 'name': tem_file.name}), content_type='application/json')
+		except:
+			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
