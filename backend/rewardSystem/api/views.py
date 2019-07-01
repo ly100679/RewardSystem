@@ -547,6 +547,6 @@ def submitfile(request):
 	else:
 		document.write(form_full_path)
 	if platform.system() != 'Windows':
-		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file aa.docx')
+		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file %s' % (form_full_path))
 		form_path = 'submit_file/%sform1.pdf' % str(project.id)
 	return HttpResponse(json.dumps({'path': form_path}), content_type='application/json')
