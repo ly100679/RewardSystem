@@ -448,5 +448,5 @@ def projectFile(request):
 			resp['files'].append(getFileInfoJson(img.img.name, 0))
 		files = ProjectFile.objects.filter(project=project)
 		for pfile in files:
-			resp['files'].append(pfile.pdf.name, 1)
+			resp['files'].append(getFileInfoJson(pfile.pdf.name, 1))
 		return HttpResponse(json.dumps(resp), content_type='application/json')
