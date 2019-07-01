@@ -159,9 +159,8 @@
   接收:
    
     {
-      code:操作是否成功(bool),
+      status:操作是否成功(bool),
       id:作品id(int)，
-      status:作品状态(string)
     }	
   
   url: "/studentProject?studentID=学号(int)"
@@ -202,8 +201,7 @@
   接收:
    
     {
-      code:操作是否成功(bool),
-      status:作品状态(string)
+      status:操作是否成功(bool)
     }	
   
   url: "/studentProject?id=作品id(int)"
@@ -271,7 +269,7 @@
       "code": 上传是否成功(bool)
     }	
   
-  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 3(音频)
+  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
   
    # 10 删除文件：
 
@@ -280,7 +278,7 @@
   上传:
   
     {
-    
+      filename:文件名(string)
     }
   
   接收:
@@ -289,4 +287,4 @@
       "code": 删除是否成功(bool)
     }	
   
-  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 3(音频)
+  url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
