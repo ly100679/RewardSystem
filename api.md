@@ -288,3 +288,22 @@
     }	
   
   url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
+  
+   # 11 获取文件：
+
+  method: DELETE
+
+  上传:无
+  
+  接收:
+   
+    {
+      files:[{
+        filename:文件名(string),
+        path:存储地址(string),
+        type:文件类型(0-2）,
+        datasize:文件大小(double)
+      },...]
+    }	
+  
+  url: "/file?projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
