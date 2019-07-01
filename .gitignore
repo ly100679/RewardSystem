@@ -1,3 +1,5 @@
 *.pyc
 db.json
 project_video
+project_img
+project_file

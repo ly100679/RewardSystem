@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from .models import *
 import json
 from datetime import datetime
+from rewardSystem.settings import PROJECTDIR
+import os
 
 #unfinish
 
@@ -360,13 +362,62 @@ def competition(request):
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 
-def test(request):
+def projectFile(request):
 	if request.method == 'POST':
+		project_id = request.GET.get('projectID')
+		file_type = int(request.GET.get('type'))
 		try:
-			tem_file = request.FILES.get('file')
-			p = Project.objects.all()[0]
-			p.video = tem_file
-			p.save()
-			return HttpResponse(json.dumps({'code': True, 'name': tem_file.name}), content_type='application/json')
+			project = Project.objects.get(pk=project_id)
+			project_file = request.FILES.get('file')
+			project_file.name = 'proj%sname%s' % (str(project.id), project_file.name)
+			if file_type == 0:
+				img = ProjectImg()
+				img.project = project
+				img.img = project_file
+				img.save()
+			elif file_type == 1:
+				pfile = ProjectFile()
+				pfile.project = project
+				pfile.pdf = project_file
+				pfile.save()
+			elif file_type == 2:
+				project.video = project_file
+				project.save()
+			return HttpResponse(json.dumps({'code': True, 'name': project_file.name}), content_type='application/json')
+		except:
+			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+	if request.method == 'DELETE':
+		try:
+			file_type = int(request.GET.get('type'))
+			prefix = 'project_img'
+			if file_type == 1:
+				prefix = 'project_file'
+			elif file_type == 2:
+				prefix = 'project_video'
+			body = json.loads(request.body)
+			file_name = body['filename']
+			project_id = request.GET.get('projectID')
+			project = Project.objects.get(pk=project_id)
+			file_name = '%s/proj%sname%s' % (prefix, str(project.id), file_name)
+			if file_type == 0:
+				img = ProjectImg.objects.get(img=file_name)
+				img.delete()
+			elif file_type == 1:
+				pfile = ProjectFile.objects.get(pdf=file_name)
+				pfile.delete()
+			elif file_type == 2:
+				project.video = None
+				project.save()
+			# delete file from project folder
+			file_name = PROJECTDIR + file_name
+			# if os.path.exists(file_name):
+    		# 	os.remove(file_name)
+			# else:
+    		# 	return HttpResponse(json.dumps({'code': 'noooooo'}), content_type='application/json')
+			if os.path.exists(file_name):
+				os.remove(file_name)
+			else:
+				return HttpResponse(json.dumps({'code': False, 'file_full_path': file_name}), content_type='application/json')
+			return HttpResponse(json.dumps({'code': True}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
