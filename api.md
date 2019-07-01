@@ -159,8 +159,9 @@
   接收:
    
     {
-      status:操作是否成功(bool),
-      id:作品id(int)
+      code:操作是否成功(bool),
+      id:作品id(int)，
+      status:作品状态(string)
     }	
   
   url: "/studentProject?studentID=学号(int)"
@@ -201,7 +202,8 @@
   接收:
    
     {
-      status:操作是否成功(bool)
+      code:操作是否成功(bool),
+      status:作品状态(string)
     }	
   
   url: "/studentProject?id=作品id(int)"
