@@ -1,5 +1,6 @@
 <!DOCTYPE >
 <html>
+	<title>竞赛申报系统</title>
 	<head>
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
@@ -64,14 +65,14 @@
         <a id="userName" >解决方案</a>
         <dl class="layui-nav-child"> <!-- 二级菜单 -->
           <dd><a href="" >个人信息</a></dd>
-          <dd><a href="" >登出</a></dd>
+          <dd><a href="index.html" >登出</a></dd>
         </dl>
       </li>
 		</ul>
 
 		<div id="buttonBox">
-				<div id="headPhoto" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
-				  
+				<div id="headPhotoBox" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+				  <img  id="headPhoto" style="width: 100%;"/>
 				</div>
 				<div id="headName" style="font-size: 30px;width: 100%;text-align: center;margin: 10px 0;">
 				  name
@@ -95,7 +96,11 @@
 				
 		</div>
 
-    <div id="mainContent" > <!--主页面默认显示所有赛事概况 可以进入赛事详情页 包括赛事信息和参赛作品-->
+    <div id="mainContent" > 
+		<div id="backgroundBox"  style="width:100%;height: 100%;position: relative;">
+			<img src="./img/background.png" style="width: 100%;height: 100%;"/>
+			<div style="position: absolute;top: 150px;left: 100px;font-size: 40px;">欢迎使用XX竞赛管理系统</div>
+		</div><!--主页面默认显示所有赛事概况 可以进入赛事详情页 包括赛事信息和参赛作品-->
 		<div id="contestListBox"  style="display: none; margin:20px;position: relative;top: 5%;">
 			<h1 style="text-align: center;">竞赛列表</h1>
 			<table id="contestTable" lay-filter="contestTable"></table>
@@ -153,7 +158,8 @@
 			var element = layui.element;
 
 		});
-		$("#headPhoto").height($("#headPhoto").width());
+		$("#headPhotoBox").height($("#headPhotoBox").width());
+		$('#headPhoto').attr("src", "./img/女.png");
 		$(".buttonIcon").width($(".buttonIcon").height());
 		$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
 		$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
@@ -165,6 +171,7 @@
 			window.location.href="newContest.html";
 		});
 		$("#contestList").click(function(){
+			$("#backgroundBox").css("display","none");
 			$("#contestListBox").css("display","block");
 		});
 	</script>
