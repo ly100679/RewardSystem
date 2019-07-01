@@ -8,6 +8,7 @@ from datetime import datetime
 from rewardSystem.settings import PROJECTDIR
 import os
 import re
+from mailmerge import MailMerge
 
 #unfinish
 
@@ -450,3 +451,93 @@ def projectFile(request):
 		for pfile in files:
 			resp['files'].append(getFileInfoJson(pfile.pdf.name, 1))
 		return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def submitfile(request):
+	project_id = request.GET.get('projectID')
+	project = Project.objects.get(pk=project_id)
+	author = project.author
+	s = "form.docx"
+	document=MailMerge(s)
+	# print(document.get_merge_fields())
+	data = {}
+	coauthors = CoAuthor.objects.filter(project=project)
+	i = 0
+	for coauthor in coauthors:
+		i = i + 1
+		data['name'+str(i)] = coauthor.name
+		data['acc'+str(i)] = coauthor.student_id
+		if coauthor.education == '0':
+			data['edu'+str(i)] = 'A'
+		elif coauthor.education == '1':
+			data['edu'+str(i)] = 'B'
+		elif coauthor.education == '2':
+			data['edu'+str(i)] = 'C'
+		elif coauthor.education == '3':
+			data['edu'+str(i)] = 'D'
+		data['phoneno'+str(i)] = coauthor.tel
+		data['email'+str(i)] = coauthor.email
+	while i < 4:
+		i = i + 1
+		data['name'+str(i)] = ''
+		data['acc'+str(i)] = ''
+		data['edu'+str(i)] = ''
+		data['phoneno'+str(i)] = ''
+		data['email'+str(i)] = ''
+	if project.project_type == '0':
+		data['isInvention'] = u'✓'
+		data['isReport'] = ''
+	else:
+		data['isInvention'] = ''
+		data['isReport'] = u'✓'
+	if author.education == '0':
+		data['edu0'] = 'A'
+	elif author.education == '1':
+		data['edu0'] = 'B'
+	elif author.education == '2':
+		data['edu0'] = 'C'
+	elif author.education == '3':
+		data['edu0'] = 'D'
+	document.merge(
+		projectID=getProjectID(project),
+		workName=project.name,
+		department=author.school.name,
+		isInvention=data['isInvention'],
+		isReport=data['isReport'],
+		name=author.name,
+		account=str(author.student_id),
+		dateOfBirth=author.birth_date.strftime('%Y-%m-%d'),
+		overalDescriptionOfWork=project.description,
+		innovationPoint=project.innovation,
+		keyword=project.keyword,
+		major=author.major.name,
+		inYear=str(author.enroll_year),
+		fullNameOfwork=project.full_name,
+		fullNameOfwork1=project.full_name,
+		cat=project.category,
+		postalAddress=author.contact_address,
+		phoneNumber=author.tel,
+		email=author.email,
+		currentEducation=data['edu0'],
+		name1=data['name1'],
+		name2=data['name2'],
+		name3=data['name3'],
+		name4=data['name4'],
+		acc1=data['acc1'],
+		acc2=data['acc2'],
+		acc3=data['acc3'],
+		acc4=data['acc4'],
+		edu1=data['edu1'],
+		edu2=data['edu2'],
+		edu3=data['edu3'],
+		edu4=data['edu4'],
+		phoneno1=data['phoneno1'],
+		phoneno2=data['phoneno2'],
+		phoneno3=data['phoneno3'],
+		phoneno4=data['phoneno4'],
+		email1=data['email1'],
+		email2=data['email2'],
+		email3=data['email3'],
+		email4=data['email4'],
+	)
+	document.write('submit_file/form1.docx')
+	return HttpResponse(json.dumps({}), content_type='application/json')

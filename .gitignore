@@ -7,4 +7,5 @@ db.json
 *.jpg
 *.txt
 *.docx
+!form.docx
 *.doc
