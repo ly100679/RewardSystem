@@ -291,7 +291,7 @@
   
    # 11 获取文件：
 
-  method: DELETE
+  method: GET
 
   上传:无
   
@@ -307,3 +307,17 @@
     }	
   
   url: "/file?projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
+  
+   # 12 获取提交表：
+
+  method: GET
+
+  上传:无
+  
+  接收:
+   
+    {
+      path:申请表的保存路径(string)
+    }	
+  
+  url: "/submitfile?projectID=作品id(int)"
