@@ -6,3 +6,5 @@ db.json
 *.pdf
 *.jpg
 *.txt
+*.docx
+*.doc
