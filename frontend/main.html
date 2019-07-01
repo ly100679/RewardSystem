@@ -465,32 +465,89 @@
 			
 			    <div class="layui-form-item" style="height: 1px;background:dimgrey;width: 80%;margin: 30px 10% 30px 10%"></div>
 			    <div class="layui-row">
-						<div class="layui-col-md2 layui-col-md-offset4">
-			        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-						</div>
-						<div class="layui-col-md2">
-			        <button class="layui-btn  layui-btn-primary" lay-submit lay-filter="cache">保存</button>
+						<div class="layui-col-md2 layui-col-md-offset5">
+			        <button class="layui-btn layui-btn-primary" lay-submit lay-filter="cache">下一页</button>
 						</div>
 			    </div>
 					<button type="reset" id="reset" class="layui-btn layui-btn-primary" style="display: none;">重置</button>
 			  </form>
+			</div>
+			<div style="margin: 20px;display: none;" id="uploadBox">
+						<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;">
+					  <button type="button" class="layui-btn layui-btn-normal" id="imageList">选择图片（最多5张）</button> 
+					  <div class="layui-upload-list">
+					    <table class="layui-table">
+					      <thead>
+					        <tr><th>文件名</th>
+					        <th>大小</th>
+					        <th>状态</th>
+					        <th>操作</th>
+					      </tr></thead>
+					      <tbody id="imagedemoList"></tbody>
+					    </table>
+					  </div>
+					  <button type="button" class="layui-btn" id="imageListAction">开始上传</button>
+						</div> 
+						
+						<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;">
+						<button type="button" class="layui-btn layui-btn-normal" id="fileList">选择文档（格式为PDF）</button> 
+						<div class="layui-upload-list">
+						  <table class="layui-table">
+						    <thead>
+						      <tr><th>文件名</th>
+						      <th>大小</th>
+						      <th>状态</th>
+						      <th>操作</th>
+						    </tr></thead>
+						    <tbody id="filedemoList"></tbody>
+						  </table>
+						</div>
+						<button type="button" class="layui-btn" id="fileListAction">开始上传</button>
+						</div>
+						
+						<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;">
+						<button type="button" class="layui-btn layui-btn-normal" id="videoList">选择视频（大小不超过50M）</button> 
+						<div class="layui-upload-list">
+						  <table class="layui-table">
+						    <thead>
+						      <tr><th>文件名</th>
+						      <th>大小</th>
+						      <th>状态</th>
+						      <th>操作</th>
+						    </tr></thead>
+						    <tbody id="videodemoList"></tbody>
+						  </table>
+						</div>
+						<button type="button" class="layui-btn" id="videoListAction">开始上传</button>
+						</div>
+					<div class="layui-row">
+						<div class="layui-col-md2 layui-col-md-offset3" style="text-align: center;">
+							<button class="layui-btn layui-btn-primary" id="lastPage" style="width:60%;margin:auto;">上一页</button>
+						</div>
+						<div class="layui-col-md2" style="text-align: center;">
+							<button class="layui-btn " id="submit" style="width:60%;margin:auto;">提交</button>
+						</div>
+						<div class="layui-col-md2" style="text-align: center;">
+							<button class="layui-btn layui-btn-primary" id="save" style="width:60%;margin:auto;">保存</button>
+						</div>
+					</div>
 			</div>
 		</div>
 
 	</body>
 	<script>
 		var projectID;
+		var projectPeriod;
 		
 		var user=JSON.parse(sessionStorage.getItem("user"));
 		$("#headName").html(user.account);
 		$("#userName").html(user.account);
+		$("#headPhoto").height($("#headPhoto").width());
+		$(".buttonIcon").width($(".buttonIcon").height());
+		$(".bigIcon").css("font-size",$(".buttonIcon").height()*0.7);
+		$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
     layui.use(['element','form','table','laydate'], function(){
       var element = layui.element;
-
-			$("#headPhoto").height($("#headPhoto").width());
-			$(".buttonIcon").width($(".buttonIcon").height());
-			$(".bigIcon").css("font-size",$(".buttonIcon").height()*0.7);
-			$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
 			
 			var index = layer.load(1, {
 				shade: [0.1,'#fff'] //0.1透明度的白色背景
@@ -516,6 +573,7 @@
 			$("#projectList").click(function(){
 					$("#userInfoBox").css("display","none");
 					$("#projectInfoBox").css("display","none");
+					$("#uploadBox").css("display","none");
 					$("#studentProjectBox").css("display","block");
 					$.ajax({
 							type:"GET",
@@ -532,7 +590,7 @@
 															{field: 'projectID', title: '作品代码',sort:true},
 															{field: 'projectName', title: '作品名',sort:true},
 															{field: 'id', title: '数据库编号',hide:true},
-															{title:'操作', toolbar: '#TableBar', width:150 }
+															{title:'操作', toolbar: '#TableBar', width:200 }
 													]]
 													,data:data.data
 													//,size:'sm'
@@ -557,15 +615,36 @@
 																	});
 															});
 													}
+													if(obj.event==='export'){
+															$.ajax({
+																	type:"GET",
+																	url: hostIP+"submitfile?projectID="+obj.data.id,
+																	dataType:"json",
+																	contentType:"application/json", 
+																	success:function(data){
+																			window.open(host+data.path);
+																	},
+															});
+													}
 													if(obj.event==='edit'){
 															var data = obj.data;
+															projectPeriod=data.projectPeriod;
+															projectID=data.id;
+															loadUpload();
+															if(projectPeriod=="未提交"){
+																$("#submit").css("display","block");
+																$("#save").css("display","block");
+															}
+															else{
+																$("#submit").css("display","none");
+																$("#save").css("display","none");
+															}
 															$.ajax({
 																	type:"GET",
 																	url: hostIP+"studentProject?studentID="+user.account+"&id="+data.id,
 																	dataType:"json",
 																	contentType:"application/json", 
 																	success:function(data){
-																			projectID=data.data[0].id;
 																			$("#studentProjectBox").css("display","none");
 																			$("#projectInfoBox").css("display","block");
 																			$("[name='projectID']").val(data.data[0].projectID);
@@ -619,14 +698,19 @@
 			$("#userInfo").click(function(){
 					$("#studentProjectBox").css("display","none");
 					$("#projectInfoBox").css("display","none");
+					$("#uploadBox").css("display","none");
 					$("#userInfoBox").css("display","block");
 			});
 			
 			$("#projectInfo").click(function(){
 					projectID=undefined;
-					$("#studentProjectBox").css("display","none");
+					projectPeriod="未提交";
 					$("#userInfoBox").css("display","none");
+					$("#uploadBox").css("display","none");
+					$("#studentProjectBox").css("display","none");
 					$("#projectInfoBox").css("display","block");
+					$("#submit").css("display","block");
+					$("#save").css("display","block");
 					
 					$('#reset').trigger('click');
 					$("[name='projectID']").val("");
@@ -640,6 +724,9 @@
 						,"phoneNumber": user.phoneNumber
 						,"email": user.email
 					})
+					
+					$("#mainContent").scrollTop(0);
+					
 			});
 			
 			var form = layui.form;
@@ -648,13 +735,44 @@
 			laydate.render({
 				elem: '#date'
 			});
-			//监听提交
-			form.on('submit(submit)', function(data){
-				saveProject(data,"已提交");
-			  return false;
+			
+			$("#submit").click(function(){
+				$.ajax({
+						type:"PUT",
+						url: hostIP+"studentProject?studentID="+user.account+"&id="+projectID,
+						dataType:"json",
+						contentType:"application/json", 
+						data:JSON.stringify({status:"已提交"}),
+						success:function(data){
+							if(data.status){
+								layer.msg("提交成功",{time:2000,icon:6});
+								setTimeout("$('#projectList').trigger('click');",2000);
+							}
+							else{
+								layer.msg("提交失败",{time:1000,icon:5});
+							}
+						},
+				});
 			});
+			
+			$("#save").click(function(){
+				layer.msg("保存成功",{time:2000,icon:6});
+				setTimeout("$('#projectList').trigger('click');",2000);
+			});
+			
+			$("#lastPage").click(function(){
+				$("#uploadBox").css("display","none");
+				$("#projectInfoBox").css("display","block");
+			});
+			
 			form.on('submit(cache)', function(data){
-				saveProject(data,"未提交");
+				if(projectPeriod=="未提交"){
+					saveProject(data,"未提交");
+				}
+				else{
+					$("#projectInfoBox").css("display","none");
+					$("#uploadBox").css("display","block");
+				}
 			  return false;
 			});
 			
@@ -680,7 +798,12 @@
 								success:function(data){
 									if(data.status){
 										layer.msg("保存成功",{time:2000,icon:6});
-										setTimeout("$('#projectList').trigger('click');",2000);
+										if(status=="已提交")
+											setTimeout("$('#projectList').trigger('click');",2000);
+										else{
+											$("#projectInfoBox").css("display","none");
+											$("#uploadBox").css("display","block");
+										}
 									}
 									else{
 										layer.msg("保存失败",{time:1000,icon:5});
@@ -698,7 +821,8 @@
 								success:function(data){
 									if(data.status){
 										layer.msg("保存成功",{time:2000,icon:6});
-										setTimeout("$('#projectList').trigger('click');",2000);
+										$("#projectInfoBox").css("display","none");
+										$("#uploadBox").css("display","block");
 									}
 									else{
 										layer.msg("保存失败",{time:1000,icon:5});
@@ -708,9 +832,424 @@
 					}
 			}
 		});
+		
+		function loadUpload(){
+			layui.use('upload', function(){
+				var $ = layui.jquery;
+			  var upload = layui.upload;
+				
+				var fileStatic=new Map(),imageNum=5,videoNum=1;
+				
+				$(".layui-upload-list tbody").empty();
+				
+				function deleteButtonBind(tr,ListView,ListIns,type,filename,index){
+					tr.find('.demo-delete').on('click', function(){
+					  var tr = ListView.find('tr#upload-'+ index)
+					  ,tds = tr.children();
+					  if(tds.eq(2).html()=='等待上传'){
+							fileStatic[filename]=false;
+					  	delete files[index]; //删除对应的文件
+					  	tr.remove();
+					  }
+					  else{
+					  	$.ajax({
+					  		type:"DELETE",
+					  		url: hostIP+"file?type="+type+"&projectID=26",
+					  		//url: "http://localhost:3000/register",
+					  		dataType:"json",
+					  		contentType:"application/json", // 指定这个协议很重要
+					  		data:JSON.stringify({filename:filename}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					  		success:function(data){
+					  			console.log(data);
+					  			if(data.code){
+										fileStatic[filename]=false;
+					  				layer.msg("删除成功",{time:1000,icon:6});
+										if(type==0)
+											imageNum++;
+										else
+											videoNum++;
+					  				tr.remove();
+					  			}
+					  			else{
+					  					layer.msg("删除失败",{time:1000,icon:5});
+					  					//layer.msg("其他错误",{time:1000,icon:5});
+					  			}
+					  		}
+					  	});
+					  }
+					});
+				}
+				
+				$.ajax({
+						type:"GET",
+						url: hostIP+"file?projectID="+projectID,
+						dataType:"json",
+						contentType:"application/json", 
+						success:function(data){
+							file=data.files;
+							fileStatic=data.files;
+								for(var i=0;i<file.length;i++){
+									if(!file[i].path)
+										continue;
+										fileStatic[file[i].filename]=true;
+									if(file[i].type==0){
+											var tr = $(['<tr id="upload-'+ i +'">'
+											  ,'<td><a target="view_window" href='+host+file[i].path+'>'+ file[i].filename +'</a></td>'
+											  ,'<td>'+ file[i].datasize.toFixed(1) +'kb</td>'
+											  ,'<td><span style="color: #5FB878;">上传成功</span></td>'
+											  ,'<td>'
+											    ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+											    ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+											  ,'</td>'
+											,'</tr>'].join(''));
+											
+											deleteButtonBind(tr,imagedemoListView,imageListIns,0,file[i].filename,i);
+											
+											imagedemoListView.append(tr);
+											
+											imageNum--;
+									}
+									if(file[i].type==1){
+											var tr = $(['<tr id="upload-'+ i +'">'
+											  ,'<td><a target="view_window" href='+host+file[i].path+'>'+ file[i].filename +'</a></td>'
+											  ,'<td>'+ file[i].datasize.toFixed(1) +'kb</td>'
+											  ,'<td><span style="color: #5FB878;">上传成功</span></td>'
+											  ,'<td>'
+											    ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+											    ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+											  ,'</td>'
+											,'</tr>'].join(''));
+											
+											deleteButtonBind(tr,filedemoListView,fileListIns,1,file[i].filename,i);
+											
+											filedemoListView.append(tr);
+									}
+									if(file[i].type==2){
+											var tr = $(['<tr id="upload-'+ i +'">'
+											  ,'<td><a target="view_window" href='+host+file[i].path+'>'+ file[i].filename +'</a></td>'
+											  ,'<td>'+ file[i].datasize.toFixed(1) +'kb</td>'
+											  ,'<td><span style="color: #5FB878;">上传成功</span></td>'
+											  ,'<td>'
+											    ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+											    ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+											  ,'</td>'
+											,'</tr>'].join(''));
+											
+											deleteButtonBind(tr,videodemoListView,videoListIns,2,file[i].filename,i);
+											
+											videodemoListView.append(tr);
+											
+											videoNum--;
+									}
+								}
+						}
+				});
+			
+				var imagedemoListView = $('#imagedemoList')
+			  ,imageListIns = upload.render({
+			    elem: '#imageList'
+			    ,url: hostIP+'file?type=0&projectID='+projectID
+			    ,accept: 'image'
+			    ,multiple: true
+			    ,auto: false
+			    ,bindAction: '#imageListAction'
+					,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+						layer.load(); //上传loading
+					}
+			    ,choose: function(obj){   
+							if(imageNum<=0){
+								layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
+								imageListIns.config.elem.next()[0].value = '';
+								return;
+							}
+			      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+			      //读取本地文件
+			      obj.preview(function(index, file, result){
+								if(fileStatic[file.name]){
+									layer.msg("重复文件",{time:1000,icon:5});
+									imageListIns.config.elem.next()[0].value = '';
+									return;
+								}
+			        var tr = $(['<tr id="upload-'+ index +'">'
+			          ,'<td>'+ file.name +'</td>'
+			          ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+			          ,'<td>等待上传</td>'
+			          ,'<td>'
+			            ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+			            ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+			          ,'</td>'
+			        ,'</tr>'].join(''));
+			        
+			        //单个重传
+			        tr.find('.demo-reload').on('click', function(){
+			          obj.upload(index, file);
+			        });
+			        
+			        //删除
+			        tr.find('.demo-delete').on('click', function(){
+								var tr = imagedemoListView.find('tr#upload-'+ index)
+								,tds = tr.children();
+								if(tds.eq(2).html()=='等待上传'){
+									imageNum++;
+									fileStatic[file.name]=false;
+									delete files[index]; //删除对应的文件
+									tr.remove();
+									imageListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+								}
+								else{
+									$.ajax({
+										type:"DELETE",
+										url: hostIP+"file?type=0&projectID="+projectID,
+										//url: "http://localhost:3000/register",
+										dataType:"json",
+										contentType:"application/json", // 指定这个协议很重要
+										data:JSON.stringify({filename:file.name}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+										success:function(data){
+											console.log(data);
+											if(data.code){
+												imageNum++;
+												fileStatic[file.name]=false;
+												layer.msg("删除成功",{time:1000,icon:6});
+												delete files[index]; //删除对应的文件
+												tr.remove();
+												imageListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+											}
+											else{
+													layer.msg("删除失败",{time:1000,icon:5});
+													//layer.msg("其他错误",{time:1000,icon:5});
+											}
+										}
+									});
+								}
+			        });
+			        imageNum--;
+					    fileStatic[file.name]=true;
+			        imagedemoListView.append(tr);
+			      });
+			    }
+			    ,done: function(res, index, upload){
+						layer.closeAll('loading');
+			      if(res.code){ //上传成功
+			        var tr = imagedemoListView.find('tr#upload-'+ index)
+			        ,tds = tr.children();
+			        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+							tds.eq(3).find('.demo-reload').addClass('layui-hide'); //隐藏重传
+			        return delete this.files[index]; //删除文件队列已经上传成功的文件
+			      }
+			      this.error(index, upload);
+			    }
+			    ,error: function(index, upload){
+						layer.closeAll('loading');
+			      var tr = imagedemoListView.find('tr#upload-'+ index)
+			      ,tds = tr.children();
+			      tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+			      tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+			    }
+			  });
+					
+					var filedemoListView = $('#filedemoList')
+					,fileListIns = upload.render({
+					  elem: '#fileList'
+					  ,url: hostIP+'file?type=1&projectID='+projectID
+					  ,accept: 'file'
+						,exts:'pdf'
+					  ,multiple: true
+					  ,auto: false
+					  ,bindAction: '#fileListAction'
+						,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+							layer.load(); //上传loading
+						}
+					  ,choose: function(obj){   
+					    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+					    //读取本地文件
+					    obj.preview(function(index, file, result){
+									if(fileStatic[file.name]){
+										layer.msg("重复文件",{time:1000,icon:5});
+										return;
+									}
+					      var tr = $(['<tr id="upload-'+ index +'">'
+					        ,'<td>'+ file.name +'</td>'
+					        ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+					        ,'<td>等待上传</td>'
+					        ,'<td>'
+					          ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+					          ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+					        ,'</td>'
+					      ,'</tr>'].join(''));
+					      
+					      //单个重传
+					      tr.find('.demo-reload').on('click', function(){
+					        obj.upload(index, file);
+					      });
+					      
+					      //删除
+					      tr.find('.demo-delete').on('click', function(){
+					        var tr = filedemoListView.find('tr#upload-'+ index)
+					        ,tds = tr.children();
+					        if(tds.eq(2).html()=='等待上传'){
+										fileStatic[file.name]=false;
+					        	delete files[index]; //删除对应的文件
+					        	tr.remove();
+					        	fileListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        }
+					        else{
+					        	$.ajax({
+					        		type:"DELETE",
+					        		url: hostIP+"file?type=1&projectID="+projectID,
+					        		//url: "http://localhost:3000/register",
+					        		dataType:"json",
+					        		contentType:"application/json", // 指定这个协议很重要
+					        		data:JSON.stringify({filename:file.name}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					        		success:function(data){
+					        			console.log(data);
+					        			if(data.code){
+													fileStatic[file.name]=false;
+					        				layer.msg("删除成功",{time:1000,icon:6});
+					        				delete files[index]; //删除对应的文件
+					        				tr.remove();
+					        				fileListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        			}
+					        			else{
+					        					layer.msg("删除失败",{time:1000,icon:5});
+					        					//layer.msg("其他错误",{time:1000,icon:5});
+					        			}
+					        		}
+					        	});
+					        }
+					      });
+					      
+					      fileStatic[file.name]=true;
+					      filedemoListView.append(tr);
+					    });
+					  }
+					  ,done: function(res, index, upload){
+							layer.closeAll('loading');
+					    if(res.code){ //上传成功
+					      var tr = filedemoListView.find('tr#upload-'+ index)
+					      ,tds = tr.children();
+					      tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+								tds.eq(3).find('.demo-reload').addClass('layui-hide'); //隐藏重传
+					      return delete this.files[index]; //删除文件队列已经上传成功的文件
+					    }
+					    this.error(index, upload);
+					  }
+					  ,error: function(index, upload){
+							layer.closeAll('loading');
+					    var tr = filedemoListView.find('tr#upload-'+ index)
+					    ,tds = tr.children();
+					    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+					    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+					  }
+					});
+					
+					var videodemoListView = $('#videodemoList')
+					,videoListIns = upload.render({
+					  elem: '#videoList'
+					  ,url: hostIP+'file?type=2&projectID='+projectID
+					  ,accept: 'video'
+						,size:50*1024
+					  ,multiple: true
+					  ,auto: false
+					  ,bindAction: '#videoListAction'
+						,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+							layer.load(); //上传loading
+						}
+					  ,choose: function(obj){   
+							if(videoNum<=0){
+								layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
+					      videoListIns.config.elem.next()[0].value = ''; 
+								return;
+							}
+					    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+					    //读取本地文件
+					    obj.preview(function(index, file, result){
+									if(fileStatic[file.name]){
+										layer.msg("重复文件",{time:1000,icon:5});
+										videoListIns.config.elem.next()[0].value = ''; 
+										return;
+									}
+					      var tr = $(['<tr id="upload-'+ index +'">'
+					        ,'<td>'+ file.name +'</td>'
+					        ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+					        ,'<td>等待上传</td>'
+					        ,'<td>'
+					          ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+					          ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+					        ,'</td>'
+					      ,'</tr>'].join(''));
+					      
+					      //单个重传
+					      tr.find('.demo-reload').on('click', function(){
+					        obj.upload(index, file);
+					      });
+					      
+					      //删除
+					      tr.find('.demo-delete').on('click', function(){
+					        var tr = videodemoListView.find('tr#upload-'+ index)
+					        ,tds = tr.children();
+					        if(tds.eq(2).html()=='等待上传'){
+										videoNum++;
+										fileStatic[file.name]=false;
+					        	delete files[index]; //删除对应的文件
+					        	tr.remove();
+					        	videoListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        }
+					        else{
+					        	$.ajax({
+					        		type:"DELETE",
+					        		url: hostIP+"file?type=2&projectID="+projectID,
+					        		//url: "http://localhost:3000/register",
+					        		dataType:"json",
+					        		contentType:"application/json", // 指定这个协议很重要
+					        		data:JSON.stringify({filename:file.name}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					        		success:function(data){
+					        			console.log(data);
+					        			if(data.code){
+													videoNum++;
+													fileStatic[file.name]=false;
+					        				layer.msg("删除成功",{time:1000,icon:6});
+					        				delete files[index]; //删除对应的文件
+					        				tr.remove();
+					        				videoListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        			}
+					        			else{
+					        					layer.msg("删除失败",{time:1000,icon:5});
+					        					//layer.msg("其他错误",{time:1000,icon:5});
+					        			}
+					        		}
+					        	});
+					        }
+					      });
+					      fileStatic[file.name]=true;
+					      	videoNum--;
+					      videodemoListView.append(tr);
+					    });
+					  }
+					  ,done: function(res, index, upload){
+							layer.closeAll('loading');
+					    if(res.code){ //上传成功
+					      var tr = videodemoListView.find('tr#upload-'+ index)
+					      ,tds = tr.children();
+					      tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+								tds.eq(3).find('.demo-reload').addClass('layui-hide'); //隐藏重传
+					      return delete this.files[index]; //删除文件队列已经上传成功的文件
+					    }
+					    this.error(index, upload);
+					  }
+					  ,error: function(index, upload){
+							layer.closeAll('loading');
+					    var tr = videodemoListView.find('tr#upload-'+ index)
+					    ,tds = tr.children();
+					    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+					    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+					  }
+					});
+			});
+		}
 	</script>
 	<script type="text/html" id="TableBar">
-			<a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+			<a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
 			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+			<a class="layui-btn layui-btn-xs" lay-event="export" style="visibility: {{d.projectPeriod=='已提交'?'visible':'hidden'}};">导出</a>
 	</script>
 </html>
