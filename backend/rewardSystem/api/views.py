@@ -371,7 +371,7 @@ def getFileInfoJson(path, filetype):
 	full_path = PROJECTDIR + path
 	try:
 		datasize = os.path.getsize(full_path)
-		datasize = (float)datasize / 1024
+		datasize = float(datasize) / 1024
 	except expression as identifier:
 		datasize = 0
 	return {
