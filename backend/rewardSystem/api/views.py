@@ -372,7 +372,7 @@ def getFileInfoJson(path, filetype):
 	try:
 		datasize = os.path.getsize(full_path)
 		datasize = float(datasize) / 1024
-	except expression as identifier:
+	except:
 		datasize = 0
 	return {
 		'filename': filename,
@@ -398,11 +398,12 @@ def projectFile(request):
 				pfile = ProjectFile()
 				pfile.project = project
 				pfile.pdf = project_file
+
 				pfile.save()
 			elif file_type == 2:
 				project.video = project_file
 				project.save()
-			return HttpResponse(json.dumps({'code': True, 'name': project_file.name}), content_type='application/json')
+			return HttpResponse(json.dumps({'code': True, 'name': pfile.pdf.name}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
 	if request.method == 'DELETE':
