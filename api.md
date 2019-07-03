@@ -493,7 +493,7 @@
       status:是否修改成功(bool)
     }	
   
-  url: "/expertProjectGrade?id=作品id(int)"
+  url: "/expertProjectGrade?expertID=专家id(int)&id=作品id(int)"
   
   # 20 团委上传竞赛文件：
 
