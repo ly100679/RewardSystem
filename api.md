@@ -246,6 +246,7 @@
     {
       id:竞赛id(int)
       competitionName:赛事名称(string)
+      competitionStatus:竞赛状态(string)
       acronym:赛事简称(string)
       startDate:开始日期(yyyy-mm-dd)
       submitDDL:提交截止(yyyy-mm-dd)
@@ -385,7 +386,7 @@
   
     {
       data:[{
-        competitionID:数据库中的序号(int)
+        id:数据库中的序号(int)
         competitionName:竞赛名称(string)
         competitionStatus:竞赛状态(string)
         
