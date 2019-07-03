@@ -84,7 +84,7 @@
         },..]
         files:[
           path:作品文件保存路径(string)
-          name:文件名(string)
+          filename:文件名(string)
         ,...]
       },...](只传当前竞赛的作品)
       
