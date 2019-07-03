@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'rewardSystem',
         'USER': 'mysql',
         'PASSWORD': 'mypassword',
-        'HOST': '49.234.65.233',
+        'HOST': '180.76.111.16',
         'PORT': '3306',
     }
 }
