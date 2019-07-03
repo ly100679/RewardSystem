@@ -392,7 +392,7 @@
       
     }	
   
-  url: "/competitionList"
+  url: "/competition"
   
 # 16 专家评审作品列表获取：
 
@@ -437,23 +437,9 @@
       
     }	
   
-  url: "/expertProject?expertID=专家账号(int)&id=作品id(int)"
+  url: "/studentProject?expertID=专家账号(int)&id=作品id(int)" 
   
-  # 17 团委退回已提交的作品：
-
-  method: GET
-
-  上传:无
-  
-  接收:
-  
-    {
-      status:是否回退成功(bool)
-    }	
-  
-  url: "/returnProject?id=作品id(int)"
-  
-  # 18 团委查看作品评分：
+  # 17 团委查看作品评分：
 
   method: GET
 
@@ -472,7 +458,7 @@
   
   url: "/schoolProjectGrade?id=作品id(int)"
   
-  # 19 专家查看作品评分：
+  # 18 专家查看作品评分：
 
   method: GET
 
@@ -487,7 +473,7 @@
   
   url: "/expertProjectGrade?id=作品id(int)"
   
-  # 20 专家打分：
+  # 19 专家打分：
 
   method: POST
 
@@ -506,7 +492,7 @@
   
   url: "/expertProjectGrade?id=作品id(int)"
   
-  # 21 团委上传竞赛文件：
+  # 20 团委上传竞赛文件：
 
   method: POST
 
@@ -524,7 +510,7 @@
   
   url: "/competitionFile?competitionID=竞赛id(int)"
   
-   # 22 团委删除竞赛文件：
+   # 21 团委删除竞赛文件：
 
   method: DELETE
 
@@ -542,7 +528,7 @@
   
   url: "/competitionFile?competitionID=竞赛id(int)"
   
-   # 23 团委获取竞赛文件：
+   # 22 团委获取竞赛文件：
 
   method: GET
 
@@ -560,26 +546,8 @@
     }	
   
   url: "/competitionFile?competitionID=竞赛id(int)"
-  
-  # 24 团委修改作品阶段：
 
-  method: POST
-
-  上传:
-  
-    {
-      status:作品要变成的阶段(string)
-    }
-  
-  接收:
-   
-    {
-      status:是否修改成功
-    }	
-  
-  url: "/projectStatus?id=作品id(int)"
-
-  # 25 团委导入专家信息：
+  # 23 团委导入专家信息：
 
   method: POST
 
