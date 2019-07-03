@@ -63,6 +63,11 @@ class Project(models.Model):
         max_length=200,
         null=True, blank=True
     )
+    expert = models.ManyToManyField(
+        Expert,
+        through='Opinion',
+        through_fields=('project', 'expert')
+    )
     description = models.TextField(null=True, blank=True)
     keyword = models.TextField(null=True, blank=True)
     innovation = models.TextField(null=True, blank=True)
@@ -78,14 +83,6 @@ class CoAuthor(models.Model):
     email = models.EmailField(max_length=254)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-class FormalProject(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
-    expert = models.ManyToManyField(
-        Expert,
-        through='Opinion',
-        through_fields=('project', 'expert')
-    )
-
 class ProjectFile(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     pdf = models.FileField(upload_to='project_file/')
@@ -95,7 +92,7 @@ class ProjectImg(models.Model):
     img = models.ImageField(upload_to='project_img/')
 
 class Opinion(models.Model):
-    project = models.ForeignKey(FormalProject, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
     score = models.IntegerField(null=True, blank=True)
     opinion = models.TextField(null=True, blank=True)

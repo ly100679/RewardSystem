@@ -167,22 +167,39 @@ def project(request):
 			pass
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	if request.method == 'GET':
-		student_id = request.GET.get('studentID')
-		# if student exist
-		try:
-			student = Student.objects.get(student_id=student_id)
-		except:
-			return HttpResponse(json.dumps({}), content_type='application/json')
+		projects = []
+		# if request has attr id
+		project_id = request.GET.get('id', None)
+		competition_id = request.GET.get('competitionID', None)
+		expert_id = request.GET.get('expertID', None)
+		student_id = request.GET.get('studentID', None)
 		# if at least one competition
 		try:
 			competition = Competition.objects.order_by('-start')[0]
 		except:
-			return HttpResponse(json.dumps({}), content_type='application/json')
-		projects = Project.objects.filter(author=student, competition=competition)
-		project_id = request.GET.get('id', None)
+			return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 		if project_id is not None:
-			projects = []
 			projects.append(Project.objects.get(pk=project_id))
+		elif competition_id is not None:
+			try:
+				competition = Competition.objects.get(pk=competition_id)
+			except:
+				return HttpResponse(json.dumps({'error': 'competition not found'}), content_type='application/json')
+			projects.append(Project.objects.filter(competition=competition))
+		elif expert_id is not None:
+			try:
+				expert = Expert.objects.get(pk=competition_id)
+			except:
+				return HttpResponse(json.dumps({'error': 'expert not found'}), content_type='application/json')
+			projects.append(Project.objects.filter(expert=expert, competition=competition))
+		elif student_id is not None:
+			try:
+				student = Student.objects.get(student_id=student_id)
+			except:
+				return HttpResponse(json.dumps({'error': 'student not found'}), content_type='application/json')
+			projects = Project.objects.filter(author=student, competition=competition)
+		else:
+			return HttpResponse(json.dumps({'error': 'unexpected request url'}), content_type='application/json')
 		resp = {}
 		data = []
 		for project in projects:
@@ -209,6 +226,8 @@ def project(request):
 				'email': author.email,
 				'currentEducation': author.education
 			}
+			project_file_info = getProjectFile(project)
+			tem['files'] = project_file_info['files']
 			partner = []
 			co_authors = CoAuthor.objects.filter(project=project)
 			for co_author in co_authors:
@@ -245,11 +264,6 @@ def project(request):
 		setProjectInfo(project, body, student, competition)
 		# add coauthor info
 		setProjectCoAuthorInfo(project, body)
-		# if project submit
-		# if body['status'] != '未提交':
-		# 	formal_project = FormalProject()
-		# 	formal_project.project = project
-		# 	formal_project.save()
 		return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
 	if request.method == 'PUT':
 		body = json.loads(request.body)
@@ -263,13 +277,11 @@ def project(request):
 			project = Project.objects.get(pk=request.GET.get('id'))
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
-		# if project submit
-		if body['status'] != '未提交':
+		# if only change competition status
+		if body['status'] != '未提交' or project.status != '未提交':
 			project.status = body['status']
 			project.save()
-			formal_project = FormalProject()
-			formal_project.project = project
-			formal_project.save()
+		# edit unsubmit project
 		else:
 			student = project.author
 			setProjectAuthorInfo(student, body)
@@ -383,6 +395,20 @@ def getFileInfoJson(path, filetype):
 		'datasize': datasize
 	}
 
+def getProjectFile(project):
+	resp = {
+		'files': []
+	}
+	if project.video is not None:
+		resp['files'].append(getFileInfoJson(project.video.name, 2))
+	files = ProjectImg.objects.filter(project=project)
+	for img in files:
+		resp['files'].append(getFileInfoJson(img.img.name, 0))
+	files = ProjectFile.objects.filter(project=project)
+	for pfile in files:
+		resp['files'].append(getFileInfoJson(pfile.pdf.name, 1))
+	return resp
+
 def projectFile(request):
 	if request.method == 'POST':
 		project_id = request.GET.get('projectID')
@@ -440,17 +466,7 @@ def projectFile(request):
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
 	if request.method == 'GET':
 		project = Project.objects.get(pk=int(request.GET.get('projectID')))
-		resp = {
-			'files': []
-		}
-		if project.video is not None:
-			resp['files'].append(getFileInfoJson(project.video.name, 2))
-		files = ProjectImg.objects.filter(project=project)
-		for img in files:
-			resp['files'].append(getFileInfoJson(img.img.name, 0))
-		files = ProjectFile.objects.filter(project=project)
-		for pfile in files:
-			resp['files'].append(getFileInfoJson(pfile.pdf.name, 1))
+		resp = getProjectFile(project)
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def submitfile(request):
