@@ -1,5 +1,6 @@
 <!DOCTYPE >
 <html>
+	<title>竞赛申报系统</title>
 	<head>
 		<script src="./layui/layui.js"></script>
 		<link href="./layui/css/layui.css"  rel="stylesheet"/>
@@ -64,14 +65,14 @@
         <a id="userName">解决方案</a>
         <dl class="layui-nav-child"> <!-- 二级菜单 -->
           <dd><a href="" >个人信息</a></dd>
-          <dd><a href="" >登出</a></dd>
+          <dd><a href="index.html" >登出</a></dd>
         </dl>
       </li>
 		</ul>
 
 		<div id="buttonBox">
-        <div id="headPhoto" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
-          
+        <div id="headPhotoBox" class="icon" style="width: 70%; margin-top:10px;margin-bottom: 10px;border: 1px solid #eeeeee; ">
+          <img  id="headPhoto" style="width: 100%;"/>
         </div>
         <div id="headName" style="font-size: 30px;width: 100%;text-align: center;margin: 10px 0;">
           name
@@ -167,6 +168,11 @@
 				</div>
 		</div>
         </form>
+		<div class="layui-row" style="margin: 20px 0;">
+				<div class="layui-col-md2 layui-col-md-offset1">
+		            <button class="layui-btn layui-btn-radius layui-btn-normal" id="return" style="width:100%">返回</button>
+				</div>
+		</div>
       </div>
     </div>
     <script>
@@ -186,7 +192,8 @@
 			var element = layui.element;
 
 		});
-		$("#headPhoto").height($("#headPhoto").width());
+		$("#headPhotoBox").height($("#headPhotoBox").width());
+		$('#headPhoto').attr("src", "./img/竞赛.png");
 		$(".buttonIcon").width($(".buttonIcon").height());
 		$(".layui-icon").css("font-size",$(".buttonIcon").height()*0.7);
 		$(".buttonText").css("font-size",$(".buttonIcon").height()*0.2);
@@ -253,5 +260,8 @@
 				"description":contest.description,
 			})
         });
+		$("#return").click(function(){
+			window.location.href='school.html';
+		});
     </script>
 </html>
