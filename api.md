@@ -82,8 +82,9 @@
           emailOfPartner:邮箱(string)
           currenteducationOfPartner:现学历(0-3)
         },..]
-        filespath:[
+        files:[
           path:作品文件保存路径(string)
+          name:文件名(string)
         ,...]
       },...](只传当前竞赛的作品)
       
@@ -252,9 +253,10 @@
       reviewDDL:评审截止(yyyy-mm-dd)
       endDate:结果公布(yyyy-mm-dd)
       description:赛事描述(string)
-      filepath:[
+      files:[{
         path:竞赛文件路径(string)
-        ,...]
+        name:文件名字(string)
+      },...]
     }	
   
   url: "/competition?id=竞赛id(int)"
