@@ -10,5 +10,8 @@ urlpatterns = [
     path('studentInfo', views.student, name='student'),
     path('competition', views.competition, name='competition'),
     path('file', views.projectFile, name='projectFile'),
-    path('submitfile', views.submitfile, name='submitfile')
+    path('submitfile', views.submitfile, name='submitfile'),
+    path('competitionFile', views.competitionFile, name='competitionFile'),
+    path('expertProjectGrade', views.expertProjectGrade, name='expertProjectGrade'),
+    path('schoolProjectGrade', views.schoolProjectGrade, name='schoolProjectGrade')
 ]

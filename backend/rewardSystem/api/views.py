@@ -345,9 +345,28 @@ def student(request):
 		except:
 			return HttpResponse(json.dumps({}), content_type='application/json')
 
+def getCompetitionStatus(competition):
+	current_time = datetime.now()
+	if competition.end < current_time:
+		return 'end'
+	elif competition.oral_defense < current_time:
+		return 'oral_defense'
+	elif competition.review < current_time:
+		return 'review'
+	elif competition.pre_review < current_time:
+		return 'pre_review'
+	elif competition.start < current_time:
+		return 'start'
+	else:
+		return 'before start'
+
 def competition(request):
 	if request.method == 'GET':
-		competitions = Competition.objects.all()
+		competition_id = request.GET.get('id', None)
+		if competition_id is not None:
+			competitions = Competition.objects.get(pk=int(competition_id))
+		else:
+			competitions = Competition.objects.all()
 		competition_list = []
 		for competition in competitions:
 			data = {
@@ -359,10 +378,14 @@ def competition(request):
 				'checkDDL': competition.review.strftime('%Y-%m-%d'),
 				'reviewDDL': competition.oral_defense.strftime('%Y-%m-%d'),
 				'endDate': competition.end.strftime('%Y-%m-%d'),
-				'description': competition.description
+				'description': competition.description,
+				'competitionStatus': getCompetitionStatus(competition)
 			}
 			competition_list.append(data)
-		return HttpResponse(json.dumps(competition_list), content_type='application/json')
+		if competition_id is not None:
+			return HttpResponse(json.dumps(competition_list[0]), content_type='application/json')
+		else:
+			return HttpResponse(json.dumps({'data': competition_list}), content_type='application/json')
 	if request.method == 'POST':
 		try:
 			body = json.loads(request.body)
@@ -379,6 +402,46 @@ def competition(request):
 			return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+
+def competitionFile(request):
+	competition_id = request.GET.get('competitionID', None)
+	try:
+		competition = Competition.objects.get(pk=competition_id)
+	except:
+		return HttpResponse(json.dumps({'error': 'competition not found'}), content_type='application/json')
+	if request.method == 'GET':
+		competition_files = CompetitionFile.objects.filter(competition=competition)
+		resp = {
+			'files': []
+		}
+		for competition_file in competition_files:
+			resp['files'].append(getFileInfoJson(competition_file.competition_file.name, 0))
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+	if request.method == 'POST':
+		competition_file = request.FILES.get('file')
+		competition_file.name = 'comp%sname%s' % (str(competition.id), competition_file.name)
+		tem = CompetitionFile()
+		tem.competition = competition
+		tem.competition_file = competition_file
+		tem.save()
+		return HttpResponse(json.dumps({'code': True}), content_type='application/json')
+	if request.method == 'DELETE':
+		body = json.loads(request.body)
+		file_name = body['filename']
+		file_name = 'proje_competition_file/comp%sname%s' % (str(competition.id), file_name)
+		competition_file = CompetitionFile.objects.get(competition=competition, competition_file=file_name)
+		competition_file.delete()
+		if not deleteFileFromFolder(file_name):
+			return HttpResponse(json.dumps({'code': False, 'file_path': file_name}), content_type='application/json')
+		return HttpResponse(json.dumps({'code': True, 'file_path': file_name}), content_type='application/json')
+
+def deleteFileFromFolder(file_name):
+	name = PROJECTDIR + file_name
+	if os.path.exists(name):
+		os.remove(name)
+		return True
+	else:
+		return False
 
 def getFileInfoJson(path, filetype):
 	filename = re.sub('proje\S*?name', '', path)
@@ -456,10 +519,7 @@ def projectFile(request):
 				project.video = None
 				project.save()
 			# delete file from project folder
-			file_name = PROJECTDIR + file_name
-			if os.path.exists(file_name):
-				os.remove(file_name)
-			else:
+			if not deleteFileFromFolder(file_name):
 				return HttpResponse(json.dumps({'code': False, 'file_full_path': file_name}), content_type='application/json')
 			return HttpResponse(json.dumps({'code': True, 'file_full_path': file_name}), content_type='application/json')
 		except:
@@ -566,3 +626,57 @@ def submitfile(request):
 		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file %s' % (form_full_path))
 		form_path = 'submit_file/%sform1.pdf' % str(project.id)
 	return HttpResponse(json.dumps({'path': form_path}), content_type='application/json')
+
+def expertProjectGrade(request):
+	project_id = request.GET.get('id')
+	expert_id = request.GET.get('expertID')
+	try:
+		project = Project.objects.get(pk=int(project_id))
+		expert = Expert.objects.get(pk=int(expert_id))
+	except:
+		return HttpResponse(json.dumps({'error': 'no such expert or project found'}), content_type='application/json')
+	if request.method == 'POST':
+		# get opinion if already exist
+		# create opinion if not
+		try:
+			opinion = Opinion.objects.get(project=project, expert=expert)
+		except:
+			opinion = Opinion()
+			opinion.project = project
+			opinion.expert = expert
+			opinion.save()
+		body = json.loads(request.body)
+		opinion.score = float(body['grade'])
+		opinion.opinion = body['advise']
+		opinion.save()
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+	if request.method == 'GET':
+		try:
+			opinion = Opinion.objects.get(project=project, expert=expert)
+		except:
+			return HttpResponse(json.dumps({'error': 'opinion not found'}), content_type='application/json')
+		resp = {
+			'grade': opinion.score,
+			'advise': opinion.opinion
+		}
+		return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def schoolProjectGrade(request):
+	if request.method == 'GET':
+		project = Project.objects.get(pk=int(request.GET.get('id')))
+		opinions = Opinion.objects.filter(project=project)
+		total_score = 0
+		grades = []
+		for opinion in opinions:
+			total_score = total_score + opinion.score
+			grades.append({
+				'name': opinion.expert.name,
+				'grade': opinion.score,
+				'advise': opinion.opinion
+			})
+		total_score = total_score / len(opinions)
+		resp = {
+			'avgGrade': total_score,
+			'grades': grades
+		}
+		return HttpResponse(json.dumps(resp), content_type='application/json')

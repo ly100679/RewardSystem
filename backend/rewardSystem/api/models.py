@@ -40,6 +40,10 @@ class Competition(models.Model):
     end = models.DateField(auto_now=False, auto_now_add=False)
     description = models.TextField(null=True, blank=True)
 
+class CompetitionFile(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    competition_file = models.FileField(upload_to='proje_competition_file/', max_length=500)
+
 class ExpertList(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -94,5 +98,5 @@ class ProjectImg(models.Model):
 class Opinion(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
-    score = models.IntegerField(null=True, blank=True)
+    score = models.FloatField(null=True, blank=True)
     opinion = models.TextField(null=True, blank=True)
