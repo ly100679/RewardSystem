@@ -82,6 +82,9 @@
           emailOfPartner:邮箱(string)
           currenteducationOfPartner:现学历(0-3)
         },..]
+        filespath:[
+          path:作品文件保存路径(string)
+        ,...]
       },...](只传当前竞赛的作品)
       
       
@@ -231,7 +234,7 @@
   
   url: "/competition"
   
-  # 9 查看竞赛列表：
+  # 9 查看竞赛详情：
 
   method: GET
 
@@ -249,11 +252,14 @@
       reviewDDL:评审截止(yyyy-mm-dd)
       endDate:结果公布(yyyy-mm-dd)
       description:赛事描述(string)
+      filepath:[
+        path:竞赛文件路径(string)
+        ,...]
     }	
   
-  url: "/competition"
+  url: "/competition?id=竞赛id(int)"
   
-   # 9 上传文件：
+   # 10 上传文件：
 
   method: POST
 
@@ -271,7 +277,7 @@
   
   url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
   
-   # 10 删除文件：
+   # 11 删除文件：
 
   method: DELETE
 
@@ -289,7 +295,7 @@
   
   url: "/file?type=文件类型(0-2)&projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
   
-   # 11 获取文件：
+   # 12 获取文件：
 
   method: GET
 
@@ -308,7 +314,7 @@
   
   url: "/file?projectID=作品id(int)" 0(图片) / 1(文档) / 2(音频)
   
-   # 12 获取提交表：
+   # 13 获取提交表：
 
   method: GET
 
@@ -322,7 +328,7 @@
   
   url: "/submitfile?projectID=作品id(int)"
   
-  # 13 团委竞赛作品列表获取：
+  # 14 团委竞赛作品列表获取：
 
   method: GET
 
@@ -367,7 +373,7 @@
   
   url: "/studentProject？competitionID=竞赛id(int)"
   
-  # 14 团委竞赛列表获取：
+  # 15 团委竞赛列表获取：
 
   method: GET
 
@@ -388,7 +394,7 @@
   
   url: "/competitionList"
   
-# 15 专家评审作品列表获取：
+# 16 专家评审作品列表获取：
 
   method: GET
 
@@ -433,7 +439,7 @@
   
   url: "/expertProject?expertID=专家账号(int)&id=作品id(int)"
   
-  # 16 团委退回已提交的作品：
+  # 17 团委退回已提交的作品：
 
   method: GET
 
@@ -447,7 +453,7 @@
   
   url: "/returnProject?id=作品id(int)"
   
-  # 17 团委查看作品评分：
+  # 18 团委查看作品评分：
 
   method: GET
 
@@ -466,7 +472,7 @@
   
   url: "/schoolProjectGrade?id=作品id(int)"
   
-  # 18 专家查看作品评分：
+  # 19 专家查看作品评分：
 
   method: GET
 
@@ -481,7 +487,7 @@
   
   url: "/expertProjectGrade?id=作品id(int)"
   
-  # 19 专家打分：
+  # 20 专家打分：
 
   method: POST
 
@@ -500,7 +506,7 @@
   
   url: "/expertProjectGrade?id=作品id(int)"
   
-  # 20 团委上传竞赛文件：
+  # 21 团委上传竞赛文件：
 
   method: POST
 
@@ -518,7 +524,7 @@
   
   url: "/competitionFile?competitionID=竞赛id(int)"
   
-   # 21 团委删除竞赛文件：
+   # 22 团委删除竞赛文件：
 
   method: DELETE
 
@@ -536,7 +542,7 @@
   
   url: "/competitionFile?competitionID=竞赛id(int)"
   
-   # 22 团委获取竞赛文件：
+   # 23 团委获取竞赛文件：
 
   method: GET
 
@@ -555,7 +561,7 @@
   
   url: "/competitionFile?competitionID=竞赛id(int)"
   
-  # 23 团委修改作品阶段：
+  # 24 团委修改作品阶段：
 
   method: POST
 
@@ -573,7 +579,7 @@
   
   url: "/projectStatus?id=作品id(int)"
 
-  # 24 团委导入专家信息：
+  # 25 团委导入专家信息：
 
   method: POST
 
