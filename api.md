@@ -540,7 +540,6 @@
       files:[{
         filename:文件名(string),
         path:存储地址(string),
-        type:文件类型(0-2）,
         datasize:文件大小(double)
       },...]
     }	
