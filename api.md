@@ -365,7 +365,7 @@
       
     }	
   
-  url: "/competitionProject？competitionID=竞赛id(int)"
+  url: "/studentProject？competitionID=竞赛id(int)"
   
   # 14 团委竞赛列表获取：
 
@@ -589,6 +589,7 @@
       [{
         name:专家姓名(string)
         account:专家账号(string)
+        yield:专家领域(string)
       },..]
     }	
   
