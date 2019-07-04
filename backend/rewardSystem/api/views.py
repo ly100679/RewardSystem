@@ -246,21 +246,25 @@ def project(request):
 		resp['data'] = data
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	if request.method == 'POST':
-		# if student exist
-		student_id = request.GET.get('studentID')
-		try:
-			student = Student.objects.get(student_id=student_id)
-		except:
-			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
-		body = json.loads(request.body)
-		# add author info
-		setProjectAuthorInfo(student, body)
-		# add project info
+		# # if student exist
+		# student_id = request.GET.get('studentID')
+		# try:
+		# 	student = Student.objects.get(student_id=student_id)
+		# except:
+		# 	return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+		# body = json.loads(request.body)
+		# # add author info
+		# setProjectAuthorInfo(student, body)
+		# # add project info
+		# project = Project()
+		# setProjectInfo(project, body, student, competition)
+		# # add coauthor info
+		# setProjectCoAuthorInfo(project, body)
+		# return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
 		project = Project()
-		setProjectInfo(project, body, student, competition)
-		# add coauthor info
-		setProjectCoAuthorInfo(project, body)
-		return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
+		project.status = '未提交'
+		project.save()
+		return HttpResponse(json.dumps({'code': project.id}), content_type='application/json')
 	if request.method == 'PUT':
 		body = json.loads(request.body)
 		# if project exist
@@ -704,6 +708,9 @@ def expertList(request):
 				tem.email = table.row_values(i)[1]
 				tem.field = table.row_values(i)[2]
 				tem.save()
+		# send invite email
+		expert_list = ExpertList.objects.filter(status=0)
+
 		return HttpResponse(json.dumps(expert_data), content_type='application/json')
 	except:
 		return HttpResponse(json.dumps({'code': False}), content_type='application/json')

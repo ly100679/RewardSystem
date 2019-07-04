@@ -49,19 +49,20 @@ class ExpertList(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     field = models.CharField(max_length=500)
+    status = models.IntegerField(default=0)
 
 class Project(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
     full_name = models.CharField(max_length=500, null=True, blank=True)
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE, null=True)
     # school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
     project_type = models.CharField(
         max_length=100,
         null=True, blank=True
     )
-    author = models.ForeignKey(Student, on_delete=models.CASCADE)
+    author = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     status = models.CharField(
-        max_length=50
+        max_length=50,
     )
     video = models.FileField(upload_to='project_video/', null=True, blank=True)
     category = models.CharField(
