@@ -267,17 +267,11 @@ def project(request):
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 		# if student exist
+		# save project form
+		# else just change project status
 		student_id = request.GET.get('studentID')
 		try:
 			student = Student.objects.get(student_id=student_id)
-		except:
-			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
-		# if only change competition status
-		if body['status'] != '未提交' or project.status != '未提交':
-			project.status = body['status']
-			project.save()
-		# edit unsubmit project
-		else:
 			setProjectAuthorInfo(student, body)
 			setProjectInfo(project, body, student, competition)
 			# remove all coauthor first
@@ -286,6 +280,9 @@ def project(request):
 				co_author.delete()
 			# add coauthor
 			setProjectCoAuthorInfo(project, body)
+		except:
+			project.status = body['status']
+			project.save()
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def setProjectAuthorInfo(student, body):

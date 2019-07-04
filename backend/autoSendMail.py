@@ -1,6 +1,7 @@
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'rewardSystem.rewardSystem.settings'
 from django.core.mail import EmailMultiAlternatives
+from rewardSystem.api.models import *
 
 
 # if __name__ == '__main__':
@@ -24,7 +25,6 @@ from django.core.mail import EmailMultiAlternatives
 #     print(233)
 
 if __name__ == '__main__':
-    
     with open('rewardSystem/tem_files/sendEmailToExpert', 'r+') as sendMailInfo:
         if_send_mail = sendMailInfo.read()
         print(if_send_mail)
@@ -35,4 +35,6 @@ if __name__ == '__main__':
         sendMailInfo.seek(0)
         sendMailInfo.truncate()
         sendMailInfo.write(if_send_mail)
+    if if_send_mail == '0':
+        print(ExpertList.objects.all()[0].name)
     
