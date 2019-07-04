@@ -127,49 +127,21 @@
   
   url: "/studentInfo?studentID=学号(int)"
   
-  # 6 新建页保存or提交作品信息：
+  # 6 请求一个可用作品代码：
 
   method: POST
 
-  上传:
-  
-    {
-      status:作品状态(string)
-      nameOfWork:作品名称(string)
-      classificationOfWork:作品类别(0-1)
-      declarationOfWork:作品分类（A-F）
-      overallDescriptionOfWork:作品总体情况说明(string)
-      innovationPoint:创新点(string)
-      keyWord:关键词(string)
-      name:姓名(string)
-      StudentID:学号(int)
-      dateOfBirth:出生年月(yyyy-mm-dd)
-      major:专业(string)
-      inYear:入学年份(int)
-      fullNameOfwork:作品全称(string)
-      postalAddress:通讯地址(string)
-      phoneNumber:联系电话(int)
-      email:邮箱(string)
-      currentEducation:现学历(0-3)
-      partner:[{
-        nameOfPartner:姓名(string)
-        studentIDOfPartner:学号(int)
-        phoneOfPartner:联系电话(int)
-        emailOfPartner:邮箱(string)
-        currenteducationOfPartner:现学历(0-3)
-      },..]
-    }	
+  上传:无
   
   接收:
    
     {
-      status:操作是否成功(bool),
-      id:作品id(int)，
+      code:一个可用的作品代码(string)
     }	
   
-  url: "/studentProject?studentID=学号(int)"
+  url: "/studentProject"
   
-  # 7 修改页保存or提交作品信息：
+  # 7 保存or提交作品信息：
 
   method: PUT
 
