@@ -9,3 +9,4 @@ db.json
 *.docx
 !form.docx
 *.doc
+*.xlsx

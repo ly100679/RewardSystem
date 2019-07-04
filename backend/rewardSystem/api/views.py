@@ -10,6 +10,7 @@ import os
 import re
 from mailmerge import MailMerge
 import platform
+import xlrd
 
 #unfinish
 
@@ -166,6 +167,11 @@ def project(request):
 		except:
 			pass
 		return HttpResponse(json.dumps(resp), content_type='application/json')
+	# if at least one competition
+	try:
+		competition = Competition.objects.order_by('-start')[0]
+	except:
+		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	if request.method == 'GET':
 		projects = []
 		# if request has attr id
@@ -173,11 +179,6 @@ def project(request):
 		competition_id = request.GET.get('competitionID', None)
 		expert_id = request.GET.get('expertID', None)
 		student_id = request.GET.get('studentID', None)
-		# if at least one competition
-		try:
-			competition = Competition.objects.order_by('-start')[0]
-		except:
-			return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 		if project_id is not None:
 			projects.append(Project.objects.get(pk=project_id))
 		elif competition_id is not None:
@@ -245,11 +246,6 @@ def project(request):
 		resp['data'] = data
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	if request.method == 'POST':
-		# if at least one competition
-		try:
-			competition = Competition.objects.order_by('-start')[0]
-		except:
-			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 		# if student exist
 		student_id = request.GET.get('studentID')
 		try:
@@ -267,11 +263,6 @@ def project(request):
 		return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
 	if request.method == 'PUT':
 		body = json.loads(request.body)
-		# if at least one competition
-		try:
-			competition = Competition.objects.order_by('-start')[0]
-		except:
-			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 		# if project exist
 		try:
 			project = Project.objects.get(pk=request.GET.get('id'))
@@ -680,3 +671,39 @@ def schoolProjectGrade(request):
 			'grades': grades
 		}
 		return HttpResponse(json.dumps(resp), content_type='application/json')
+
+def expertList(request):
+	try:
+		expert_list_file = request.FILES.get('file')
+		full_path = PROJECTDIR + 'tem_files/info.xlsx'
+		with open(full_path, 'wb+') as f:
+			for chunk in expert_list_file.chunks():
+				f.write(chunk)
+		f.close()
+		data = xlrd.open_workbook(full_path)
+		table = data.sheets()[0]
+		expert_data = []
+		for i in range(table.nrows):
+			expert_data.append({
+				'name': table.row_values(i)[0],
+				'account': table.row_values(i)[1],
+				'yield': table.row_values(i)[2]
+			})
+		# if at least one competition
+		try:
+			competition = Competition.objects.order_by('-start')[0]
+		except:
+			return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+		for i in range(table.nrows):
+			try:
+				tem = ExpertList.objects.get(email=table.row_values(i)[1])
+			except:
+				tem = ExpertList()
+				tem.competition = competition
+				tem.name = table.row_values(i)[0]
+				tem.email = table.row_values(i)[1]
+				tem.field = table.row_values(i)[2]
+				tem.save()
+		return HttpResponse(json.dumps(expert_data), content_type='application/json')
+	except:
+		return HttpResponse(json.dumps({'code': False}), content_type='application/json')

@@ -13,5 +13,6 @@ urlpatterns = [
     path('submitfile', views.submitfile, name='submitfile'),
     path('competitionFile', views.competitionFile, name='competitionFile'),
     path('expertProjectGrade', views.expertProjectGrade, name='expertProjectGrade'),
-    path('schoolProjectGrade', views.schoolProjectGrade, name='schoolProjectGrade')
+    path('schoolProjectGrade', views.schoolProjectGrade, name='schoolProjectGrade'),
+    path('expertInfo', views.expertList, name='expertList')
 ]
