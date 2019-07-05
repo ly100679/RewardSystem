@@ -32,7 +32,7 @@
         <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
             <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
             <li class="layui-nav-item  layui-this"><a href="">当前竞赛</a></li>
-            <li class="layui-nav-item"><a href="workList.html" id="mainManagement">竞赛管理</a></li>
+            <li class="layui-nav-item"><a href="contestList.html" id="mainManagement">竞赛管理</a></li>
         </ul>
     </div>
     <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
@@ -149,10 +149,18 @@
 		$("#managementButton").html("我要参赛");
 	}
 	if(user.enter=='expert'){
-		$("#mainManagement").attr("href","");
+		$("#mainManagement").attr("href","expertWorkList.html");
 		$("#mainManagement").html("评分管理");
 		$("#managementButton").html("我要打分");
 	}
+	$("#managementButton").click(function(){
+		if(user.enter=='student')
+			window.location.href="workList.html";
+		if(user.enter=='expert')
+			window.location.href="expertWorkList.html";
+		if(user.enter=='school')
+			window.location.href="contestList.html";
+	});
 	
 	$("#loadMore").click(function(){
 		$("#loadMore").css("display","none");

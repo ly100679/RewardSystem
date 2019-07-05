@@ -1,0 +1,306 @@
+<!DOCTYPE ><!--该页面由三种用户所公用-->
+<html style="height: 100%;">
+    <title>竞赛申报系统</title>
+    <head>
+		<script src="./layui/layui.js"></script>
+		<link href="./layui/css/layui.css"  rel="stylesheet"/>
+		<script src="./host.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+        <style>
+			.layui-table-view{
+				margin:0;
+			}
+			.verticalCenter{
+				position: relative;
+				top:50%;
+				transform: translate(0,-50%);
+			}
+		</style>
+        
+    </head>
+    <body style="background: #eeeeee;height: 100%;">
+        <div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
+            <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;">
+                <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
+                    <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
+                    <li class="layui-nav-item"><a href="detailOfRaces.html">当前竞赛</a></li>
+                    <li class="layui-nav-item layui-this"><a href="contestList.html">竞赛管理</a></li>
+                </ul>
+            </div>
+            <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;float: right">
+                <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
+                    <li class="layui-nav-item">
+                        <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="infoOfStudent.html">个人信息</a></dd>
+                            <dd><a href="../index.html" >登出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
+                <fieldset class="layui-elem-field layui-field-title" style="margin:10px 0 0 0"><legend style="font-size:28px">&nbsp&nbsp竞赛管理</legend><div class="layui-field-box"></div></fieldset>
+                <div style="height:15%;margin:auto;border: 1px solid #ddd; width: 90%; border-radius: 5px; margin-top: 10px;margin-bottom: 40px;" class="layui-row  layui-col-space10">
+                    <div style="font-size:20px;text-align: center;white-space: nowrap;" class="layui-col-md1 verticalCenter">当前阶段:</div>
+                    <div style="font-size:35px;color: #01AAED;transform:translate(-20%,-50%)" class="layui-col-md2 layui-col-md-offset1 verticalCenter" id="currentStatus">作品提交</div>
+                    <div id="timeBox" style="font-size:15px;" class="layui-col-md4 verticalCenter">
+                        阶段时间:2019年7月1日-2019年8月2日
+                    </div>
+                    <div style="" class="layui-col-md2 verticalCenter">
+                        <button class="layui-btn layui-btn-primary" id="changeCondition" lay-filter="changeCondition">进入下一阶段</button>
+                    </div>
+					<div style="" class="layui-col-md2 verticalCenter">
+					    <button class="layui-btn layui-btn-primary" id="uploadContestFile" lay-filter="uploadContestFile">上传文件</button>
+					</div>
+                </div>
+				<div class="layui-tab" id="listBox" style="width:90%;margin:auto;height:60%">
+					<ul class="layui-tab-title">
+						<li class="layui-this">作品列表</li>
+						<li>专家列表</li>
+					</ul>
+					<div class="layui-tab-content" style="padding: 0;">
+						<div class="layui-tab-item layui-show">
+							<table id="workTable" lay-filter="workTable"></table>
+						</div>
+						<div class="layui-tab-item">
+							<table id="expertTable" lay-filter="expertTable"></table>
+							<div style="text-align: center;margin-top: 10px;">
+								<button class="layui-btn layui-btn-primary" id="importExpert" lay-filter="importExpert">导入专家</button>
+							</div>
+						</div>
+					</div>
+				</div>
+        </div>
+        </div>
+        
+        <!--更改阶段的表单-->
+        <div id="changeCondition-main" style="display: none;">
+            <form class="layui-form" id="changeCondition-form" action="">
+                
+                <div class="layui-form-item" style="text-align: center" >
+                 <div> <input type="radio" name="condition" value="1"  title="提交"checked></div>
+                  <div><input type="radio" name="condition" value="2"  title="初审"></div>
+                  <div><input type="radio" name="condition" value="3"  title="评审"></div>
+                  <div><input type="radio" name="condition" value="4"  title="答辩"></div>
+                  <div><input type="radio" name="condition" value="5"  title="结束"></div>
+                </div>
+                <div class="layui-form-item" style="text-align: center">
+                        <button class="layui-btn" lay-submit lay-filter="saveCondition" >立即提交</button>
+                </div>
+            </form>
+        </div>
+        <!--手动添加专家的表单-->
+        <div id="addExpert-main" style="display: none;">
+                <form class="layui-form" id="addExpert-form" action="">
+                    <div style="height:5%"></div>
+                    <div class="layui-form-item" style="width:80%;margin-left:10%">
+                            <input type="text" placeholder="请输入姓名" name="nameOfExpert" required  lay-verify="required" autocomplete="off" class="layui-input">
+                       
+                    </div>
+                    <div class="layui-form-item" style="width:80%;margin-left:10%">
+                            <input type="text" placeholder="请输入邮箱" name="emailOfExpert" required  lay-verify="required" autocomplete="off" class="layui-input">
+                           
+                    </div>
+                    <div class="layui-form-item" style="width:80%;margin-left:10%">
+                    <select name="expertField" lay-verify="required">
+                    <option value="">选择领域</option>
+			        <option value="0">机械与控制</option>
+			        <option value="1">信息技术</option>
+			        <option value="2">数理</option>
+			        <option value="3">生命科学</option>
+			        <option value="4">能源化工</option>
+                    <option value="5">哲学社会科学</option>
+                    </select>
+                  </div>
+                  <div class="layui-form-item" style="text-align: center">
+                        <button class="layui-btn" lay-submit lay-filter="saveExpert" >立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary" id="closeBtn" >重置</button>
+                </div>
+                  </form>
+        </div>
+                  
+
+             
+    </body>
+    <!--点击更改阶段与添加专家-->
+    <script>
+		var declarationOfWork = new Map();
+		declarationOfWork["A"]="机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)";
+		declarationOfWork["B"]="信息技术(包括计算机、电信、通讯、电子等)";
+		declarationOfWork["C"]="数理(包括数学、物理、地球与空间科学等)";
+		declarationOfWork["D"]="生命科学(包括生物､农学､药学､医学､健康､卫生､食品等)";
+		declarationOfWork["E"]="能源化工(包括能源、材料、石油、化学、化工、生态、环保等)";
+		declarationOfWork["F"]="哲学社会科学(包括哲学、经济、社会、法律、教育、管理)";
+		var nextPeriod = new Map();
+		nextPeriod["未开始"]="作品提交";
+		nextPeriod["作品提交"]="团委初审";
+		nextPeriod["团委初审"]="专家评审";
+		nextPeriod["专家评审"]="现场答辩";
+		nextPeriod["现场答辩"]="奖项公布";
+		nextPeriod["奖项公布"]="已结束";
+		
+		var contestID=JSON.parse(sessionStorage.getItem("contestManage")).contestID;
+		$.ajax({
+			type:"GET",
+			url: hostIP+"competition?id="+contestID,
+			dataType:"json",
+			contentType:"application/json", 
+			success:function(data){
+				if(data.competitionStatus=="已结束"){
+					$("#changeCondition").css("display","none");
+					$("#importExpert").css("display","none");
+					$("#uploadContestFile").css("display","none");
+				}
+				$("#currentStatus").html(data.competitionStatus);
+				
+				$("#changeCondition").click(function(){
+				    $.ajax({
+				    	type:"PUT",
+				    	url: hostIP+"competition?id="+contestID,
+				    	dataType:"json",
+				    	contentType:"application/json", 
+						data:JSON.stringify({status:nextPeriod[data.competitionStatus]}),
+				    	success:function(data){
+							if(data.status){
+								layer.msg("成功进入下一阶段",{time:1000,icon:6});
+								setTimeout("location.href='contestManage.html';",1000);
+							}
+							else{
+								layer.msg("修改阶段失败",{time:1000,icon:5});
+							}
+						},
+					});
+				});
+			},
+		});
+		
+
+        $("#addExpert").click(function(){
+            layui.use('layer',function(){
+                var layer=layui.layer;
+                layer.open({
+                    type:1,
+                    title:"添加专家",
+                    shift:2,
+                    area:['400px','300px'],
+                    content:$("#addExpert-main"),
+                    success:function(layero,index){},
+                    yes:function(index, layero){
+						console.log(layero)
+					}
+                });
+            });
+        });
+        
+
+        layui.use(['layer', 'form'], function (){
+            var layer=layui.layer;
+            $=layui.jquery;
+            form=layui.form;
+            //监听提交
+            form.on('submit(saveExpert)',function(data){
+
+
+            });
+        });
+
+        function CloseWin(){
+            parent.location.reload(); // 父页面刷新
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+        }
+        $("#expertList").click(function(){
+			window.location.href="expertList.html";
+		});
+        layui.use('element', function(){
+			var element = layui.element;
+		});
+        layui.use('table', function(){
+			var contestID=JSON.parse(sessionStorage.getItem("contestManage")).contestID;
+			var table = layui.table;
+			$.ajax({
+				type:"GET",
+				url: hostIP+"studentProject?competitionID="+contestID,
+				dataType:"json",
+				contentType:"application/json", 
+				success:function(data){
+					table.render({
+						elem: '#workTable'
+						,height: $("#listBox").height()-20
+						,data:data.data
+						,page: true //开启分页
+						,cols: [[ //表头
+							{field:'projectID',title:'作品代码',width:150,sort:true},
+							{field:'projectName',title:'作品名'},
+							{field:'projectPeriod',title:'状态',width:200},
+							{field:'avgGrade',title:'平均分',width:200},
+							{field: 'id', title: '数据库编号',hide:true},
+							{width:250,title:'操作',toolbar:'#Bar',align:'center'}
+						]]
+					});
+					table.on('tool(workTable)', function(obj){
+						if(obj.event==="return"){
+							layer.confirm('确定退回 “'+obj.data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
+								$.ajax({
+									type:"PUT",
+									url: hostIP+"studentProject?id="+obj.data.id,
+									dataType:"json",
+									contentType:"application/json", 
+									data:JSON.stringify({status:"未提交"}),
+									success:function(data){
+										layer.msg("退回成功！",{time:1000,icon:6});
+										window.location.href="contestManage.html";
+									},
+								});
+							});
+						}
+					});
+				}
+			});
+			$.ajax({
+				type:"GET",
+				url: hostIP+"expertInfo",
+				dataType:"json",
+				contentType:"application/json", 
+				success:function(data){
+					for(var index in data){
+						data[index]['yield']=declarationOfWork[data[index]['yield']];
+					}
+					table.render({
+						elem: '#expertTable'
+						,height: $("#listBox").height()-60
+						,data:data
+						,page: true //开启分页
+						,cols: [[ //表头
+							{field:'name',title:'专家名称',width:150},
+							{field:'account',title:'专家账号',width:200},
+							{field:'yield',title:'专家领域'}
+						]]
+					});
+				}
+			});
+		});
+    </script>
+	<script type="text/html" id="Bar">
+		{{# if(d.projectPeriod=="已提交"){ }}
+			<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="return">退回</a>
+		{{#  } }}
+		{{# if(d.projectPeriod=="评审中"){ }}
+			<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="checkGrade">查看打分</a>
+		{{#  } }}
+		{{# if(d.projectPeriod=="初审中"||d.projectPeriod=="评审中"){ }}
+			<a class="layui-btn layui-btn-xs" lay-event="pass">通过</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fire">未通过</a>
+		{{#  } }}
+		{{# if(d.projectPeriod=="现场答辩"){ }}
+			<a class="layui-btn layui-btn-xs" lay-event="pass">颁奖</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fire">不颁奖</a>
+		{{#  } }}
+	</script>
+</html>
