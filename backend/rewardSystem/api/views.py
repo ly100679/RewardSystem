@@ -170,7 +170,7 @@ def project(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	# if at least one competition
 	try:
-		competition = Competition.objects.order_by('-start')[0]
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])
 	except:
 		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	if request.method == 'GET':
@@ -686,43 +686,54 @@ def schoolProjectGrade(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def expertList(request):
+	# if at least one competition
 	try:
-		expert_list_file = request.FILES.get('file')
-		full_path = PROJECTDIR + 'tem_files/info.xlsx'
-		with open(full_path, 'wb+') as f:
-			for chunk in expert_list_file.chunks():
-				f.write(chunk)
-		f.close()
-		data = xlrd.open_workbook(full_path)
-		table = data.sheets()[0]
-		expert_data = []
-		for i in range(table.nrows):
-			expert_data.append({
-				'name': table.row_values(i)[0],
-				'account': table.row_values(i)[1],
-				'yield': table.row_values(i)[2]
-			})
-		# if at least one competition
-		try:
-			competition = Competition.objects.order_by('-start')[0]
-		except:
-			return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
-		for i in range(table.nrows):
-			try:
-				tem = ExpertList.objects.get(email=table.row_values(i)[1])
-			except:
-				tem = ExpertList()
-				tem.competition = competition
-				tem.name = table.row_values(i)[0]
-				tem.email = table.row_values(i)[1]
-				tem.field = table.row_values(i)[2]
-				tem.save()
-		# send invite email
-		expert_list = ExpertList.objects.filter(status=0)
-
-		return HttpResponse(json.dumps(expert_data), content_type='application/json')
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
 	except:
-		return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+	if request.method == 'POST':
+		try:
+			expert_list_file = request.FILES.get('file')
+			full_path = PROJECTDIR + 'tem_files/info.xlsx'
+			with open(full_path, 'wb+') as f:
+				for chunk in expert_list_file.chunks():
+					f.write(chunk)
+			f.close()
+			data = xlrd.open_workbook(full_path)
+			table = data.sheets()[0]
+			expert_data = []
+			for i in range(table.nrows):
+				expert_data.append({
+					'name': table.row_values(i)[0],
+					'account': table.row_values(i)[1],
+					'yield': table.row_values(i)[2]
+				})
+			for i in range(table.nrows):
+				try:
+					tem = ExpertList.objects.get(email=table.row_values(i)[1], competition=competition)
+				except:
+					tem = ExpertList()
+					tem.competition = competition
+					tem.name = table.row_values(i)[0]
+					tem.email = table.row_values(i)[1]
+					tem.field = table.row_values(i)[2]
+					tem.save()
+			# send invite email
+			expert_list = ExpertList.objects.filter(status=0)
+
+			return HttpResponse(json.dumps(expert_data), content_type='application/json')
+		except:
+			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+	if request.method == 'GET':
+		expert_list = ExpertList.objects.filter(competition=competition)
+		resp = []
+		for expert in expert_list:
+			resp.append({
+				'name': expert.name,
+				'account': expert.email,
+				'yield': expert.field
+			})
+		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def expert(request):
 	field = request.GET.get('field')
@@ -736,7 +747,7 @@ def expert(request):
 		expert.field = field
 		expert.save()
 	try:
-		competition = Competition.objects.order_by('-start')[0]
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])
 	except:
 		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	projects = Project.objects.filter(competition=competition, category=field)
