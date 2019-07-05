@@ -485,7 +485,7 @@
   
   # 19 专家打分：
 
-  method: POST
+  method: PUT
 
   上传:
   
