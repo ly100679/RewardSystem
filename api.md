@@ -447,7 +447,7 @@
       
     }	
   
-  url: "/studentProject?expertID=专家账号(int)&id=作品id(int)" 
+  url: "/studentProject?expertID=专家账号(string)&id=作品id(int)" 
   
   # 17 团委查看作品评分：
 
