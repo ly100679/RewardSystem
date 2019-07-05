@@ -368,7 +368,7 @@ def competition(request):
 	if request.method == 'GET':
 		competition_id = request.GET.get('id', None)
 		if competition_id is not None:
-			competitions = Competition.objects.get(pk=int(competition_id))
+			competitions = [Competition.objects.get(pk=int(competition_id))]
 		else:
 			competitions = Competition.objects.all()
 		competition_list = []
