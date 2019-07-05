@@ -1,6 +1,6 @@
 # 作品阶段
 
-  未提交，已提交，团委初审，专家评审，现场答辩，奖项公布
+  未提交，已提交，初审中，初审通过，初审未通过，评审中，进入答辩，未进入答辩，现场答辩，获奖，未获奖
   
 # 竞赛阶段
 
@@ -578,3 +578,39 @@
     }	
   
   url: "/competition?id="+竞赛id(string)
+  
+  # 25 团委获取专家信息：
+
+  method: GET
+
+  上传:文件
+  
+  接收:
+   
+    {
+      [{
+        name:专家姓名(string)
+        account:专家账号(string)
+        yield:专家领域(string)
+      },..]
+    }	
+  
+  url: "/expertInfo"
+  
+  # 26 获取打包文件
+  
+  method: POST
+  
+  上传：
+  
+    {
+      id:[project id,.....]
+    }
+    
+  接受：
+  
+    {
+      filepath: 压缩包路径
+    }
+    
+  url: "/zipProject?expertID=专家id"
