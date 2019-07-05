@@ -11,6 +11,7 @@ import re
 from mailmerge import MailMerge
 import platform
 import xlrd
+from . import sendMail
 
 #unfinish
 
@@ -390,23 +391,23 @@ def competition(request):
 		else:
 			return HttpResponse(json.dumps({'data': competition_list}), content_type='application/json')
 	if request.method == 'POST':
-		try:
-			body = json.loads(request.body)
-			competition = Competition()
-			# competition.name = body['competitionName']
-			# competition.acronym = body['acronym']
-			# competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
-			# competition.pre_review = datetime.strptime(body['submitDDL'], '%Y-%m-%d')
-			# competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
-			# competition.oral_defense = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
-			# competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
-			# competition.description = body['description']
-			# competition.status = body['status']
-			# competition.save()
-			setCompetition(competition, body)
-			return HttpResponse(json.dumps({'status': True}), content_type='application/json')
-		except:
-			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+		# try:
+		body = json.loads(request.body)
+		competition = Competition()
+		# competition.name = body['competitionName']
+		# competition.acronym = body['acronym']
+		# competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
+		# competition.pre_review = datetime.strptime(body['submitDDL'], '%Y-%m-%d')
+		# competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
+		# competition.oral_defense = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
+		# competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
+		# competition.description = body['description']
+		# competition.status = body['status']
+		# competition.save()
+		setCompetition(competition, body)
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
+		# except:
+		# 	return HttpResponse(json.dumps({'status': False}), content_type='application/json')
 	if request.method == 'PUT':
 		body = json.loads(request.body)
 		competition = Competition.objects.get(pk=request.GET.get('id'))
@@ -722,3 +723,27 @@ def expertList(request):
 		return HttpResponse(json.dumps(expert_data), content_type='application/json')
 	except:
 		return HttpResponse(json.dumps({'code': False}), content_type='application/json')
+
+def expert(request):
+	field = request.GET.get('field')
+	expert_name = request.GET.get('expertname')
+	expert_username = request.GET.get('email')
+	try:
+		expert = Expert.objects.get(username=expert_username)
+	except:
+		expert = Expert.objects.create_user(expert_username, expert_username, '123456')
+		expert.name = expert_name
+		expert.field = field
+		expert.save()
+	try:
+		competition = Competition.objects.order_by('-start')[0]
+	except:
+		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+	projects = Project.objects.filter(competition=competition, category=field)
+	for project in projects:
+		opinion = Opinion()
+		opinion.expert = expert
+		opinion.project = project
+		opinion.save()
+	sendMail.sendExpertAccountEmail(expert_name, expert_username)
+	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly'}), content_type='application/json')

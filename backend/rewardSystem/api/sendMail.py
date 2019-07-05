@@ -1,19 +1,18 @@
-import threading
-import time
+from django.core.mail import EmailMultiAlternatives
 
-class mailThread(threading.Thread):
-    def __init__(self):
-        # threading.Thread.__init__()
-        super().__init__()
-        self._delay_time = 5
-    def run(self):
-        time.sleep(self._delay_time)
-        print('23333%s' % self.name)
-
-if __name__ == '__main__':
-    test_thread = mailThread()
-    test_thread2 = mailThread()
-    test_thread.start()
-    test_thread.join()
-    test_thread2.start()
-    test_thread2.join()
+def sendExpertAccountEmail(expert_name, expert_email):
+	msg = EmailMultiAlternatives(
+		'测试邮件',
+		'''
+		%s，你好。<br>
+		你已参加本次评审<br>
+		你的账号为：%s
+		<br>
+		如果这是你第一次使用系统，你的默认密码为：123456<br>
+		你可前往<a>180.76.111.16</a>登录<br>
+		''' % (expert_name, expert_email),
+		'2086607502@qq.com',
+		[expert_email],
+	)
+	msg.content_subtype = 'html'
+	msg.send()
