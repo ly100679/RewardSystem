@@ -596,3 +596,21 @@
     }	
   
   url: "/expertInfo"
+  
+  # 26 获取打包文件
+  
+  method: POST
+  
+  上传：
+  
+    {
+      id:[project id,.....]
+    }
+    
+  接受：
+  
+    {
+      filepath: 压缩包路径
+    }
+    
+  url: "/zipProject?expertID=专家id"
