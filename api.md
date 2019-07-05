@@ -328,6 +328,7 @@
         projectName:作品名(string),
         projectID:作品代码(string),
         projectPeriod:作品所处阶段(string)
+        avgGrade:平均分(double)
         nameOfWork:作品名称(string)
         classificationOfWork:作品类别(0-1)
         declarationOfWork:作品分类（A-F）
