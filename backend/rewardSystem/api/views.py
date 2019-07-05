@@ -187,13 +187,13 @@ def project(request):
 				competition = Competition.objects.get(pk=competition_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'competition not found'}), content_type='application/json')
-			projects.append(Project.objects.filter(competition=competition))
+			projects = Project.objects.filter(competition=competition)
 		elif expert_id is not None:
 			try:
 				expert = Expert.objects.get(pk=competition_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'expert not found'}), content_type='application/json')
-			projects.append(Project.objects.filter(expert=expert, competition=competition))
+			projects = Project.objects.filter(expert=expert, competition=competition)
 		elif student_id is not None:
 			try:
 				student = Student.objects.get(student_id=student_id)
@@ -219,7 +219,7 @@ def project(request):
 				'keyWord': project.keyword,
 				'name': author.name,
 				'account': author.student_id,
-				'dateOfBirth': author.birth_date,
+				'dateOfBirth': author.birth_date.strftime('%Y-%m-%d'),
 				'major': author.major.name,
 				'inYear': author.enroll_year,
 				'fullNameOfwork': project.full_name,
@@ -287,7 +287,7 @@ def project(request):
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def setProjectAuthorInfo(student, body):
-	birth_date = body['dateOfBirth']
+	birth_date = datetime.strptime(body['dateOfBirth'], '%Y-%m-%d')
 	student.birth_date = birth_date
 	student.contact_address = body['postalAddress']
 	student.education = body['currentEducation']
@@ -746,4 +746,4 @@ def expert(request):
 		opinion.project = project
 		opinion.save()
 	sendMail.sendExpertAccountEmail(expert_name, expert_username)
-	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly'}), content_type='application/json')
+	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly', 'field': field}), content_type='application/json')
