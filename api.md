@@ -205,6 +205,7 @@
       reviewDDL:评审截止(yyyy-mm-dd)
       endDate:结果公布(yyyy-mm-dd)
       description:赛事描述(string)
+      status:赛事阶段(string)
     }	
   
   接收:
