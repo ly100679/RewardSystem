@@ -170,7 +170,7 @@ def project(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	# if at least one competition
 	try:
-		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
 	except:
 		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	if request.method == 'GET':
@@ -411,6 +411,14 @@ def competition(request):
 	if request.method == 'PUT':
 		body = json.loads(request.body)
 		competition = Competition.objects.get(pk=request.GET.get('id'))
+		# ensure only one ongoing competition
+		try:
+			ongoing_competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
+			if body.get('status', None) in ['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布']:
+				if competition.id != ongoing_competition.id:
+					return HttpResponse(json.dumps({'status': False, 'error': 'already has an ongoing competition'}), content_type='application/json')
+		except:
+			pass
 		setCompetition(competition, body)
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
@@ -540,9 +548,7 @@ def projectFile(request):
 		resp = getProjectFile(project)
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
-def submitfile(request):
-	project_id = request.GET.get('projectID')
-	project = Project.objects.get(pk=project_id)
+def getSubmitFile(project):
 	author = project.author
 	s = "form.docx"
 	document=MailMerge(s)
@@ -629,6 +635,12 @@ def submitfile(request):
 	if platform.system() != 'Windows':
 		ret = os.system('unoconv -f pdf --output=/root/RewardSystem/backend/rewardSystem/submit_file %s' % (form_full_path))
 		form_path = 'submit_file/%sform1.pdf' % str(project.id)
+	return form_path
+
+def submitfile(request):
+	project_id = request.GET.get('projectID')
+	project = Project.objects.get(pk=project_id)
+	form_path = getSubmitFile(project)
 	return HttpResponse(json.dumps({'path': form_path}), content_type='application/json')
 
 def expertProjectGrade(request):
@@ -747,7 +759,7 @@ def expert(request):
 		expert.field = field
 		expert.save()
 	try:
-		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
 	except:
 		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	projects = Project.objects.filter(competition=competition, category=field)
