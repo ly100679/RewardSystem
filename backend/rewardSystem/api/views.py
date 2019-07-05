@@ -12,6 +12,7 @@ from mailmerge import MailMerge
 import platform
 import xlrd
 from . import sendMail
+import zipfile
 
 #unfinish
 
@@ -770,3 +771,38 @@ def expert(request):
 		opinion.save()
 	sendMail.sendExpertAccountEmail(expert_name, expert_username)
 	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly', 'field': field}), content_type='application/json')
+
+def zipProject(request):
+	expert_id = request.GET.get('expertID')
+	body = json.loads(request.body)
+	project_ids = body['id']
+	zip_file_name = 'tem_files/%s.zip' % expert_id
+	z = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
+	print(os.sep)
+	resp = []
+	# handle submit file
+	for dirpath, dirnames, filenames in os.walk('submit_file'):
+		for filename in filenames:
+			if filename == '.gitkeep':
+				continue
+			project_id = re.sub('form1.docx', '', filename)
+			# if project id in request id list, zip this file
+			if int(project_id) in project_ids:
+				z.write(dirpath+os.sep+filename, str(project_id) + os.sep + 'form.docx')
+	getZipProject('project_file', expert_id, z, project_ids)
+	getZipProject('project_img', expert_id, z, project_ids)
+	getZipProject('project_video', expert_id, z, project_ids)
+	z.close()
+	return HttpResponse(json.dumps({'filepath': zip_file_name}), content_type='application/json')
+
+def getZipProject(folder_name, expert_id, z, project_ids):
+	for dirpath, dirnames, filenames in os.walk(folder_name):
+		zip_file_path = dirpath
+		for filename in filenames:
+			if filename == '.gitkeep':
+				continue
+			project_id = re.match(r'proj([0-9]*?)name', filename).group(1)
+			formal_filename = re.sub('proj\S*?name', '', filename)
+			# if project id in request id list, zip this file
+			if int(project_id) in project_ids:
+				z.write(dirpath+os.sep+filename, str(project_id) + os.sep + folder_name + os.sep + formal_filename)
