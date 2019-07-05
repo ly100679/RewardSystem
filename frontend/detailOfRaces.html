@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>冯如杯竞赛系统</title>
+    <script src="./layui/layui.js"></script>
+    <link href="./layui/css/layui.css"  rel="stylesheet"/>
+    <script src="./host.js"></script>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+<style>
+    hr{
+		height: 3px;
+    }
+	#loadMore:hover{
+		background-color: rgba(244,244,244,0.5);
+		color: #666;
+	}
+	.layui-btn-lg{
+		height: 60px;
+		line-height: 60px;
+		font-size: 25px;
+	}
+</style>
+
+<body style="background: #eeeeee; height: 100%;overflow: auto;">
+<div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
+    <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
+    <div style="width: 35%;height: 80px;display: inline-block;">
+        <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
+            <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
+            <li class="layui-nav-item  layui-this"><a href="">当前竞赛</a></li>
+            <li class="layui-nav-item"><a href="workList.html" id="mainManagement">竞赛管理</a></li>
+        </ul>
+    </div>
+    <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
+    <div style="width: 35%;height: 80px;display: inline-block;float: right">
+        <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
+            <li class="layui-nav-item">
+                <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="infoOfStudent.html">个人信息</a></dd>
+                    <dd><a href="../index.html" >登出</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--<div  style="width: 100%;height: 40px;margin: 0 0% 0 0%;background: white;"></div>-->
+<div  style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px; border: 1px solid #eeeeee;" id="mainContent">
+    <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;"> 
+		当前正在进行冯如杯知识竞赛：
+	</div>
+	
+	<div style="height: 50%;width: 80%;font-size: 50px;margin:10px 10% 0 10%; border: 1px solid #eeeeee;background: #eeeeee;border-radius: 10px;">
+    <div style="height: 90%;width: 95%;margin: auto;position: relative;top: 50%;transform: translate(0,-50%);">
+        <div class="layui-carousel" id="test1" style="height: 100%;width: 100%;font-size: 50px;">
+            <div carousel-item>
+                <!--            <div style="width: 100%;height: 100%;">-->
+                <!--                <div style="text-align: center;"><p>冯如杯</p></div>-->
+                <!--                <div><p>&nbsp&nbsp&nbsp&nbsp冯如杯比赛是由XX举办的的XXXXXXXXX，已经XXXXX，XXXXXXXXXXX</p></div>-->
+                <!--            </div>-->
+                <div><a href="detailOfRaces.html"><img alt='' src="./img/冯如杯1.jpg" height="100%" width="100%"/></a></div>
+                <div><a href="detailOfRaces.html"><img alt='' src="./img/冯如杯2.jpg" height="100%" width="100%"/></a></div>
+                <div><a href="detailOfRaces.html"><img alt='' src="./img/冯如杯3.jpg" height="100%" width="100%"/></a></div>
+            </div>
+        </div>
+    </div>
+	</div>
+	
+	<div style="height: 18%;width: 100%;text-align: center;" id="progressBox"> 
+		<div class="layui-row" style="height: 50%">
+			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
+				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+			</div>
+			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(-40%,-100%);">
+				<hr class="layui-bg-green" style="width: 120%;">
+			</div>
+			<div class="layui-col-md1" style="transform: translate(0,-100%);position: relative;top: 100%;">
+				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+			</div>
+			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(40%,-100%);">
+				<hr class="layui-bg-green" style="width: 120%;float: right;">
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
+				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+			</div>
+			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(-40%,-100%);">
+				<hr class="layui-bg-green" style="width: 120%;">
+			</div>
+			<div class="layui-col-md1" style="transform: translate(0,-100%);position: relative;top: 100%;">
+				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+			</div>
+			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(40%,-100%);">
+				<hr class="layui-bg-gray" style="width: 120%;float: right;">
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
+				<i class="layui-icon layui-icon-circle-dot" style="color: #eee;font-size: 40px;"></i>
+			</div>
+		</div>
+		<div class="layui-row" style="font-size: 20px;">
+			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%);white-space: nowrap; ">
+				提交作品
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;" >
+				团委初审
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);white-space: nowrap;">
+				专家评审
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;" >
+				现场答辩
+			</div>
+			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);color: #eee;white-space: nowrap;">
+				结果公布
+			</div>
+		</div>
+	</div>
+	<div class="layui-row">
+		<div class="layui-col-md3 layui-col-md-offset5" style="transform: translate(-16.7%);">
+			<button class="layui-btn layui-btn-radius layui-btn-lg" style="width:100%" id="managementButton">管理竞赛</button>
+		</div>
+	</div>
+</div>
+
+<div class="layui-row"  style="text-align: center;color: #ccc; position: absolute;bottom: 1%;width: 70%;left: 15%;" id="loadMore">
+		<i class="layui-icon layui-icon-down" style="font-size: 30px;"></i>
+</div>
+<div class="layui-row"  style="text-align: center;color: #666; position: absolute;bottom: 1%;width: 70%;left: 15%;display: none;" id="loading">
+		<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px;"></i>
+</div>
+
+<div style="height: 600px;width: 70%;background-color: #000;display: none;margin: auto;" id="specificInfo">
+	
+</div>
+</body>
+
+
+<script>
+	var user=JSON.parse(sessionStorage.getItem("user"));
+	if(user.enter=='student'){
+		$("#mainManagement").attr("href","workList.html");
+		$("#mainManagement").html("作品管理");
+		$("#managementButton").html("我要参赛");
+	}
+	if(user.enter=='expert'){
+		$("#mainManagement").attr("href","");
+		$("#mainManagement").html("评分管理");
+		$("#managementButton").html("我要打分");
+	}
+	
+	$("#loadMore").click(function(){
+		$("#loadMore").css("display","none");
+		$("#loading").css("display","block");
+		setTimeout("$('#loading').css('display','none');$('#specificInfo').css('display','block');",1000);
+	});
+	
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+    layui.use('carousel', function(){
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,height:'100%'
+            ,arrow: 'hover'//始终显示箭头
+            ,anim: 'fade' //切换动画方式
+			,interval:2000
+        });
+    });
+</script>
+</html>

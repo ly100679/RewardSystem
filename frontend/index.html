@@ -80,8 +80,11 @@
 			//监听提交
 			form.on('submit(login)', function(data){
 				//layer.msg(JSON.stringify(data.field));
-				var user={account:data.field.account};
 				var enter=data.field.identity;
+				var user={
+					account:data.field.account,
+					enter:enter,
+				};
 				$.ajax({
 					type:"POST",
 					url: hostIP+"login/"+enter,
@@ -92,10 +95,7 @@
 						if(data.status){
 							layer.msg("登录成功",{time:1000,icon:6});
 							sessionStorage.setItem("user",JSON.stringify(user));
-							if(enter=="student")
-								window.location.href="main.html";
-							else
-								window.location.href=enter+".html";
+							window.location.href="newIndex.html";
 						}
 						else{
 							if(data.errorCode==undefined)

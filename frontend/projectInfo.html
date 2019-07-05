@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>冯如杯竞赛系统</title>
+    <script src="./layui/layui.js"></script>
+    <link href="./layui/css/layui.css"  rel="stylesheet"/>
+    <script src="./host.js"></script>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+<script>
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+</script>
+<!--<script src="/static/build/layui.js"></script>-->
+<script>
+    layui.use('carousel', function(){
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,height:'100%'
+            ,arrow: 'always'//始终显示箭头
+            ,anim: 'fade' //切换动画方式
+        });
+    });
+</script>
+
+<style>
+    .nav_style{
+
+    }
+</style>
+
+<body style="background: #eeeeee">
+    <div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
+        <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
+        <div style="width: 35%;height: 80px;display: inline-block;">
+            <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
+                <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
+                <li class="layui-nav-item"><a href="detailOfRaces.html">当前竞赛</a></li>
+                <li class="layui-nav-item layui-this" ><a href="workList.html">作品管理</a></li>
+            </ul>
+        </div>
+        <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
+        <div style="width: 35%;height: 80px;display: inline-block;float: right">
+            <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
+                <li class="layui-nav-item">
+                    <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="infoOfStudent.html">个人信息</a></dd>
+                        <dd><a href="../index.html" >登出</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div  style="width: 70%;height: 1800px;margin: 20px 15% 0 15%;background: white;" id="mainContent">
+        <div style="width: 90%;height: 1800px;border:1px solid RGB(230,230,230);margin: 0 5% 0 5%" id="frame">
+            <fieldset class="layui-elem-field layui-field-title"><legend>欢迎使用北航软院竞赛系统</legend><div class="layui-field-box"></div></fieldset>
+            <div class="layui-form" lay-filter="projectInfo" style="width: 80%;height: 1500px;display: inline-block;margin: 0 10% 0 10%;">
+                    <div class="layui-form-item"style="width: 80%;">
+                        <label class="layui-form-label">作品名称</label>
+                        <div class="layui-input-block" style="width: 80%; ">
+                            <input type="text" disabled name="nameOfWork" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item"style="width: 80%;">
+                        <label class="layui-form-label">作品类别</label>
+                        <div class="layui-input-block" style="width: 80%;">
+                            <input type="text" disabled name="classificationOfWork" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item"style="width: 80%;">
+                        <label class="layui-form-label">作品分类</label>
+                        <div class="layui-input-block" style="width: 80%;">
+                            <input type="text" disabled name="declarationOfWork" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text" style="width: 80%;">
+                        <label class="layui-form-label">作品总体情况说明(不超过800字)</label>
+                        <div class="layui-input-block">
+                            <textarea name="overallDescriptionOfWork"  placeholder="请输入内容" class="layui-textarea" disabled></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text" style="width: 80%;">
+                        <label class="layui-form-label">创新点</label>
+                        <div class="layui-input-block">
+                            <textarea disabled name="innovationPoint"  placeholder="（1-5条作品创意的创新点）" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text" style="width: 80%;">
+                        <label class="layui-form-label">关键词</label>
+                        <div class="layui-input-block">
+                            <textarea disabled name="keyWord" placeholder="（4-7个体现作品核心技术和问题的关键词）" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="name" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="account" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">出生年月</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="dateOfBirth" id="date" lay-verify="date|required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">专业</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="major" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">入学年份</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="inYear" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">作品全称</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="fullNameOfwork" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">通讯地址</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="postalAddress" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="phoneNumber" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="email" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item"style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">现学历</label>
+                        <div class="layui-input-block" style="width: 200px">
+                            <input disabled type="text" name="currentEducation" disabled class="layui-input">
+                        </div>
+                    </div>
+
+                <!--                合作者信息-->
+                <div class="layui-form-item" style="width: 100%;display: none;" id="partner_1">
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">合作者姓名</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="nameOfPartner1" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="studentIDOfPartner1"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="phoneOfPartner1"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block" style="width:200px;">
+                            <input disabled type="text" name="emailOfPartner1"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width:40%;display: inline-block;">
+                        <label class="layui-form-label">现学历</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="Currenteducation1" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="width: 100%;display: none;" id="partner_2">
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">合作者姓名</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="nameOfPartner2" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="studentIDOfPartner2"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="phoneOfPartner2"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block" style="width:200px;">
+                            <input disabled type="text" name="emailOfPartner2"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width:40%;display: inline-block;">
+                        <label class="layui-form-label">现学历</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="Currenteducatio2" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="width: 100%;display: none;" id="partner_3">
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">合作者姓名</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="nameOfPartner3" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="studentIDOfPartner3"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="phoneOfPartner3"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block" style="width:200px;">
+                            <input disabled type="text" name="emailOfPartner3"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width:40%;display: inline-block;">
+                        <label class="layui-form-label">现学历</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="Currenteducatio3" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="width: 100%;display: none;" id="partner_4">
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">合作者姓名</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="nameOfPartner4" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="studentIDOfPartner4"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="phoneOfPartner4"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block" style="width:200px;">
+                            <input disabled type="text" name="emailOfPartner4"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="width:40%;display: inline-block;">
+                        <label class="layui-form-label">现学历</label>
+                        <div class="layui-input-block" style="width: 200px;">
+                            <input disabled type="text" name="Currenteducatio4" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title"><legend>附件</legend><div class="layui-field-box"></div></fieldset>
+				<div id="files">
+					
+				</div>
+				
+				<div class="layui-col-md2 layui-col-md-offset3" style="text-align: center;">
+				    <button class="layui-btn layui-btn-primary" id="reset" style="width:60%;margin:auto;" onclick="window.history.back(-1);">返回</button>
+				</div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+	var classificationOfWork= new Map();
+	classificationOfWork["0"]="科技发明制作";
+	classificationOfWork["1"]="调查报告和学术论文";
+	var declarationOfWork = new Map();
+	declarationOfWork["A"]="机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)";
+	declarationOfWork["B"]="信息技术(包括计算机、电信、通讯、电子等)";
+	declarationOfWork["C"]="数理(包括数学、物理、地球与空间科学等)";
+	declarationOfWork["D"]="生命科学(包括生物､农学､药学､医学､健康､卫生､食品等)";
+	declarationOfWork["E"]="能源化工(包括能源、材料、石油、化学、化工、生态、环保等)";
+	declarationOfWork["F"]="哲学社会科学(包括哲学、经济、社会、法律、教育、管理)";
+	var currentEducation = new Map();
+	currentEducation["0"]="大专";
+	currentEducation["1"]="大学本科";
+	currentEducation["2"]="硕士研究生";
+	currentEducation["3"]="博士研究生";
+	var projectID=JSON.parse(sessionStorage.getItem("projectID")).projectID;
+	var user=JSON.parse(sessionStorage.getItem("user"));
+    layui.use('form', function(){
+        var form = layui.form;
+        $.ajax({
+        	type:"GET",
+        	url: hostIP+"studentProject?studentID="+user.account+"&id="+projectID,
+        	dataType:"json",
+        	contentType:"application/json", 
+        	success:function(data){
+        		console.log(data);
+				for(var i=1;i<=data.data[0].files.length;i++){
+					if(data.data[0].files[i-1].type==2&&data.data[0].files[i-1].path=='')
+						continue;
+					var test = '<a href="' + host + data.data[0].files[i-1].path+'">' + data.data[0].files[i-1].filename + '</a>';
+					$('#files').append(test);
+				}
+        		for(var i=1;i<=data.data[0].partner.length;i++){
+        			data.data[0]["nameOfPartner"+i]=data.data[0].partner[i-1].nameOfPartner;
+        			data.data[0]["studentIDOfPartner"+i]=data.data[0].partner[i-1].studentIDOfPartner;
+        			data.data[0]["phoneOfPartner"+i]=data.data[0].partner[i-1].phoneOfPartner;
+        			data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
+        			data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
+        		}
+				data.data[0].classificationOfWork=classificationOfWork[data.data[0].classificationOfWork];
+				data.data[0].declarationOfWork=declarationOfWork[data.data[0].declarationOfWork];
+				data.data[0].currentEducation=currentEducation[data.data[0].currentEducation];
+        		form.val('projectInfo',data.data[0]);
+        	}
+		});
+	});
+
+    $(function () {
+        if(true)
+        {
+            $('#partner_1').css('display','block');
+            $('#partner_2').css('display','block');
+        }
+    })
+</script>
+</html>

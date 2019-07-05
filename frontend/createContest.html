@@ -1,0 +1,233 @@
+<!DOCTYPE >
+<html>
+    <title>竞赛申报系统</title>
+    <head>
+		<script src="./layui/layui.js"></script>
+		<link href="./layui/css/layui.css"  rel="stylesheet"/>
+		<script src="./host.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+        <style>
+            #mainContent{
+                height: 90%;
+                width: 80%;
+                float:left;
+                margin:2% 0 0 10%;
+                background-color:#ffffff;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
+            <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;">
+                <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
+                    <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
+                    <li class="layui-nav-item"><a href="">竞赛详情</a></li>
+                    <li class="layui-nav-item layui-this"><a href="listOfWorks.html">作品管理</a></li>
+                </ul>
+            </div>
+            <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;float: right">
+                <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
+                    <li class="layui-nav-item">
+                        <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="infoOfStudent.html">个人信息</a></dd>
+                            <dd><a href="../index.html" >登出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="width:100%;height:91.5%;background-color:#eee">
+        <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
+                
+                <div id="newContestForm" style="width:100%;margin-left:20%;height:100%;float:left">
+                        <form class="layui-form" name="contestForm">
+                                <div class="layui-row">
+                                <div>
+                                    <div style="height:10%;margin-left:17%;margin-top:2%"><a style="font-size:28px" >新创建一个赛事</a></div>
+                        
+                                    <div class="layui-form-item">
+                                    <label class="layui-form-label">赛事名称</label>
+                                    <div class="layui-input-inline style="width: 60%;"> 
+                                        <input type="text" class="layui-input" id="competitionName "name="competitionName" required  lay-verify="required" autocomplete="off">
+                                    </div>
+                                    </div>
+                        
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">赛事简称</label>
+                                        <div class="layui-input-inline style="width: 30%;"> 
+                                            <input type="text" class="layui-input" id="acronym" name="acronym" required  lay-verify="required" autocomplete="off">
+                                        </div>
+                                    </div>
+                        
+                        
+                                    <div class="layui-form-item">
+                                    <label class="layui-form-label">开始时间</label>
+                                    <div class="layui-input-inline"> 
+                                        <input type="text" class="layui-input time" id="startDate" name="startDate" required  lay-verify="required|date" autocomplete="off">
+                                    </div>
+                                    
+                                        <label class="layui-form-label">提交截至</label>
+                                        <div class="layui-input-inline"> 
+                                            <input type="text" class="layui-input time" id="submitDDL" name="submitDDL" required  lay-verify="required|date|   " autocomplete="off">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                      <label class="layui-form-label">初审截至</label>
+                                      <div class="layui-input-inline style="width: 30%;"> 
+                                          <input type="text" class="layui-input time" id="checkDDL" name="checkDDL" required  lay-verify="required|date" autocomplete="off">
+                                      </div>
+                            
+                                      <label class="layui-form-label">评审截至</label>
+                                      <div class="layui-input-inline style="width: 50%;"> 
+                                          <input type="text" class="layui-input time" id="reviewDDL" name="reviewDDL" required  lay-verify="required|date" autocomplete="off">
+                                      </div>
+                                    </div>
+                        
+                                    <div class="layui-form-item">
+                                      <label class="layui-form-label">结果公布</label>
+                                      <div class="layui-input-inline style="width: 60%;"> 
+                                          <input type="text" class="layui-input time" id="endDate" name="endDate" required  lay-verify="required|date" autocomplete="off">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">赛事描述</label>
+                                        <div class="layui-input-inline style="width: 60%;"> 
+                                            <textarea class="layui-input" name="description" autocomplete="off" style="width:300px;height:100px"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                </form>
+								<div class="layui-row">
+										<div class="layui-col-md2 layui-col-md-offset2">
+											<button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="newContest" style="width:100%">保存</button>
+										</div>
+										<div class="layui-col-md2">
+										    <button class="layui-btn layui-btn-radius layui-btn-primary" lay-submit id="return" onclick="window.history.back(-1)" lay-filter="returnList" style="width:100%">返回</button>
+										</div>
+								</div>
+                </div>
+        </div>
+        
+        </div>
+        <script>
+      
+                layui.use('laydate',function(){
+                      var laydate=layui.laydate;
+                      lay('.time').each(function(){
+                        laydate.render({
+                          elem:this
+                          ,format:'yyyy/M/d'
+                        });
+                      });
+                });
+        </script>
+                
+             
+    </body>
+    <script>
+        layui.use('element', function(){
+			var element = layui.element;
+		});
+    </script>
+    <script>
+            layui.use(['form','laydate'], function(){
+                var form = layui.form;
+                var laydate=layui.laydate;
+                var sta=laydate.render({
+                    elem: '#startDate',
+                    done: function(value,date,endDate){
+						console.log($(":input#startDate.layui-input.time").val());
+                        sub.config.min={
+                            year:date.year,
+                            month:date.month-1,
+                            date:date.date
+                        };
+                    }
+                });
+                var sub=laydate.render({
+                    elem: '#submitDDL',
+                    done: function(value,date,endDate){
+						if($(":input#startDate.layui-input.time").val()){
+								che.config.min={
+								    year:date.year,
+								    month:date.month-1,
+								    date:date.date
+								};
+						}
+						else
+						{
+							layer.msg("请按顺序填写日期！",{time:1000,icon:5});
+							$(":input#submitDDL.layui-input.time").val("");
+						}
+					}
+                });
+                var che=laydate.render({
+                    elem: '#checkDDL',
+                    done: function(value,date,endDate){
+						if($(":input#submitDDL.layui-input.time").val()&&$(":input#startDate.layui-input.time").val()){
+							rev.config.min={
+							    year:date.year,
+							    month:date.month-1,
+							    date:date.date
+							};
+						}
+						else
+						{
+							layer.msg("请按顺序填写日期！",{time:1000,icon:5});
+							$(":input#checkDDL.layui-input.time").val("");
+						}
+                    }
+                });
+                var rev=laydate.render({
+                    elem: '#reviewDDL',
+                    done: function(value,date,endDate){
+						if($(":input#checkDDL.layui-input.time").val()&&$(":input#submitDDL.layui-input.time").val()&&$(":input#startDate.layui-input.time").val()){
+							end.config.min={
+							    year:date.year,
+							    month:date.month-1,
+							    date:date.date
+							};
+						}
+						else
+						{
+							layer.msg("请按顺序填写日期！",{time:1000,icon:5});
+							$(":input#reviewDDL.layui-input.time").val("");
+						}
+                    }
+                });
+                var end=laydate.render({
+                    elem: '#endDate',
+					done: function(value,date,endDate){
+						if($(":input#reviewDDL.layui-input.time").val()&&$(":input#checkDDL.layui-input.time").val()&&$(":input#submitDDL.layui-input.time").val()&&$(":input#startDate.layui-input.time").val()){
+							end.config.min={
+							    year:date.year,
+							    month:date.month-1,
+							    date:date.date
+							};
+						}
+						else
+						{
+							layer.msg("请按顺序填写日期！",{time:1000,icon:5});
+							$(":input#endDate.layui-input.time").val("");
+						}
+					}
+                });
+                //监听提交
+                form.on('submit(newContest)', function(data){
+                    layer.msg(JSON.stringify(data.field));
+                    return false;
+                });
+            });
+        </script>
+    
+</html>

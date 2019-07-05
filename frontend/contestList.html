@@ -1,0 +1,90 @@
+<!DOCTYPE ><!--该页面由三种用户所公用-->
+<html>
+    <title>竞赛申报系统</title>
+    <head>
+		<script src="./layui/layui.js"></script>
+		<link href="./layui/css/layui.css"  rel="stylesheet"/>
+		<script src="./host.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+        <style>
+            #mainContent{
+                height: 90%;
+                width: 80%;
+                float:left;
+                margin:2% 0 0 10%;
+                background-color:#ffffff;
+            }
+        </style>
+        
+    </head>
+    <body style="background: #eeeeee;">
+        <div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
+            <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;">
+                <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
+                    <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
+                    <li class="layui-nav-item"><a href="">竞赛详情</a></li>
+                    <li class="layui-nav-item layui-this"><a href="listOfWorks.html">竞赛管理</a></li>
+                </ul>
+            </div>
+            <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
+            <div style="width: 35%;height: 80px;display: inline-block;float: right">
+                <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
+                    <li class="layui-nav-item">
+                        <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="infoOfStudent.html">个人信息</a></dd>
+                            <dd><a href="../index.html" >登出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
+                <div style="height:5%;margin-top:2%" ><a style="font-size:28px">&nbsp&nbsp竞赛列表</a></div>
+				<button class="layui-btn layui-btn-normal" id="createCompetition">新建竞赛</button>
+                <div id="workListBox" style="margin-top:2%;width:90%;margin-left:5%;height:70%">
+                    <table id="workTable" lay-filter="workTable"></table>
+                </div>
+        </div>
+        
+        </div>
+                        
+                
+             
+    </body>
+    <script>
+        layui.use('element', function(){
+			var element = layui.element;
+		});
+    </script>
+    <script type="text/html" id="Bar">
+		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i></a>
+	</script>
+    <script>
+		$("#createCompetition").click(function(){
+			window.location.href="createContest.html";
+		});
+        layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+			elem: '#workTable'
+			,skin:'nob'
+			,height: 312
+			,url: 'work.txt' //数据接口
+			,page: true //开启分页
+			,cols: [[ //表头
+				{field:'workID',title:'作品ID',width:150,sort:true},
+				{field:'workName',title:'作品名',width:500},
+				{field:'condition',title:'状态',width:200},
+				{width:250,title:'操作',toolbar:'#Bar',align:'center'}
+			]]
+		  });
+		  
+		});
+    </script>
+</html>
