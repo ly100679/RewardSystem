@@ -235,6 +235,7 @@
       reviewDDL:评审截止(yyyy-mm-dd)
       endDate:结果公布(yyyy-mm-dd)
       description:赛事描述(string)
+      status:赛事阶段(string)
       files:[{
         path:竞赛文件路径(string)
         name:文件名字(string)
