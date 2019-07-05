@@ -1,3 +1,11 @@
+# 作品阶段
+
+  未提交，已提交，团委初审，专家评审，现场答辩，奖项公布
+  
+# 竞赛阶段
+
+  未开始，作品提交，团委初审，专家评审，现场答辩，奖项公布，已结束
+
 # 1 登录验证:
 
   method: POST
@@ -197,6 +205,7 @@
       reviewDDL:评审截止(yyyy-mm-dd)
       endDate:结果公布(yyyy-mm-dd)
       description:赛事描述(string)
+      status:赛事阶段(string)
     }	
   
   接收:
@@ -542,3 +551,29 @@
     }	
   
   url: "/expertInfo"
+  
+  # 24 修改比赛数据：
+
+  method: PUT
+
+  上传:
+  
+    {
+      competitionName:赛事名称(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+      status:赛事阶段(string)
+    }	
+  
+  接收:
+   
+    {
+      status:操作是否成功(bool)
+    }	
+  
+  url: "/competition?id="+竞赛id(string)
