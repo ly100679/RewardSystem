@@ -124,11 +124,10 @@
                     <input disabled type="checkbox" name="Create2" title="模型">
                     <input disabled type="checkbox" name="Create3" title="图纸">
                     <input disabled type="checkbox" name="Create4" title="磁盘">
-                    <input disabled type="checkbox" name="Create5" title="图纸">
-                    <input disabled type="checkbox" name="Create7" title="图片">
-                    <input disabled type="checkbox" name="Create8" title="录像">
-                    <input disabled type="checkbox" name="Create9" title="样品">
-                    <input disabled type="checkbox" name="Create6" title="现场演示">
+                    <input disabled type="checkbox" name="Create6" title="图片">
+                    <input disabled type="checkbox" name="Create7" title="录像">
+                    <input disabled type="checkbox" name="Create8" title="样品">
+                    <input disabled type="checkbox" name="Create5" title="现场演示">
                     <input disabled type="checkbox" name="Create1" title="实物、产品">
                 </div>
 <!--                作品调查方式	□走访  □问卷  □现场采访  □人员介绍  □个别交谈  □亲临实践  □会议  □图片、照片   -->
@@ -360,18 +359,47 @@
 
                 <fieldset class="layui-elem-field layui-field-title"><legend>作品文档</legend><div class="layui-field-box"></div></fieldset>
                 <div id="fiels" style="width: 80%;margin: 0 0 50px 0;">
+					<p id="defaultFiels">无</p>
                 </div>
 				<fieldset class="layui-elem-field layui-field-title"><legend>作品图片</legend><div class="layui-field-box"></div></fieldset>
 				<div id="img" style="width: 100%;margin: 0 0 50px 0;">
+					<p id="defaultImages">无</p>
 				</div>
                 <fieldset class="layui-elem-field layui-field-title"><legend>作品视频</legend><div class="layui-field-box"></div></fieldset>
                 <div id="video" style="width: 80%;margin: 0 0 50px 0;">
+					<p id="defaultVedios">无</p>
                 </div>
             </div>
 			
-			<div class="layui-row" style="margin: 10px 0;">
-				<div class="layui-col-md2 layui-col-md-offset4" style="text-align: center;">
-					<button class="layui-btn layui-btn-primary" id="reset" style="width:60%;margin:auto;" onclick="window.history.back(-1);">返回</button>
+			<div id="stureturn" class="layui-row" style="margin: 100px 0;">
+				<div class="layui-col-md2 layui-col-md-offset2" style="text-align: center;">
+					<button class="layui-btn layui-btn-primary" style="width:60%;margin:auto;" onclick="window.history.back(-1)">返回</button>
+				</div>
+			</div>
+			
+			<div id="expertScore">
+				<fieldset class="layui-elem-field layui-field-title"><legend>评分</legend><div class="layui-field-box"></div></fieldset>
+				<div class="layui-form" lay-filter="expertScore" style="height: 100%;">
+					<div class="layui-form-item"style="width: 80%;">
+					    <label class="layui-form-label">作品得分</label>
+					    <div class="layui-input-block" style="width: 80%; ">
+					        <input type="text" name="score" required  lay-verify="required" autocomplete="off" class="layui-input">
+					    </div>
+					</div>
+					<div class="layui-form-item layui-form-text" style="width: 80%;">
+					    <label class="layui-form-label">评审意见</label>
+					    <div class="layui-input-block">
+					        <textarea name="opinion"  placeholder="请输入评审意见" class="layui-textarea"></textarea>
+					    </div>
+					</div>
+					<div class="layui-row" style="margin: 10px 0;">
+						<div class="layui-col-md2 layui-col-md-offset2" style="text-align: center;">
+							<button class="layui-btn layui-btn-primary" lay-submit lay-filter="reset" id="reset" style="width:60%;margin:auto;">返回</button>
+						</div>
+						<div class="layui-col-md2 layui-col-md-offset4" style="text-align: center;">
+							<button class="layui-btn" id="nextWork" style="width:60%;margin:auto;">下一页</button>
+						</div>
+					</div>
 				</div>
 			</div>
         </div>
@@ -403,6 +431,10 @@
 	if(user.enter=='expert'){
 		$("#author").css('display','none');
 	}
+	if(user.enter=='student'){
+		$('#nextWork').css('display','none');
+		$('#expertScore').css('display','none');
+	}
     layui.use('form', function(){
         var form = layui.form;
         $.ajax({
@@ -415,13 +447,18 @@
 				for(var i=1;i<=data.data[0].files.length;i++){
 					if(data.data[0].files[i-1].type==2&&data.data[0].files[i-1].path=='')
 						continue;
-					if(data.data[0].files[i-1].type==0)
+					if(data.data[0].files[i-1].type==0){
 						var test = '<img style="width:220px;height:250px;margin:20px 20px 0 0" src="' + 
 									host + data.data[0].files[i-1].path +'" onclick=' + "'" + 'window.open("' + host + data.data[0].files[i-1].path + '")' + "'" +'/>' ;
-					else if (data.data[0].files[i-1].type==1)
+						$("#defaultImages").css('display','none');
+					}
+					else if (data.data[0].files[i-1].type==1){
 						var test = '<p><a href="' + host + data.data[0].files[i-1].path+'">' + data.data[0].files[i-1].filename + '</a></p>';
-					else
+						$("#defaultFiles").css('display','none');
+					}	
+					else{
 						var test = '<video src="' + host + data.data[0].files[i-1].path + '" controls height="500" width="500"><vedio/>';
+						$("#defaultvedios").css('display','none');}
 					$('#'+filetype[data.data[0].files[i-1].type]).append(test);
 				}
         		for(var i=1;i<=data.data[0].partner.length;i++){
@@ -442,6 +479,47 @@
                 else
                     $("#c1").css("display","none");
         	}
+		});
+		
+		form.on('submit(reset)', function(data){
+			console.log(data.field);
+			$.ajax({
+				type:"PUT",
+				url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+				dataType:"json",
+				contentType:"application/json", 
+				data:JSON.JSON.stringify(data.field),
+				success:function(data){
+					if(data.status){
+						layer.msg("评分成功！返回",{time:1000,icon:6});
+					}
+					else{
+						layer.msg("评分失败！返回",{time:1000,icon:5});
+					}
+					window.history.back(-1);
+				}
+			});
+			return false;
+		});
+		form.on('submit(nextwork)', function(data){
+			console.log(data.field);
+			$.ajax({
+				type:"PUT",
+				url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+				dataType:"json",
+				contentType:"application/json", 
+				data:JSON.JSON.stringify(data.field),
+				success:function(data){
+					if(data.status){
+						layer.msg("评分成功！",{time:1000,icon:6});
+					}
+					else{
+						layer.msg("评分失败！",{time:1000,icon:5});
+					}
+					window.history.back(-1);
+				}
+			});
+			return false;
 		});
 	});
 
