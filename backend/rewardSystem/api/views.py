@@ -351,6 +351,18 @@ def getCompetitionStatus(competition):
 	else:
 		return 'before start'
 
+def setCompetition(competition, body):
+	competition.name = body.get('competitionName', competition.name)
+	competition.acronym = body.get('acronym', competition.acronym)
+	competition.start = datetime.strptime(body.get('startDate', competition.start.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.pre_review = datetime.strptime(body.get('submitDDL', competition.pre_review.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.review = datetime.strptime(body.get('checkDDL', competition.review.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.oral_defense = datetime.strptime(body.get('reviewDDL', competition.oral_defense.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.end = datetime.strptime(body.get('endDate', competition.end.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.description = body.get('description', competition.description)
+	competition.status = body.get('status', competition.status)
+	competition.save()
+
 def competition(request):
 	if request.method == 'GET':
 		competition_id = request.GET.get('id', None)
@@ -370,7 +382,7 @@ def competition(request):
 				'reviewDDL': competition.oral_defense.strftime('%Y-%m-%d'),
 				'endDate': competition.end.strftime('%Y-%m-%d'),
 				'description': competition.description,
-				'competitionStatus': getCompetitionStatus(competition)
+				'competitionStatus': competition.status
 			}
 			competition_list.append(data)
 		if competition_id is not None:
@@ -381,18 +393,25 @@ def competition(request):
 		try:
 			body = json.loads(request.body)
 			competition = Competition()
-			competition.name = body['competitionName']
-			competition.acronym = body['acronym']
-			competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
-			competition.pre_review = datetime.strptime(body['submitDDL'], '%Y-%m-%d')
-			competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
-			competition.oral_defense = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
-			competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
-			competition.description = body['description']
-			competition.save()
+			# competition.name = body['competitionName']
+			# competition.acronym = body['acronym']
+			# competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
+			# competition.pre_review = datetime.strptime(body['submitDDL'], '%Y-%m-%d')
+			# competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
+			# competition.oral_defense = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
+			# competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
+			# competition.description = body['description']
+			# competition.status = body['status']
+			# competition.save()
+			setCompetition(competition, body)
 			return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'status': False}), content_type='application/json')
+	if request.method == 'PUT':
+		body = json.loads(request.body)
+		competition = Competition.objects.get(pk=request.GET.get('id'))
+		setCompetition(competition, body)
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def competitionFile(request):
 	competition_id = request.GET.get('competitionID', None)
@@ -530,18 +549,17 @@ def submitfile(request):
 	data = {}
 	coauthors = CoAuthor.objects.filter(project=project)
 	i = 0
+	edu_dict = {
+		'0': 'A',
+		'1': 'B',
+		'2': 'C',
+		'3': 'D'
+	}
 	for coauthor in coauthors:
 		i = i + 1
 		data['name'+str(i)] = coauthor.name
 		data['acc'+str(i)] = coauthor.student_id
-		if coauthor.education == '0':
-			data['edu'+str(i)] = 'A'
-		elif coauthor.education == '1':
-			data['edu'+str(i)] = 'B'
-		elif coauthor.education == '2':
-			data['edu'+str(i)] = 'C'
-		elif coauthor.education == '3':
-			data['edu'+str(i)] = 'D'
+		data['edu'+str(i)] = edu_dict[coauthor.education]
 		data['phoneno'+str(i)] = coauthor.tel
 		data['email'+str(i)] = coauthor.email
 	while i < 4:
@@ -557,14 +575,8 @@ def submitfile(request):
 	else:
 		data['isInvention'] = ''
 		data['isReport'] = u'✓'
-	if author.education == '0':
-		data['edu0'] = 'A'
-	elif author.education == '1':
-		data['edu0'] = 'B'
-	elif author.education == '2':
-		data['edu0'] = 'C'
-	elif author.education == '3':
-		data['edu0'] = 'D'
+	data['edu0'] = edu_dict[author.education]
+	# return HttpResponse(json.dumps({'path': project.full_name}), content_type='application/json')
 	document.merge(
 		projectID=getProjectID(project),
 		workName=project.name,
@@ -579,8 +591,8 @@ def submitfile(request):
 		keyword=project.keyword,
 		major=author.major.name,
 		inYear=str(author.enroll_year),
-		fullNameOfwork=project.full_name,
-		fullNameOfwork1=project.full_name,
+		fullNameOfWork=project.full_name,
+		fullNameOfWork1=project.full_name,
 		cat=project.category,
 		postalAddress=author.contact_address,
 		phoneNumber=author.tel,

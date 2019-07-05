@@ -38,6 +38,7 @@ class Competition(models.Model):
     oral_defense = models.DateField(auto_now=False, auto_now_add=False)
     end = models.DateField(auto_now=False, auto_now_add=False)
     description = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=100, null=True, blank=True)
 
 class CompetitionFile(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
