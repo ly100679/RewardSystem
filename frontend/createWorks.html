@@ -91,7 +91,7 @@
                             <div class="layui-form-item" style="width: 80%">
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 作品分类</label>
                                 <div class="layui-input-block">
-                                    <select name="declarationOfWork" lay-verify="required">
+                                    <select name="declarationOfWork">
                                         <option value=""></option>
                                         <option name="declarationOfWork" value="A" title=""checked>A.机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)</option>
                                         <option name="declarationOfWork" value="B" title="">B.信息技术(包括计算机、电信、通讯、电子等)</option>
@@ -143,7 +143,7 @@
                             <div class="layui-form-item" style="width: 100%;display: inline-block;" >
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 出生年月</label>
                                 <div class="layui-input-block" style="width: 400px;">
-                                    <input type="text" name="dateOfBirth" id="date" lay-verify="date|required" autocomplete="off" class="layui-input">
+                                    <input type="text" name="dateOfBirth" id="date" lay-verify="date" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -164,14 +164,14 @@
                             <div class="layui-form-item" style="width: 40%;display: inline-block;" >
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 作品全称</label>
                                 <div class="layui-input-block" style="width: 200px;">
-                                    <input type="text" name="fullNameOfwork" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                    <input type="text" name="fullNameOfwork" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-form-item" style="width: 40%;display: inline-block;" >
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 通讯地址</label>
                                 <div class="layui-input-block" style="width: 200px;">
-                                    <input type="text" name="postalAddress" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                    <input type="text" name="postalAddress"  autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -507,6 +507,12 @@
 				return false;
 			});
 			form.on('submit(submit)', function(data){
+				if(data.field['declarationOfWork']==''||data.field['overallDescriptionOfWork']==''
+				||data.field['innovationPoint']==''||data.field['keyWord']==''||data.field['dateOfBirth']==''
+				||data.field['fullNameOfwork']==''||data.field['postalAddress']==''||data.field['currentEducation']==''){
+					layer.msg("请填写完整后再提交！",{time:1000,icon:5});
+					return false;
+				}
 				saveProject(data,"已提交");
 				return false;
 			});
@@ -969,10 +975,6 @@
     layui.use('form', function(){
         var form = layui.form;
         //监听提交
-        form.on('submit(formDemo)', function(data){
-            layer.msg(JSON.stringify(data.field));
-            return false;
-            });
     });
 
     layui.use('carousel', function(){
