@@ -83,6 +83,12 @@
         phoneNumber:联系电话(int)
         email:邮箱(string)
         currentEducation:现学历(0-3)
+        display(length = 8):[
+          多选框值(bool)
+        ,...]
+        research(length = 15):[
+          多选框值(bool)
+        ,...]
         partner:[{
           nameOfPartner:姓名(string)
           studentIDOfPartner:学号(int)
@@ -180,6 +186,12 @@
         emailOfPartner:邮箱(string)
         currenteducationOfPartner:现学历(0-3)
       },..]
+      display(length = 8):[
+        多选框值(bool)
+      ,...]
+      research(length = 15):[
+        多选框值(bool)
+      ,...]
     }	
   
   接收:
