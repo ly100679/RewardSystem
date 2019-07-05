@@ -219,7 +219,7 @@ def project(request):
 				'keyWord': project.keyword,
 				'name': author.name,
 				'account': author.student_id,
-				'dateOfBirth': author.birth_date.strftime('%Y-%m-%d'),
+				'dateOfBirth': author.birth_date,
 				'major': author.major.name,
 				'inYear': author.enroll_year,
 				'fullNameOfwork': project.full_name,
@@ -287,7 +287,7 @@ def project(request):
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def setProjectAuthorInfo(student, body):
-	birth_date = datetime.strptime(body['dateOfBirth'],'%Y-%m-%d')
+	birth_date = body['dateOfBirth']
 	student.birth_date = birth_date
 	student.contact_address = body['postalAddress']
 	student.education = body['currentEducation']
@@ -355,11 +355,11 @@ def getCompetitionStatus(competition):
 def setCompetition(competition, body):
 	competition.name = body.get('competitionName', competition.name)
 	competition.acronym = body.get('acronym', competition.acronym)
-	competition.start = datetime.strptime(body.get('startDate', competition.start.strftime('%Y-%m-%d')), '%Y-%m-%d')
-	competition.pre_review = datetime.strptime(body.get('submitDDL', competition.pre_review.strftime('%Y-%m-%d')), '%Y-%m-%d')
-	competition.review = datetime.strptime(body.get('checkDDL', competition.review.strftime('%Y-%m-%d')), '%Y-%m-%d')
-	competition.oral_defense = datetime.strptime(body.get('reviewDDL', competition.oral_defense.strftime('%Y-%m-%d')), '%Y-%m-%d')
-	competition.end = datetime.strptime(body.get('endDate', competition.end.strftime('%Y-%m-%d')), '%Y-%m-%d')
+	competition.start = body.get('startDate', competition.start)
+	competition.pre_review = body.get('submitDDL', competition.pre_review)
+	competition.review = body.get('checkDDL', competition.review)
+	competition.oral_defense = body.get('reviewDDL', competition.oral_defense)
+	competition.end = body.get('endDate', competition.end)
 	competition.description = body.get('description', competition.description)
 	competition.status = body.get('status', competition.status)
 	competition.save()
@@ -377,11 +377,11 @@ def competition(request):
 				'id': competition.id,
 				'competitionName': competition.name,
 				'acronym': competition.acronym,
-				'startDate': competition.start.strftime('%Y-%m-%d'),
-				'submitDDL': competition.pre_review.strftime('%Y-%m-%d'),
-				'checkDDL': competition.review.strftime('%Y-%m-%d'),
-				'reviewDDL': competition.oral_defense.strftime('%Y-%m-%d'),
-				'endDate': competition.end.strftime('%Y-%m-%d'),
+				'startDate': competition.start,
+				'submitDDL': competition.pre_review,
+				'checkDDL': competition.review,
+				'reviewDDL': competition.oral_defense,
+				'endDate': competition.end,
 				'description': competition.description,
 				'competitionStatus': competition.status
 			}
@@ -396,11 +396,11 @@ def competition(request):
 		competition = Competition()
 		# competition.name = body['competitionName']
 		# competition.acronym = body['acronym']
-		# competition.start = datetime.strptime(body['startDate'], '%Y-%m-%d')
-		# competition.pre_review = datetime.strptime(body['submitDDL'], '%Y-%m-%d')
-		# competition.review = datetime.strptime(body['checkDDL'], '%Y-%m-%d')
-		# competition.oral_defense = datetime.strptime(body['reviewDDL'], '%Y-%m-%d')
-		# competition.end = datetime.strptime(body['endDate'], '%Y-%m-%d')
+		# competition.start = body['startDate']
+		# competition.pre_review = body['submitDDL']
+		# competition.review = body['checkDDL']
+		# competition.oral_defense = body['reviewDDL']
+		# competition.end = body['endDate']
 		# competition.description = body['description']
 		# competition.status = body['status']
 		# competition.save()
@@ -586,7 +586,7 @@ def submitfile(request):
 		isReport=data['isReport'],
 		name=author.name,
 		account=str(author.student_id),
-		dateOfBirth=author.birth_date.strftime('%Y-%m-%d'),
+		dateOfBirth=author.birth_date,
 		overalDescriptionOfWork=project.description,
 		innovationPoint=project.innovation,
 		keyword=project.keyword,

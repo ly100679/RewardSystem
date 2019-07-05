@@ -33,11 +33,11 @@ class Committee(User):
 class Competition(models.Model):
     name = models.CharField(max_length=200)
     acronym = models.CharField(max_length=10, null=True, blank=True)
-    start = models.DateField(auto_now=False, auto_now_add=False)
-    pre_review = models.DateField(auto_now=False, auto_now_add=False)
-    review = models.DateField(auto_now=False, auto_now_add=False)
-    oral_defense = models.DateField(auto_now=False, auto_now_add=False)
-    end = models.DateField(auto_now=False, auto_now_add=False)
+    start = models.CharField(max_length=100, null=True, blank=True)
+    pre_review = models.CharField(max_length=100, null=True, blank=True)
+    review = models.CharField(max_length=100, null=True, blank=True)
+    oral_defense = models.CharField(max_length=100, null=True, blank=True)
+    end = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=100, null=True, blank=True)
 
