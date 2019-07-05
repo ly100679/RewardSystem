@@ -48,15 +48,15 @@
                 <fieldset class="layui-elem-field layui-field-title" style="margin:10px 0 0 0"><legend style="font-size:28px">&nbsp&nbsp竞赛管理</legend><div class="layui-field-box"></div></fieldset>
                 <div style="height:15%;margin:auto;border: 1px solid #ddd; width: 90%; border-radius: 5px; margin-top: 10px;margin-bottom: 40px;" class="layui-row  layui-col-space10">
                     <div style="font-size:20px;text-align: center;white-space: nowrap;" class="layui-col-md1 verticalCenter">当前阶段:</div>
-                    <div style="font-size:35px;color: #01AAED;transform:translate(-20%,-50%)" class="layui-col-md2 layui-col-md-offset1 verticalCenter" id="currentStatus">作品提交</div>
+                    <div style="font-size:35px;color: #01AAED;transform:translate(-20%,-50%)" class="layui-col-md2 layui-col-md-offset1 verticalCenter" id="currentStatus"></div>
                     <div id="timeBox" style="font-size:15px;" class="layui-col-md4 verticalCenter">
-                        阶段时间:2019年7月1日-2019年8月2日
+                        阶段时间:
                     </div>
                     <div style="" class="layui-col-md2 verticalCenter">
                         <button class="layui-btn layui-btn-primary" id="changeCondition" lay-filter="changeCondition">进入下一阶段</button>
                     </div>
 					<div style="" class="layui-col-md2 verticalCenter">
-					    <button class="layui-btn layui-btn-primary" id="uploadContestFile" lay-filter="uploadContestFile">上传文件</button>
+					    <button class="layui-btn layui-btn-primary" id="fileController" lay-filter="fileController">文件管理</button>
 					</div>
                 </div>
 				<div class="layui-tab" id="listBox" style="width:90%;margin:auto;height:60%">
@@ -79,22 +79,6 @@
         </div>
         </div>
         
-        <!--更改阶段的表单-->
-        <div id="changeCondition-main" style="display: none;">
-            <form class="layui-form" id="changeCondition-form" action="">
-                
-                <div class="layui-form-item" style="text-align: center" >
-                 <div> <input type="radio" name="condition" value="1"  title="提交"checked></div>
-                  <div><input type="radio" name="condition" value="2"  title="初审"></div>
-                  <div><input type="radio" name="condition" value="3"  title="评审"></div>
-                  <div><input type="radio" name="condition" value="4"  title="答辩"></div>
-                  <div><input type="radio" name="condition" value="5"  title="结束"></div>
-                </div>
-                <div class="layui-form-item" style="text-align: center">
-                        <button class="layui-btn" lay-submit lay-filter="saveCondition" >立即提交</button>
-                </div>
-            </form>
-        </div>
         <!--手动添加专家的表单-->
         <div id="addExpert-main" style="display: none;">
                 <form class="layui-form" id="addExpert-form" action="">
@@ -125,7 +109,21 @@
                   </form>
         </div>
                   
-
+		<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;display: none;" id="fileControllerLayer">
+		    <button type="button" class="layui-btn layui-btn-normal" id="fileList">选择文件</button>
+		    <div class="layui-upload-list">
+		        <table class="layui-table">
+		            <thead>
+		            <tr><th>文件名</th>
+		                <th>大小</th>
+		                <th>状态</th>
+		                <th>操作</th>
+		            </tr></thead>
+		            <tbody id="filedemoList"></tbody>
+		        </table>
+		    </div>
+		    <button type="button" class="layui-btn" id="fileListAction">开始上传</button>
+		</div>
              
     </body>
     <!--点击更改阶段与添加专家-->
@@ -144,6 +142,14 @@
 		nextPeriod["专家评审"]="现场答辩";
 		nextPeriod["现场答辩"]="奖项公布";
 		nextPeriod["奖项公布"]="已结束";
+		var passPeriod = new Map();
+		passPeriod["初审中"]="初审通过";
+		passPeriod["评审中"]="进入答辩";
+		passPeriod["现场答辩"]="获奖";
+		var firePeriod = new Map();
+		firePeriod["初审中"]="初审未通过";
+		firePeriod["评审中"]="未进入答辩";
+		firePeriod["现场答辩"]="未获奖";
 		
 		var contestID=JSON.parse(sessionStorage.getItem("contestManage")).contestID;
 		$.ajax({
@@ -158,6 +164,16 @@
 					$("#uploadContestFile").css("display","none");
 				}
 				$("#currentStatus").html(data.competitionStatus);
+				if(data.competitionStatus=="作品提交")
+					$("#timeBox").html("阶段时间:"+data.startDate+"至"+data.submitDDL);
+				else if(data.competitionStatus=="团委初审")
+					$("#timeBox").html("阶段时间:"+data.submitDDL+"至"+data.checkDDL);
+				else if(data.competitionStatus=="专家评审")
+					$("#timeBox").html("阶段时间:"+data.checkDDL+"至"+data.reviewDDL);
+				else if(data.competitionStatus=="现场答辩")
+					$("#timeBox").html("阶段时间:"+data.reviewDDL+"至"+data.endDate);
+				else
+					$("#timeBox").html("阶段时间:无");
 				
 				$("#changeCondition").click(function(){
 				    $.ajax({
@@ -180,8 +196,198 @@
 			},
 		});
 		
+		function loadUpload(){
+			layui.use('upload', function(){
+				var $ = layui.jquery;
+			  var upload = layui.upload;
+				
+				var fileStatic=new Map();
+				
+				$(".layui-upload-list tbody").empty();
+				
+				function deleteButtonBind(tr,ListView,ListIns,type,filename,index){
+					tr.find('.demo-delete').on('click', function(){
+					  var tr = ListView.find('tr#upload-'+ index)
+					  ,tds = tr.children();
+					  if(tds.eq(2).html()=='等待上传'){
+							fileStatic[filename]=false;
+					  	delete files[index]; //删除对应的文件
+					  	tr.remove();
+					  }
+					  else{
+					  	$.ajax({
+					  		type:"DELETE",
+					  		url: hostIP+"competitionFile?competitionID="+contestID,
+					  		//url: "http://localhost:3000/register",
+					  		dataType:"json",
+					  		contentType:"application/json", // 指定这个协议很重要
+					  		data:JSON.stringify({filename:filename}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					  		success:function(data){
+					  			console.log(data);
+					  			if(data.code){
+										fileStatic[filename]=false;
+					  				layer.msg("删除成功",{time:1000,icon:6});
+										if(type==0)
+											imageNum++;
+										else
+											videoNum++;
+					  				tr.remove();
+					  			}
+					  			else{
+					  					layer.msg("删除失败",{time:1000,icon:5});
+					  					//layer.msg("其他错误",{time:1000,icon:5});
+					  			}
+					  		}
+					  	});
+					  }
+					});
+				}
+				
+					$.ajax({
+							type:"GET",
+							url: hostIP+"competitionFile?competitionID="+contestID,
+							dataType:"json",
+							contentType:"application/json", 
+							success:function(data){
+								file=data.files;
+								fileStatic=data.files;
+								for(var i=0;i<file.length;i++){
+									if(!file[i].path)
+										continue;
+									fileStatic[file[i].filename]=true;
+									var tr = $(['<tr id="upload-'+ i +'">'
+												  ,'<td><a target="view_window" href='+host+file[i].path+'>'+ file[i].filename +'</a></td>'
+												  ,'<td>'+ file[i].datasize.toFixed(1) +'kb</td>'
+												  ,'<td><span style="color: #5FB878;">上传成功</span></td>'
+												  ,'<td>'
+												    ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+												    ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+												  ,'</td>'
+												,'</tr>'].join(''));
+												
+									deleteButtonBind(tr,filedemoListView,fileListIns,1,file[i].filename,i);
+												
+									filedemoListView.append(tr);
+								}
+							}
+					});
+					
+				var filedemoListView = $('#filedemoList')
+					,fileListIns = upload.render({
+					  elem: '#fileList'
+					  ,url: hostIP+'competitionFile?competitionID='+contestID
+					  ,accept: 'file'
+					  ,multiple: true
+					  ,auto: false
+					  ,bindAction: '#fileListAction'
+						,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+							layer.load(); //上传loading
+						}
+					  ,choose: function(obj){   
+					    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+					    //读取本地文件
+					    obj.preview(function(index, file, result){
+									if(fileStatic[file.name]){
+										layer.msg("重复文件",{time:1000,icon:5});
+										return;
+									}
+					      var tr = $(['<tr id="upload-'+ index +'">'
+					        ,'<td>'+ file.name +'</td>'
+					        ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+					        ,'<td>等待上传</td>'
+					        ,'<td>'
+					          ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+					          ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+					        ,'</td>'
+					      ,'</tr>'].join(''));
+					      
+					      //单个重传
+					      tr.find('.demo-reload').on('click', function(){
+					        obj.upload(index, file);
+					      });
+					      
+					      //删除
+					      tr.find('.demo-delete').on('click', function(){
+					        var tr = filedemoListView.find('tr#upload-'+ index)
+					        ,tds = tr.children();
+					        if(tds.eq(2).html()=='等待上传'){
+										fileStatic[file.name]=false;
+					        	delete files[index]; //删除对应的文件
+					        	tr.remove();
+					        	fileListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        }
+					        else{
+					        	$.ajax({
+					        		type:"DELETE",
+					        		url: hostIP+"competitionFile?competitionID="+contestID,
+					        		//url: "http://localhost:3000/register",
+					        		dataType:"json",
+					        		contentType:"application/json", // 指定这个协议很重要
+					        		data:JSON.stringify({filename:file.name}), //只有这一个参数，json格式，后台解析为实体，后台可以直接用
+					        		success:function(data){
+					        			console.log(data);
+					        			if(data.code){
+													fileStatic[file.name]=false;
+					        				layer.msg("删除成功",{time:1000,icon:6});
+					        				delete files[index]; //删除对应的文件
+					        				tr.remove();
+					        				fileListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+					        			}
+					        			else{
+					        					layer.msg("删除失败",{time:1000,icon:5});
+					        					//layer.msg("其他错误",{time:1000,icon:5});
+					        			}
+					        		}
+					        	});
+					        }
+					      });
+					      
+					      fileStatic[file.name]=true;
+					      filedemoListView.append(tr);
+					    });
+					  }
+					  ,done: function(res, index, upload){
+							layer.closeAll('loading');
+					    if(res.code){ //上传成功
+					      var tr = filedemoListView.find('tr#upload-'+ index)
+					      ,tds = tr.children();
+					      tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+								tds.eq(3).find('.demo-reload').addClass('layui-hide'); //隐藏重传
+					      return delete this.files[index]; //删除文件队列已经上传成功的文件
+					    }
+					    this.error(index, upload);
+					  }
+					  ,error: function(index, upload){
+							layer.closeAll('loading');
+					    var tr = filedemoListView.find('tr#upload-'+ index)
+					    ,tds = tr.children();
+					    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+					    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+					  }
+					});
+			});
+		}
+		
+		$("#fileController").click(function(){
+		    layui.use('layer',function(){
+		        var layer=layui.layer;
+		        layer.open({
+		            type:1,
+		            title:"竞赛文件管理",
+		            area:['800px','500px'],
+		            content: $('#fileControllerLayer'),
+		            success:function(layero,index){
+						$('#fileControllerLayer').css("display","block");
+						loadUpload();
+					},
+					end:function(){
+						$('#fileControllerLayer').css("display","none");
+					}
+		        });
+		    });
+		});
 
-        $("#addExpert").click(function(){
+        $("#importExpert").click(function(){
             layui.use('layer',function(){
                 var layer=layui.layer;
                 layer.open({
@@ -195,18 +401,6 @@
 						console.log(layero)
 					}
                 });
-            });
-        });
-        
-
-        layui.use(['layer', 'form'], function (){
-            var layer=layui.layer;
-            $=layui.jquery;
-            form=layui.form;
-            //监听提交
-            form.on('submit(saveExpert)',function(data){
-
-
             });
         });
 
@@ -255,6 +449,36 @@
 									data:JSON.stringify({status:"未提交"}),
 									success:function(data){
 										layer.msg("退回成功！",{time:1000,icon:6});
+										window.location.href="contestManage.html";
+									},
+								});
+							});
+						}
+						if(obj.event==="pass"){
+							layer.confirm('确定通过 “'+obj.data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
+								$.ajax({
+									type:"PUT",
+									url: hostIP+"studentProject?id="+obj.data.id,
+									dataType:"json",
+									contentType:"application/json", 
+									data:JSON.stringify({status:passPeriod[obj.data.projectPeriod]}),
+									success:function(data){
+										layer.msg("操作成功！",{time:1000,icon:6});
+										window.location.href="contestManage.html";
+									},
+								});
+							});
+						}
+						if(obj.event==="fire"){
+							layer.confirm('确定不通过 “'+obj.data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
+								$.ajax({
+									type:"PUT",
+									url: hostIP+"studentProject?id="+obj.data.id,
+									dataType:"json",
+									contentType:"application/json", 
+									data:JSON.stringify({status:firePeriod[obj.data.projectPeriod]}),
+									success:function(data){
+										layer.msg("操作成功！",{time:1000,icon:6});
 										window.location.href="contestManage.html";
 									},
 								});

@@ -70,28 +70,15 @@
 	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
-		$("#createProject").click(function(){
-			$.ajax({
-				type:"POST",
-				url: hostIP+"studentProject",
-				dataType:"json",
-				contentType:"application/json", 
-				success:function(data){
-					sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
-					window.location.href="createWorks.html";
-				}
-			});
-		});
         layui.use('table', function(){
 		  var table = layui.table;
 		  
 		  $.ajax({
 		  				type:"GET",
-		  				url: hostIP+"studentProject?studentID="+user.account,
+		  				url: hostIP+"studentProject?expertID=3",//+user.account,
 		  				dataType:"json",
 		  				contentType:"application/json", 
 		  				success:function(data){
-		  								var table=layui.table;
 		  								table.render({
 		  										elem: "#workTable",
 		  										cols: [[ //标题栏
@@ -109,40 +96,15 @@
 		  								});
 		  								table.on('tool(workTable)', function(obj){
 		  										var data = obj.data;
-		  										if(obj.event==='del'){
-		  												layer.confirm('确定删除 “'+data.projectName + '” ?',{icon: 3, title:'提示'},function (index) {
-		  														$.ajax({
-		  																type:"DELETE",
-		  																url: hostIP+"studentProject?id="+data.id,
-		  																dataType:"json",
-		  																contentType:"application/json", 
-		  																success:function(data){
-		  																		if(data.status){
-		  																				obj.del();
-		  																				layer.close(index);
-		  																		}
-		  																},
-		  														});
-		  												});
-		  										}
-		  										if(obj.event==='export'){
-		  												$.ajax({
-		  														type:"GET",
-		  														url: hostIP+"submitfile?projectID="+obj.data.id,
-		  														dataType:"json",
-		  														contentType:"application/json", 
-		  														success:function(data){
-		  																window.open(host+data.path);
-		  														},
-		  												});
-		  										}
-		  										if(obj.event==='edit'){
-		  												sessionStorage.setItem("projectID",JSON.stringify({projectID:data.id,status:"edit"}));
-		  												window.location.href="createWorks.html";	
-		  										}
 												if(obj.event==='show'){
 													sessionStorage.setItem("projectID",JSON.stringify({projectID:data.id}));
 													window.location.href="projectInfo.html";
+												}
+		  										if(obj.event==='grade'){
+		  												layer.msg("打分还没做！",{time:1000,icon:5});
+		  										}
+												if(obj.event==='download'){
+														layer.msg("下载还没做！",{time:1000,icon:5});
 												}
 		  								});
 		  				},
