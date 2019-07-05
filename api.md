@@ -578,3 +578,21 @@
     }	
   
   url: "/competition?id="+竞赛id(string)
+  
+  # 25 团委获取专家信息：
+
+  method: GET
+
+  上传:文件
+  
+  接收:
+   
+    {
+      [{
+        name:专家姓名(string)
+        account:专家账号(string)
+        yield:专家领域(string)
+      },..]
+    }	
+  
+  url: "/expertInfo"
