@@ -639,3 +639,31 @@
     }
     
   url: "/zipProject?expertID=专家id"
+  
+  # 27 获取当前竞赛信息
+  
+  method: GET
+  
+  上传：无
+    
+  接受：
+  
+    {
+      id:竞赛id(int)
+      competitionName:赛事名称(string)
+      competitionStatus:竞赛状态(string)
+      acronym:赛事简称(string)
+      startDate:开始日期(yyyy-mm-dd)
+      submitDDL:提交截止(yyyy-mm-dd)
+      checkDDL:初审截止(yyyy-mm-dd)
+      reviewDDL:评审截止(yyyy-mm-dd)
+      endDate:结果公布(yyyy-mm-dd)
+      description:赛事描述(string)
+      status:赛事阶段(string)
+      files:[{
+        path:竞赛文件路径(string)
+        name:文件名字(string)
+      },...]
+    }	
+    
+  url: "/currenCompetition"
