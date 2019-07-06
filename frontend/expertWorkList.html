@@ -49,11 +49,36 @@
                     <table id="workTable" lay-filter="workTable"></table>
                 </div>
         </div>
-        
-        </div>
-                        
-                
-             
+		
+		<div id="expertScore">
+			<fieldset class="layui-elem-field layui-field-title"><legend>评分</legend><div class="layui-field-box"></div></fieldset>
+			<div class="layui-form" lay-filter="expertScore" style="height: 80%;">
+				<div class="layui-form-item"style="width: 80%;">
+				    <label class="layui-form-label">作品名称</label>
+				    <div class="layui-input-block" style="width: 80%; ">
+				        <input type="text" disabled name="nameOfWork" autocomplete="off" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item"style="width: 80%;">
+				    <label class="layui-form-label">作品得分</label>
+				    <div class="layui-input-block" style="width: 80%; ">
+				        <input type="text" name="grade" autocomplete="off" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item layui-form-text" style="width: 80%;">
+				    <label class="layui-form-label">评审意见</label>
+				    <div class="layui-input-block">
+				        <textarea name="advise"  placeholder="请输入评审意见" class="layui-textarea"></textarea>
+				    </div>
+				</div>
+				<div class="layui-row" style="margin: 10px 0;">
+					<div class="layui-col-md2 layui-col-md-offset4" style="text-align: center;">
+						<button class="layui-btn" lay-submit lay-filter="reset" id="reset" style="width:60%;margin:auto;">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+                                                    
     </body>
     <script>
         layui.use('element', function(){
@@ -70,7 +95,7 @@
 	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
-        layui.use('table', function(){
+        layui.use(['table','form'], function(){
 		  var table = layui.table;
 		  
 		  $.ajax({
@@ -101,10 +126,75 @@
 													window.location.href="projectInfo.html";
 												}
 		  										if(obj.event==='grade'){
-		  												layer.msg("打分还没做！",{time:1000,icon:5});
+		  											layui.use('layer',function(){
+		  											    var layer=layui.layer;
+														var form = layui.form;
+		  											    layer.open({
+		  											        type:1,
+		  											        title:"作品给分",
+		  											        area:['800px','500px'],
+		  											        content: $('#expertScore'),
+		  											        success:function(layero,index){
+		  														$('#expertScore').css("display","block");
+																$.ajax({
+																	type:"GET",
+																	url: hostIP+"expertProjectGrade?id="+obj.data.id,
+																	dataType:"json",
+																	contentType:"application/json", 
+																	success:function(data){
+																		form.val('expertScore',{'grade':data['grade']});
+																		form.val('expertScore',{'advise':data['advise']});
+																	}
+																});
+																form.val('expertScore',{'nameOfWork':data.projectName});
+																
+																form.on('submit(reset)', function(data){
+																	console.log(data.field);
+																	$.ajax({
+																		type:"POST",
+																		url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+																		dataType:"json",
+																		contentType:"application/json", 
+																		data:JSON.stringify(data.field),
+																		success:function(data){
+																			if(data.status){
+																				layer.msg("保存成功！返回",{time:1000,icon:6});
+																			}
+																			else{
+																				layer.msg("保存失败！返回",{time:1000,icon:5});
+																			}
+																			window.history.back(-1);
+																		}
+																	});
+																	return false;
+																});
+		  													},
+		  													end:function(){
+		  														$('#expertScore').css("display","none");
+		  													}
+		  											    });
+		  											});
 		  										}
 												if(obj.event==='download'){
-														layer.msg("下载还没做！",{time:1000,icon:5});
+													var zipID = new Array();
+													zipID.push(data.id);
+													$.ajax({
+														type:"PUT",
+														url: hostIP+"/zipProject?expertID="+user.account,
+														dataType:"json",
+														contentType:"application/json", 
+														data:JSON.stringify({id:zipID}),
+														success:function(data){
+															/*if(data.status){
+																layer.msg("保存成功！返回",{time:1000,icon:6});
+															}
+															else{
+																layer.msg("保存失败！返回",{time:1000,icon:5});
+															}
+															window.history.back(-1);*/
+															console.log(data);
+														}
+													});
 												}
 		  								});
 		  				},
