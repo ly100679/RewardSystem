@@ -261,8 +261,11 @@ def project(request):
 				'currentEducation': author.education
 			}
 			if expert_id is not None:
-				opinion = Opinion.objects.filter(expert=expert, project=project)
-				tem['hasEdit'] = True if opinion.status != '0' else False
+				try:
+					opinion = Opinion.objects.filter(expert=expert, project=project)[0]
+					tem['hasEdit'] = True if opinion.status != '0' else False
+				except:
+					tem['hasEdit'] = False
 			project_file_info = getProjectFile(project)
 			tem['files'] = project_file_info['files']
 			partner = []
