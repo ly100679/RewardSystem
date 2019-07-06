@@ -49,7 +49,7 @@
             <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
                 <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
                 <li class="layui-nav-item"><a href="detailOfRaces.html">当前竞赛</a></li>
-                <li class="layui-nav-item layui-this" ><a href="workList.html">作品管理</a></li>
+                <li class="layui-nav-item layui-this" ><a id="mainManagement" href="workList.html">作品管理</a></li>
             </ul>
         </div>
         <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
@@ -431,6 +431,8 @@
 	if(user.enter=='expert'){
 		$("#author").css('display','none');
 		$("#stureturn").css('display','none');
+		$("#mainManagement").attr("href","expertWorkList.html");
+		$("#mainManagement").html("评分管理");
 	}
 	if(user.enter=='student'){
 		$('#nextWork').css('display','none');
@@ -439,6 +441,8 @@
 	if(user.enter=='school'){
 		//$("#stureturn").css('display','none');
 		$("#expertScore").css('display','none');
+		$("#mainManagement").attr("href","contestList.html");
+		$("#mainManagement").html("竞赛管理");
 	}
     layui.use('form', function(){
         var form = layui.form;
