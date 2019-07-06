@@ -84,9 +84,11 @@
         
         <!--手动添加专家的表单-->
         <div id="addExpert-main" style="display: none;text-align: center;height: 100%;">
-			<div class="layui-upload-drag" id="test10" style="margin:auto;position:relative;top:50%;transform: translateY(-50%);">
-				<i class="layui-icon"></i>
-				<p>点击上传，或将文件拖拽到此处(仅允许上传表格)</p>
+			<div class="layui-upload-drag" id="test10" style="margin:auto;position:relative;top:50%;transform: translateY(-50%);width:80%;height: 80%;">
+				<div style="position:relative;top:50%;transform: translateY(-50%);">
+					<i class="layui-icon"></i>
+					<p>点击上传，或将文件拖拽到此处(仅允许上传表格)</p>
+				</div>
 			</div>
         </div>
                   
@@ -451,7 +453,7 @@
 					}
 					table.render({
 						elem: '#workTable'
-						,height: $("#listBox").height()-20
+						,height: $("#listBox").height()-60
 						,data:data.data
 						,page: true //开启分页
 						,cols: [[ //表头
