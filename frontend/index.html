@@ -94,7 +94,9 @@
 					success:function(data){
 						if(data.status){
 							layer.msg("登录成功",{time:1000,icon:6});
+							user.canEdit = data.canEdit;
 							sessionStorage.setItem("user",JSON.stringify(user));
+							console.log(user);
 							window.location.href="newIndex.html";
 						}
 						else{

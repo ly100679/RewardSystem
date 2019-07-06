@@ -72,17 +72,32 @@
 	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
-		$("#createProject").click(function(){
-			$.ajax({
-				type:"POST",
-				url: hostIP+"studentProject",
-				dataType:"json",
-				contentType:"application/json", 
-				success:function(data){
-					sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
-					window.location.href="createWorks.html";
+		$.ajax({
+			type:"GET",
+			url: hostIP+"currenCompetition",
+			dataType:"json",
+			contentType:"application/json", 
+			success:function(data){
+				if(data.competitionStatus!="作品提交"){
+					$("#createProject").click(function(){
+						layer.msg("当前不是作品提交阶段！",{time:1000,icon:5});
+					});
 				}
-			});
+				else{
+					$("#createProject").click(function(){
+						$.ajax({
+							type:"POST",
+							url: hostIP+"studentProject",
+							dataType:"json",
+							contentType:"application/json", 
+							success:function(data){
+								sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
+								window.location.href="createWorks.html";
+							}
+						});
+					});
+				}
+			}
 		});
         layui.use('table', function(){
 		  var table = layui.table;
@@ -149,7 +164,7 @@
 		  								});
 		  				},
 		  				error:function(){
-		  						layer.msg("网络问题无法获得数据",{time:1000,icon:5});
+		  						layer.msg("当前没有比赛正在进行！",{time:1000,icon:5});
 		  				}
 		  		});
 		  
