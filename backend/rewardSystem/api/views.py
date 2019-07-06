@@ -14,6 +14,7 @@ import xlrd
 from . import sendMail
 import zipfile
 import numpy
+import hashlib
 
 #unfinish
 
@@ -363,12 +364,15 @@ def setCompetition(competition, body):
 		expert_list = ExpertList.objects.filter(competition=competition, status=0)
 		expert_info_list = []
 		for expert in expert_list:
+			md5 = hashlib.md5()
+			md5.update(str(expert.id).encode())
+			expert.status = md5.hexdigest()
 			expert_info_list.append({
 				'name': expert.name,
 				'email': expert.email,
-				'field': expert.field
+				'field': expert.field,
+				'code': expert.status
 			})
-			expert.status = 1
 			expert.save()
 		project_info_list = {
 			'A': [],
@@ -421,6 +425,10 @@ def competition(request):
 				'description': competition.description,
 				'competitionStatus': competition.status
 			}
+			data['files'] = []
+			competition_files = CompetitionFile.objects.filter(competition=competition)
+			for competition_file in competition_files:
+				data['files'].append(getFileInfoJson(competition_file.competition_file.name, 0))
 			competition_list.append(data)
 		if competition_id is not None:
 			return HttpResponse(json.dumps(competition_list[0]), content_type='application/json')
@@ -766,28 +774,34 @@ def expertList(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def expert(request):
-	field = request.GET.get('field')
-	expert_name = request.GET.get('expertname')
-	expert_username = request.GET.get('email')
 	try:
-		expert = Expert.objects.get(username=expert_username)
-	except:
-		expert = Expert.objects.create_user(expert_username, expert_username, '123456')
-		expert.name = expert_name
-		expert.field = field
-		expert.save()
-	try:
-		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审'])[0]
 	except:
 		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
-	projects = Project.objects.filter(competition=competition, category=field)
+	expert_username = request.GET.get('email')
+	expert_code = request.GET.get('code')
+	try:
+		expert_info = ExpertList.objects.get(status=expert_code)
+	except:
+		return HttpResponse(json.dumps({'error': 'no such code'}), content_type='application/json')
+	try:
+		expert = Expert.objects.get(username=expert_info.email)
+	except:
+		expert = Expert.objects.create_user(expert_info.email, expert_info.email, '123456')
+		expert.name = expert_info.name
+		expert.field = expert_info.field
+		expert.save()
+	projects = Project.objects.filter(competition=competition, category=expert.field)
 	for project in projects:
-		opinion = Opinion()
-		opinion.expert = expert
-		opinion.project = project
-		opinion.save()
-	sendMail.sendExpertAccountEmail(expert_name, expert_username)
-	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly', 'field': field}), content_type='application/json')
+		try:
+			opinion = Opinion.objects.get(expert=expert, project=project)
+		except:
+			opinion = Opinion()
+			opinion.expert = expert
+			opinion.project = project
+			opinion.save()
+	sendMail.sendExpertAccountEmail(expert.name, expert.username)
+	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly'}), content_type='application/json')
 
 def zipProject(request):
 	expert_id = request.GET.get('expertID')
@@ -808,7 +822,11 @@ def zipProject(request):
 		for filename in filenames:
 			if filename == '.gitkeep':
 				continue
-			project_id = re.sub('form1.docx', '', filename)
+			try:
+				project_id = re.sub('form1.docx', '', filename)
+				project_id = int(project_id)
+			except:
+				continue
 			# if project id in request id list, zip this file
 			if int(project_id) in project_ids:
 				z.write(dirpath+os.sep+filename, str(project_id) + os.sep + 'form.docx')
@@ -829,3 +847,26 @@ def getZipProject(folder_name, expert_id, z, project_ids):
 			# if project id in request id list, zip this file
 			if int(project_id) in project_ids:
 				z.write(dirpath+os.sep+filename, str(project_id) + os.sep + folder_name + os.sep + formal_filename)
+
+def currenCompetition(request):
+	try:
+		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
+	except:
+		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+	data = {
+		'id': competition.id,
+		'competitionName': competition.name,
+		'acronym': competition.acronym,
+		'startDate': competition.start,
+		'submitDDL': competition.pre_review,
+		'checkDDL': competition.review,
+		'reviewDDL': competition.oral_defense,
+		'endDate': competition.end,
+		'description': competition.description,
+		'competitionStatus': competition.status
+	}
+	data['files'] = []
+	competition_files = CompetitionFile.objects.filter(competition=competition)
+	for competition_file in competition_files:
+		data['files'].append(getFileInfoJson(competition_file.competition_file.name, 0))
+	return HttpResponse(json.dumps(data), content_type='application/json')
