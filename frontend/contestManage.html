@@ -180,21 +180,23 @@
 					$("#timeBox").html("阶段时间:无");
 				
 				$("#changeCondition").click(function(){
-				    $.ajax({
-				    	type:"PUT",
-				    	url: hostIP+"competition?id="+contestID,
-				    	dataType:"json",
-				    	contentType:"application/json", 
-						data:JSON.stringify({status:nextPeriod[data.competitionStatus]}),
-				    	success:function(data){
-							if(data.status){
-								layer.msg("成功进入下一阶段",{time:1000,icon:6});
-								setTimeout("location.href='contestManage.html';",1000);
-							}
-							else{
-								layer.msg("修改阶段失败",{time:1000,icon:5});
-							}
-						},
+					layer.confirm('确定进入下一阶段?',{icon: 3, title:'提示'},function (index) {
+						$.ajax({
+							type:"PUT",
+							url: hostIP+"competition?id="+contestID,
+							dataType:"json",
+							contentType:"application/json", 
+							data:JSON.stringify({status:nextPeriod[data.competitionStatus]}),
+							success:function(data){
+								if(data.status){
+									layer.msg("成功进入下一阶段",{time:1000,icon:6});
+									setTimeout("location.href='contestManage.html';",1000);
+								}
+								else{
+									layer.msg("修改阶段失败",{time:1000,icon:5});
+								}
+							},
+						});
 					});
 				});
 			},
@@ -504,6 +506,64 @@
 								});
 							});
 						}
+						if(obj.event==="checkProject"){
+							sessionStorage.setItem("projectID",JSON.stringify({projectID:obj.data.id}));
+							window.location.href="projectInfo.html";
+						}
+						if(obj.event==="checkGrade"){
+							layui.use('layer',function(){
+							    var layer=layui.layer;
+							    layer.open({
+							        type:1,
+							        title:"查看打分",
+							        shift:2,
+							        area:['800px','500px'],
+							        content:$("#checkGradeLayer"),
+							        success:function(layero,index){
+										$("#checkGradeLayer").empty();
+										$.ajax({
+											type:"GET",
+											url: hostIP+"schoolProjectGrade?id="+obj.data.id,
+											dataType:"json",
+											contentType:"application/json", 
+											success:function(data){
+												$("#checkGradeLayer").append("<div class='layui-form-item' style='width: 30%;display: inline-block;' >"
+																			+	"<label class='layui-form-label'>平均分</label>"
+																			+	"<div class='layui-input-block'>"
+																			+		"<input type='text' class='layui-input' value="+data.avgGrade +">"
+																			+	"</div>"
+																			+"</div>");
+												for(var index in data.grades){
+													$("#checkGradeLayer").append("<div style='width: 80%;height: 50px;margin: 0 0 0 1%;' >"
+																				+	"<fieldset class='layui-elem-field layui-field-title'><legend>专家"+(index+1)+"</legend></fieldset>"
+																				+"</div>"
+																				+"<div class='layui-form-item' style='width: 100%;'>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家姓名</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].name +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家给分</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].grade +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家建议</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].advise +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+"</div>");
+												}
+											}
+										});
+									},
+							    });
+							});
+						}
 					});
 				}
 			});
@@ -532,6 +592,7 @@
 		});
     </script>
 	<script type="text/html" id="Bar">
+		<a class="layui-btn layui-btn-xs" lay-event="checkProject">查看作品</a>
 		{{# if(d.projectPeriod=="已提交"){ }}
 			<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="return">退回</a>
 		{{#  } }}
