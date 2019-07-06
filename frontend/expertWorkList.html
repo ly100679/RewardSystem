@@ -49,8 +49,11 @@
                     <table id="workTable" lay-filter="workTable"></table>
                 </div>
 				<div class="layui-row" style="margin: 10px 0;">
-					<div class="layui-col-md2 layui-col-md-offset5" style="text-align: center;">
+					<div class="layui-col-md2 layui-col-md-offset1" style="text-align: center;">
 						<button class="layui-btn" lay-filter="download" id="download" style="width:100%;margin:auto;">下载全部作品</button>
+					</div>
+					<div class="layui-col-md2 layui-col-md-offset6" style="text-align: center;">
+						<button class="layui-btn layui-btn-normal" lay-filter="canEdit" id="canEdit" style="width:100%;margin:auto;">提交评分</button>
 					</div>
 				</div>
         </div>
@@ -95,9 +98,13 @@
 	</script>
 	<script type="text/html" id="TableBar">
 			<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
-			<a class="layui-btn layui-btn-xs" lay-event="grade">打分</a>
+			<a class="layui-btn layui-btn-xs giveMyGrade" lay-event="grade">打分</a>
 	</script>
     <script>
+		var user=JSON.parse(sessionStorage.getItem("user"));
+		if(!user.canEdit){
+			$('#canEdit').css('display','none');
+		}
 		var zipID = new Array();
 		$("#download").click(function(){
 				$.ajax({
@@ -109,6 +116,27 @@
 					success:function(data){
 						window.open(host+data['filepath']);
 						console.log(data);
+					}
+				});
+		});	
+		$("#canEdit").click(function(){
+				$.ajax({
+					type:"PUT",
+					url: hostIP+"/expert?expertID="+user.account,
+					dataType:"json",
+					contentType:"application/json", 
+					data:JSON.stringify({id:zipID}),
+					success:function(data){
+						if(data.status){
+							user.canEdit=false;
+							sessionStorage.setItem("user",JSON.stringify(user));
+							layer.msg("提交成功!",{time:1000,icon:6});
+							$('#canEdit').css('display','none');
+							$('a.giveMyGrade').css('display','none');
+						}
+						else{
+							layer.msg("提交失败!",{time:1000,icon:5});
+						}
 					}
 				});
 		});	
@@ -140,6 +168,9 @@
 		  										// ,even: true
 		  										,page: true
 		  								});
+										if(!user.canEdit){
+											$('a.giveMyGrade').css('display','none');
+										}
 		  								table.on('tool(workTable)', function(obj){
 		  										var data = obj.data;
 												if(obj.event==='show'){
@@ -171,7 +202,7 @@
 																
 																form.verify({
 																	score: [
-																		/^(0|[1-9]\d|100)$/
+																		/^([1-9][0-9]{0,1}|100)$/
 																		,'请输入0-100的整数'
 																	] 
 																});
@@ -190,7 +221,7 @@
 																			else{
 																				layer.msg("保存失败！返回",{time:1000,icon:5});
 																			}
-																			window.history.back(-1);
+																			window.location.href='expertWorkList.html';
 																		}
 																	});
 																	return false;
@@ -208,8 +239,6 @@
 		  						layer.msg("网络问题无法获得数据",{time:1000,icon:5});
 		  				}
 		  		});
-		  
-		  
-		});
+			});
     </script>
 </html>
