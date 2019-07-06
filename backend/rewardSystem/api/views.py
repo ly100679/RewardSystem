@@ -815,7 +815,7 @@ def expert(request):
 		expert.name = expert_info.name
 		expert.field = expert_info.field
 		expert.save()
-	projects = Project.objects.filter(competition=competition, category=expert.field)
+	projects = Project.objects.filter(competition=competition, category=expert.field, status='评审中')
 	for project in projects:
 		try:
 			opinion = Opinion.objects.get(expert=expert, project=project)
@@ -825,7 +825,7 @@ def expert(request):
 			opinion.project = project
 			opinion.save()
 	sendMail.sendExpertAccountEmail(expert.name, expert.username)
-	return HttpResponse(json.dumps({'status': 'success! You will recieve an email contains your account info shortly'}), content_type='application/json')
+	return HttpResponse('success! You will recieve an email contains your account info shortly')
 
 def zipProject(request):
 	expert_id = request.GET.get('expertID')
