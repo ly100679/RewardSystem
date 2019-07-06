@@ -83,6 +83,12 @@
         phoneNumber:联系电话(int)
         email:邮箱(string)
         currentEducation:现学历(0-3)
+        display(length = 8):[
+          多选框值(bool)
+        ,...]
+        research(length = 15):[
+          多选框值(bool)
+        ,...]
         partner:[{
           nameOfPartner:姓名(string)
           studentIDOfPartner:学号(int)
@@ -180,6 +186,12 @@
         emailOfPartner:邮箱(string)
         currenteducationOfPartner:现学历(0-3)
       },..]
+      display(length = 8):[
+        多选框值(bool)
+      ,...]
+      research(length = 15):[
+        多选框值(bool)
+      ,...]
     }	
   
   接收:
@@ -328,6 +340,7 @@
         projectName:作品名(string),
         projectID:作品代码(string),
         projectPeriod:作品所处阶段(string)
+        avgGrade:平均分(double)
         nameOfWork:作品名称(string)
         classificationOfWork:作品类别(0-1)
         declarationOfWork:作品分类（A-F）
@@ -344,6 +357,12 @@
         phoneNumber:联系电话(int)
         email:邮箱(string)
         currentEducation:现学历(0-3)
+        display(length = 8):[
+          多选框值(bool)
+        ,...]
+        research(length = 15):[
+          多选框值(bool)
+        ,...]
         partner:[{
           nameOfPartner:姓名(string)
           studentIDOfPartner:学号(int)
@@ -410,6 +429,12 @@
         phoneNumber:联系电话(int)
         email:邮箱(string)
         currentEducation:现学历(0-3)
+        display(length = 8):[
+          多选框值(bool)
+        ,...]
+        research(length = 15):[
+          多选框值(bool)
+        ,...]
         partner:[{
           nameOfPartner:姓名(string)
           studentIDOfPartner:学号(int)
@@ -422,7 +447,7 @@
       
     }	
   
-  url: "/studentProject?expertID=专家账号(int)&id=作品id(int)" 
+  url: "/studentProject?expertID=专家账号(string)&id=作品id(int)" 
   
   # 17 团委查看作品评分：
 
@@ -460,7 +485,7 @@
   
   # 19 专家打分：
 
-  method: POST
+  method: PUT
 
   上传:
   

@@ -17,14 +17,14 @@
         </style>
         
     </head>
-    <body>
+    <body style="background: #eeeeee;">
         <div style="width: 100%;height: 80px;background:RGB(57,61,73)" id="nav">
             <div style="width: 15%;height: 100%;float: left;display: inline-block"></div>
             <div style="width: 35%;height: 80px;display: inline-block;">
                 <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
                     <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
-                    <li class="layui-nav-item"><a href="">竞赛详情</a></li>
-                    <li class="layui-nav-item layui-this"><a href="listOfWorks.html">作品管理</a></li>
+                    <li class="layui-nav-item"><a href="detailOfRaces.html">当前竞赛</a></li>
+                    <li class="layui-nav-item layui-this"><a href="contestList.html">竞赛管理</a></li>
                 </ul>
             </div>
             <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
@@ -43,7 +43,6 @@
                 </ul>
             </div>
         </div>
-        <div style="width:100%;height:91.5%;background-color:#eee">
         <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
                 
                 <div id="newContestForm" style="width:100%;margin-left:20%;height:100%;float:left">
@@ -106,12 +105,14 @@
                                     </div>
                                 </div>
                                 </div>
-                                </form>
 								<div class="layui-row">
-										<div class="layui-col-md2 layui-col-md-offset2">
+										<div class="layui-col-md2 layui-col-md-offset1">
 											<button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="newContest" style="width:100%">保存</button>
 										</div>
-										<div class="layui-col-md2">
+								</div>
+                                </form>
+								<div class="layui-row">
+										<div class="layui-col-md2 layui-col-md-offset4" style="position: relative;transform: translate(0,-100%);">
 										    <button class="layui-btn layui-btn-radius layui-btn-primary" lay-submit id="return" onclick="window.history.back(-1)" lay-filter="returnList" style="width:100%">返回</button>
 										</div>
 								</div>
@@ -224,7 +225,24 @@
                 });
                 //监听提交
                 form.on('submit(newContest)', function(data){
-                    layer.msg(JSON.stringify(data.field));
+                    //layer.msg(JSON.stringify(data.field));
+					data.field.status="未开始";
+					$.ajax({
+						type:"POST",
+						url: hostIP+"competition",
+						dataType:"json",
+						contentType:"application/json", 
+						data:JSON.stringify(data.field),
+						success:function(data){
+							if(data.status){
+								layer.msg("创建成功",{time:2000,icon:6});
+								setTimeout("location.href='contestList.html';",2000);
+							}
+							else{
+								layer.msg("创建失败",{time:2000,icon:5});
+							}
+						},
+					});
                     return false;
                 });
             });

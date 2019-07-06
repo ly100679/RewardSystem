@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>冯如杯竞赛系统</title>
     <script src="./layui/layui.js"></script>
     <link href="./layui/css/layui.css"  rel="stylesheet"/>
@@ -32,11 +32,14 @@
         });
     });
 </script>
-
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+</script>
 <style>
-    .nav_style{
 
-    }
 </style>
 
 <body style="background: #eeeeee">
@@ -66,10 +69,12 @@
         </div>
     </div>
 
-    <div  style="width: 70%;height: 1800px;margin: 20px 15% 0 15%;background: white;" id="mainContent">
-        <div style="width: 90%;height: 1800px;border:1px solid RGB(230,230,230);margin: 0 5% 0 5%" id="frame">
-            <fieldset class="layui-elem-field layui-field-title"><legend>欢迎使用北航软院竞赛系统</legend><div class="layui-field-box"></div></fieldset>
+    <div  style="width: 70%;margin: 20px 15% 0 15%;background: white;border:1px solid #eee;" id="mainContent">
+        <div style="width: 90%;border:1px solid RGB(230,230,230);margin: 10px 5% 10px 5%" id="frame">
+            <fieldset class="layui-elem-field layui-field-title"><legend>作品详情</legend><div class="layui-field-box"></div></fieldset>
             <div class="layui-form" lay-filter="projectInfo" style="width: 80%;height: 1500px;display: inline-block;margin: 0 10% 0 10%;">
+
+                <fieldset class="layui-elem-field layui-field-title"><legend>申报作品情况</legend><div class="layui-field-box"></div></fieldset>
                     <div class="layui-form-item"style="width: 80%;">
                         <label class="layui-form-label">作品名称</label>
                         <div class="layui-input-block" style="width: 80%; ">
@@ -113,7 +118,42 @@
                         </div>
                     </div>
 
-                    <div class="layui-form-item" style="width: 40%;display: inline-block;" >
+<!--                作品可展示的形式	□实物、产品  □模型  □图纸  □磁盘  □现场演示  □图片  □录像  □样品（对于发明制作类）-->
+                <div style="width: 80%;line-height: 40px;margin: 10px 0 10px 0;" id="c1">
+                    <label class="layui-form-label">作品可展示的形式</label>
+                    <input disabled type="checkbox" name="Create2" title="模型">
+                    <input disabled type="checkbox" name="Create3" title="图纸">
+                    <input disabled type="checkbox" name="Create4" title="磁盘">
+                    <input disabled type="checkbox" name="Create6" title="图片">
+                    <input disabled type="checkbox" name="Create7" title="录像">
+                    <input disabled type="checkbox" name="Create8" title="样品">
+                    <input disabled type="checkbox" name="Create5" title="现场演示">
+                    <input disabled type="checkbox" name="Create1" title="实物、产品">
+                </div>
+<!--                作品调查方式	□走访  □问卷  □现场采访  □人员介绍  □个别交谈  □亲临实践  □会议  □图片、照片   -->
+<!--                □书报刊物  □统计报表  □影视资料  □文件  □集体组织  □自发  □其它  （对于调查报告和学术论文类）-->
+                <div style="width: 80%;line-height: 40px;margin: 10px 0 20px 0;" id="c2">
+                    <label class="layui-form-label" >作品调查的方式<br/><br/><br/><br/><br/></label>
+                    <input disabled type="checkbox" name="research1" title="走访">
+                    <input disabled type="checkbox" name="research2" title="问卷">
+                    <input disabled type="checkbox" name="research7" title="会议">
+                    <input disabled type="checkbox" name="research12" title="文件">
+                    <input disabled type="checkbox" name="research14" title="自发">
+                    <input disabled type="checkbox" name="research3" title="现场采访">
+                    <input disabled type="checkbox" name="research4" title="人员介绍 ">
+                    <input disabled type="checkbox" name="research5" title="个别交谈">
+                    <input disabled type="checkbox" name="research6" title="亲临实践">
+                    <input disabled type="checkbox" name="research9" title="书报刊物">
+                    <input disabled type="checkbox" name="research10" title="统计报表 ">
+                    <input disabled type="checkbox" name="research11" title="影视资料">
+                    <input disabled type="checkbox" name="research13" title="集体组织">
+                    <input disabled type="checkbox" name="research8" title="图片、照片">
+                    <input disabled type="checkbox" name="research15" title="其它">
+                </div>
+				
+				<div id="author">
+                <fieldset class="layui-elem-field layui-field-title"><legend>申报者情况</legend><div class="layui-field-box"></div></fieldset>
+                <div class="layui-form-item" style="width: 40%;display: inline-block;" >
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-block" style="width: 200px;">
                             <input disabled type="text" name="name" disabled class="layui-input">
@@ -182,6 +222,7 @@
                             <input disabled type="text" name="currentEducation" disabled class="layui-input">
                         </div>
                     </div>
+				</div>
 
                 <!--                合作者信息-->
                 <div class="layui-form-item" style="width: 100%;display: none;" id="partner_1">
@@ -212,7 +253,7 @@
                     <div class="layui-form-item" style="width:40%;display: inline-block;">
                         <label class="layui-form-label">现学历</label>
                         <div class="layui-input-block" style="width: 200px;">
-                            <input disabled type="text" name="Currenteducation1" autocomplete="off" class="layui-input">
+                            <input disabled type="text" name="currenteducationOfPartner1" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -245,7 +286,7 @@
                     <div class="layui-form-item" style="width:40%;display: inline-block;">
                         <label class="layui-form-label">现学历</label>
                         <div class="layui-input-block" style="width: 200px;">
-                            <input disabled type="text" name="Currenteducatio2" autocomplete="off" class="layui-input">
+                            <input disabled type="text" name="currenteducationOfPartner2" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -278,7 +319,7 @@
                     <div class="layui-form-item" style="width:40%;display: inline-block;">
                         <label class="layui-form-label">现学历</label>
                         <div class="layui-input-block" style="width: 200px;">
-                            <input disabled type="text" name="Currenteducatio3" autocomplete="off" class="layui-input">
+                            <input disabled type="text" name="currenteducationOfPartner3" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -311,21 +352,56 @@
                     <div class="layui-form-item" style="width:40%;display: inline-block;">
                         <label class="layui-form-label">现学历</label>
                         <div class="layui-input-block" style="width: 200px;">
-                            <input disabled type="text" name="Currenteducatio4" autocomplete="off" class="layui-input">
+                            <input disabled type="text" name="currenteducationOfPartner4" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
 
-                <fieldset class="layui-elem-field layui-field-title"><legend>附件</legend><div class="layui-field-box"></div></fieldset>
-				<div id="files">
-					
+                <fieldset class="layui-elem-field layui-field-title"><legend>作品文档</legend><div class="layui-field-box"></div></fieldset>
+                <div id="fiels" style="width: 80%;margin: 0 0 50px 0;">
+					<p id="defaultFiels">无</p>
+                </div>
+				<fieldset class="layui-elem-field layui-field-title"><legend>作品图片</legend><div class="layui-field-box"></div></fieldset>
+				<div id="img" style="width: 100%;margin: 0 0 50px 0;">
+					<p id="defaultImages">无</p>
 				</div>
-				
-				<div class="layui-col-md2 layui-col-md-offset3" style="text-align: center;">
-				    <button class="layui-btn layui-btn-primary" id="reset" style="width:60%;margin:auto;" onclick="window.history.back(-1);">返回</button>
-				</div>
-
+                <fieldset class="layui-elem-field layui-field-title"><legend>作品视频</legend><div class="layui-field-box"></div></fieldset>
+                <div id="video" style="width: 80%;margin: 0 0 50px 0;">
+					<p id="defaultVedios">无</p>
+                </div>
             </div>
+			
+			<div id="stureturn" class="layui-row" style="margin: 100px 0;">
+				<div class="layui-col-md2 layui-col-md-offset2" style="text-align: center;">
+					<button class="layui-btn layui-btn-primary" style="width:60%;margin:auto;" onclick="window.history.back(-1)">返回</button>
+				</div>
+			</div>
+			
+			<div id="expertScore">
+				<fieldset class="layui-elem-field layui-field-title"><legend>评分</legend><div class="layui-field-box"></div></fieldset>
+				<div class="layui-form" lay-filter="expertScore" style="height: 100%;">
+					<div class="layui-form-item"style="width: 80%;">
+					    <label class="layui-form-label">作品得分</label>
+					    <div class="layui-input-block" style="width: 80%; ">
+					        <input type="text" name="score" required  lay-verify="required" autocomplete="off" class="layui-input">
+					    </div>
+					</div>
+					<div class="layui-form-item layui-form-text" style="width: 80%;">
+					    <label class="layui-form-label">评审意见</label>
+					    <div class="layui-input-block">
+					        <textarea name="opinion"  placeholder="请输入评审意见" class="layui-textarea"></textarea>
+					    </div>
+					</div>
+					<div class="layui-row" style="margin: 10px 0;">
+						<div class="layui-col-md2 layui-col-md-offset2" style="text-align: center;">
+							<button class="layui-btn layui-btn-primary" lay-submit lay-filter="reset" id="reset" style="width:60%;margin:auto;">返回</button>
+						</div>
+						<div class="layui-col-md2 layui-col-md-offset4" style="text-align: center;">
+							<button class="layui-btn" id="nextWork" style="width:60%;margin:auto;">下一页</button>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 </body>
@@ -333,7 +409,7 @@
 <script>
 	var classificationOfWork= new Map();
 	classificationOfWork["0"]="科技发明制作";
-	classificationOfWork["1"]="调查报告和学术论文";
+    classificationOfWork["1"]="调查报告和学术论文";
 	var declarationOfWork = new Map();
 	declarationOfWork["A"]="机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)";
 	declarationOfWork["B"]="信息技术(包括计算机、电信、通讯、电子等)";
@@ -346,8 +422,19 @@
 	currentEducation["1"]="大学本科";
 	currentEducation["2"]="硕士研究生";
 	currentEducation["3"]="博士研究生";
+	var filetype = new Map();
+	filetype["0"] = "img";
+	filetype["1"] = "fiels";
+	filetype["2"] = "video";
 	var projectID=JSON.parse(sessionStorage.getItem("projectID")).projectID;
 	var user=JSON.parse(sessionStorage.getItem("user"));
+	if(user.enter=='expert'){
+		$("#author").css('display','none');
+	}
+	if(user.enter=='student'){
+		$('#nextWork').css('display','none');
+		$('#expertScore').css('display','none');
+	}
     layui.use('form', function(){
         var form = layui.form;
         $.ajax({
@@ -360,30 +447,81 @@
 				for(var i=1;i<=data.data[0].files.length;i++){
 					if(data.data[0].files[i-1].type==2&&data.data[0].files[i-1].path=='')
 						continue;
-					var test = '<a href="' + host + data.data[0].files[i-1].path+'">' + data.data[0].files[i-1].filename + '</a>';
-					$('#files').append(test);
+					if(data.data[0].files[i-1].type==0){
+						var test = '<img style="width:220px;height:250px;margin:20px 20px 0 0" src="' + 
+									host + data.data[0].files[i-1].path +'" onclick=' + "'" + 'window.open("' + host + data.data[0].files[i-1].path + '")' + "'" +'/>' ;
+						$("#defaultImages").css('display','none');
+					}
+					else if (data.data[0].files[i-1].type==1){
+						var test = '<p><a href="' + host + data.data[0].files[i-1].path+'">' + data.data[0].files[i-1].filename + '</a></p>';
+						$("#defaultFiles").css('display','none');
+					}	
+					else{
+						var test = '<video src="' + host + data.data[0].files[i-1].path + '" controls height="500" width="500"><vedio/>';
+						$("#defaultvedios").css('display','none');}
+					$('#'+filetype[data.data[0].files[i-1].type]).append(test);
 				}
         		for(var i=1;i<=data.data[0].partner.length;i++){
         			data.data[0]["nameOfPartner"+i]=data.data[0].partner[i-1].nameOfPartner;
         			data.data[0]["studentIDOfPartner"+i]=data.data[0].partner[i-1].studentIDOfPartner;
         			data.data[0]["phoneOfPartner"+i]=data.data[0].partner[i-1].phoneOfPartner;
         			data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
-        			data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
+        			data.data[0]["currenteducationOfPartner"+i]=currentEducation[data.data[0].partner[i-1].currenteducationOfPartner];
+					$('#partner_'+i).css('display','inline-block');
         		}
 				data.data[0].classificationOfWork=classificationOfWork[data.data[0].classificationOfWork];
 				data.data[0].declarationOfWork=declarationOfWork[data.data[0].declarationOfWork];
 				data.data[0].currentEducation=currentEducation[data.data[0].currentEducation];
         		form.val('projectInfo',data.data[0]);
+
+                if(data.data[0].classificationOfWork === 0)
+                    $("#c2").css("display","none");
+                else
+                    $("#c1").css("display","none");
         	}
+		});
+		
+		form.on('submit(reset)', function(data){
+			console.log(data.field);
+			$.ajax({
+				type:"PUT",
+				url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+				dataType:"json",
+				contentType:"application/json", 
+				data:JSON.JSON.stringify(data.field),
+				success:function(data){
+					if(data.status){
+						layer.msg("评分成功！返回",{time:1000,icon:6});
+					}
+					else{
+						layer.msg("评分失败！返回",{time:1000,icon:5});
+					}
+					window.history.back(-1);
+				}
+			});
+			return false;
+		});
+		form.on('submit(nextwork)', function(data){
+			console.log(data.field);
+			$.ajax({
+				type:"PUT",
+				url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+				dataType:"json",
+				contentType:"application/json", 
+				data:JSON.JSON.stringify(data.field),
+				success:function(data){
+					if(data.status){
+						layer.msg("评分成功！",{time:1000,icon:6});
+					}
+					else{
+						layer.msg("评分失败！",{time:1000,icon:5});
+					}
+					window.history.back(-1);
+				}
+			});
+			return false;
 		});
 	});
 
-    $(function () {
-        if(true)
-        {
-            $('#partner_1').css('display','block');
-            $('#partner_2').css('display','block');
-        }
-    })
 </script>
 </html>

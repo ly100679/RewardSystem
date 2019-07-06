@@ -24,7 +24,7 @@
                 <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
                     <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
                     <li class="layui-nav-item"><a href="detailOfRaces.html">当前竞赛</a></li>
-                    <li class="layui-nav-item layui-this"><a href="contestList.html">竞赛管理</a></li>
+                    <li class="layui-nav-item layui-this"><a href="workList.html">评分管理</a></li>
                 </ul>
             </div>
             <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
@@ -44,10 +44,9 @@
             </div>
         </div>
         <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
-				<fieldset class="layui-elem-field layui-field-title" style="margin:10px 0 0 0"><legend style="font-size:28px">&nbsp&nbsp已有的竞赛</legend><div class="layui-field-box"></div></fieldset>
-				<button class="layui-btn layui-btn-normal" id="createContest" style="margin-top: 10px; margin-left: 50px;">新建竞赛</button>
-                <div id="contestListBox" style="margin-top:10px;width:90%;margin: auto;height:80%">
-                    <table id="contestTable" lay-filter="contestTable"></table>
+                <fieldset class="layui-elem-field layui-field-title" style="margin:10px 0 0 0"><legend style="font-size:28px">&nbsp&nbsp待评分的作品</legend><div class="layui-field-box"></div></fieldset>
+                <div id="workListBox" style="margin-top:10px;width:90%;margin: auto;height:80%">
+                    <table id="workTable" lay-filter="workTable"></table>
                 </div>
         </div>
         
@@ -65,42 +64,48 @@
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i></a>
 	</script>
 	<script type="text/html" id="TableBar">
-			<a class="layui-btn layui-btn-xs" lay-event="show" style="display: {{d.competitionStatus=='已结束'?'inline-block':'none'}};">查看</a>
-			<a class="layui-btn layui-btn-xs" lay-event="edit" style="display: {{d.competitionStatus=='已结束'?'none':'inline-block'}}; margin-left: 0;">管理</a>
+			<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
+			<a class="layui-btn layui-btn-xs" lay-event="grade">打分</a>
+			<a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
 	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
-		$("#createContest").click(function(){
-			window.location.href="createContest.html";
-		});
         layui.use('table', function(){
 		  var table = layui.table;
 		  
 		  $.ajax({
 		  				type:"GET",
-		  				url: hostIP+"competition",
+		  				url: hostIP+"studentProject?expertID=3",//+user.account,
 		  				dataType:"json",
 		  				contentType:"application/json", 
 		  				success:function(data){
-		  								var table=layui.table;
 		  								table.render({
-		  										elem: "#contestTable",
+		  										elem: "#workTable",
 		  										cols: [[ //标题栏
-		  												{field: 'competitionName', title: '竞赛名称',sort:true},
-		  												{field: 'startDate', width:150, title: '开始日期',sort:true},
-		  												{field: 'competitionStatus', title: '竞赛阶段', width:150},
+		  												{field: 'projectPeriod', width:150, title: '阶段',sort:true},
+		  												{field: 'projectID', title: '作品代码',sort:true},
+		  												{field: 'projectName', title: '作品名',sort:true},
 		  												{field: 'id', title: '数据库编号',hide:true},
-		  												{title:'操作', toolbar: '#TableBar', width:150 }
+		  												{title:'操作', toolbar: '#TableBar', width:200 }
 		  										]]
 		  										,data:data.data,
-												height:$("#contestListBox").height()-20
+												height:$("#workListBox").height()-20
 		  										//,size:'sm'
 		  										// ,even: true
 		  										,page: true
 		  								});
-		  								table.on('tool(contestTable)', function(obj){
-		  									sessionStorage.setItem("contestManage",JSON.stringify({contestID:obj.data.id}));
-		  									window.location.href="contestManage.html";	
+		  								table.on('tool(workTable)', function(obj){
+		  										var data = obj.data;
+												if(obj.event==='show'){
+													sessionStorage.setItem("projectID",JSON.stringify({projectID:data.id}));
+													window.location.href="projectInfo.html";
+												}
+		  										if(obj.event==='grade'){
+		  												layer.msg("打分还没做！",{time:1000,icon:5});
+		  										}
+												if(obj.event==='download'){
+														layer.msg("下载还没做！",{time:1000,icon:5});
+												}
 		  								});
 		  				},
 		  				error:function(){

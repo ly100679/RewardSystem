@@ -44,7 +44,7 @@
             </div>
         </div>
         <div id="mainContent" style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px;"> 
-                <div style="margin-top:10px" ><a style="font-size:28px">&nbsp&nbsp已有的作品</a></div>
+                <fieldset class="layui-elem-field layui-field-title" style="margin:10px 0 0 0"><legend style="font-size:28px">&nbsp&nbsp已有的作品</legend><div class="layui-field-box"></div></fieldset>
 				<button class="layui-btn layui-btn-normal" id="createProject" style="margin-top: 10px; margin-left: 50px;">新建作品</button>
                 <div id="workListBox" style="margin-top:10px;width:90%;margin: auto;height:80%">
                     <table id="workTable" lay-filter="workTable"></table>
@@ -79,7 +79,7 @@
 				dataType:"json",
 				contentType:"application/json", 
 				success:function(data){
-					sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code}));
+					sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
 					window.location.href="createWorks.html";
 				}
 			});
@@ -139,7 +139,7 @@
 		  												});
 		  										}
 		  										if(obj.event==='edit'){
-		  												sessionStorage.setItem("projectID",JSON.stringify({projectID:data.id}));
+		  												sessionStorage.setItem("projectID",JSON.stringify({projectID:data.id,status:"edit"}));
 		  												window.location.href="createWorks.html";	
 		  										}
 												if(obj.event==='show'){

@@ -32,7 +32,7 @@
         <ul class="layui-nav" lay-filter="" style="height: 80px; line-height: 80px">
             <li class="layui-nav-item"><a href="newIndex.html">主页信息</a></li>
             <li class="layui-nav-item  layui-this"><a href="">当前竞赛</a></li>
-            <li class="layui-nav-item"><a href="workList.html" id="mainManagement">竞赛管理</a></li>
+            <li class="layui-nav-item"><a href="contestList.html" id="mainManagement">竞赛管理</a></li>
         </ul>
     </div>
     <div style="width: 15%;height: 100%;float: right;display: inline-block"></div>
@@ -126,18 +126,85 @@
 			<button class="layui-btn layui-btn-radius layui-btn-lg" style="width:100%" id="managementButton">管理竞赛</button>
 		</div>
 	</div>
-</div>
 
-<div class="layui-row"  style="text-align: center;color: #ccc; position: absolute;bottom: 1%;width: 70%;left: 15%;" id="loadMore">
+	<div class="layui-row"  style="text-align: center;color: #ccc; position: absolute;bottom: 1%;width: 70%;left: 15%;" id="loadMore">
 		<i class="layui-icon layui-icon-down" style="font-size: 30px;"></i>
-</div>
-<div class="layui-row"  style="text-align: center;color: #666; position: absolute;bottom: 1%;width: 70%;left: 15%;display: none;" id="loading">
+	</div>
+
+	<div class="layui-row"  style="text-align: center;color: #666; position: absolute;bottom: 1%;width: 70%;left: 15%;display: none;" id="loading">
 		<i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px;"></i>
+	</div>
+
+	<div style="height: 600px;width: 100%;display: none;margin: auto;" id="specificInfo">
+		<div id="mainContent2" style="width: 100%;height: 100%;margin: 0 0% 0 0%;background: white; border-radius: 10px;">
+			<div style="width:50%;margin-left:5%;height:90%;margin-top:3%;float:left">
+				<div id="introduction" style="width:90%;margin-left:5%;height:90%;margin-top:3%;float:left;background-color: RGB(57,61,73)">
+				</div>
+			</div>
+			<div style="width:35%;margin-left:5%;height:90%;margin-top:3%;float:left">
+				<div style="height:43%;width:90%;margin-top:5%;margin-left:5%;">
+					<div style="width:100%;text-align: center;height:10%"><a style="font-size:18px;">——赛程信息——</a></div>
+					<div style="height:88%;margin-top:5%;border:0px solid #cecbcb">
+						<table id="scheduleTable" class="layui-table" lay-even lay-skin="nob">
+							<colgroup>
+								<col width="30%">
+								<col width="60%">
+							</colgroup>
+							<tr>
+								<td>开始时间</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>提交截至</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>初审截至</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>评审截至</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>结果公布</td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div style="height:43%;width:90%;margin-top:6%;margin-left:5%;">
+					<div style="width:100%;text-align: center;height:10%"><a style="font-size:18px;">——相关文件——</a></div>
+					<div style="height:88%;margin-top:5%;border:0px solid #cecbcb">
+						<table id="fileTable" class="layui-table" lay-even lay-skin="nob">
+							<colgroup>
+								<col width="90%">
+							</colgroup>
+							<tr>
+								<td>文件1</td>
+							</tr>
+							<tr>
+								<td>文件2</td>
+							</tr>
+							<tr>
+								<td>文件3</td>
+							</tr>
+							<tr>
+								<td>文件4</td>
+							</tr>
+							<tr>
+								<td>文件5</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 
-<div style="height: 600px;width: 70%;background-color: #000;display: none;margin: auto;" id="specificInfo">
-	
-</div>
+
 </body>
 
 
@@ -149,10 +216,18 @@
 		$("#managementButton").html("我要参赛");
 	}
 	if(user.enter=='expert'){
-		$("#mainManagement").attr("href","");
+		$("#mainManagement").attr("href","expertWorkList.html");
 		$("#mainManagement").html("评分管理");
 		$("#managementButton").html("我要打分");
 	}
+	$("#managementButton").click(function(){
+		if(user.enter=='student')
+			window.location.href="workList.html";
+		if(user.enter=='expert')
+			window.location.href="expertWorkList.html";
+		if(user.enter=='school')
+			window.location.href="contestList.html";
+	});
 	
 	$("#loadMore").click(function(){
 		$("#loadMore").css("display","none");

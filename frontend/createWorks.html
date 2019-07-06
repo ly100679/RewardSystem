@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="height: 100%;">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>冯如杯竞赛系统</title>
     <script src="./layui/layui.js"></script>
     <link href="./layui/css/layui.css"  rel="stylesheet"/>
@@ -13,12 +13,10 @@
 
 <!--<script src="/static/build/layui.js"></script>-->
 <script>
+
 </script>
 
 <style>
-    .nav_style{
-
-    }
 </style>
 
 <body style="background: #eeeeee;height: 100%;">
@@ -76,14 +74,14 @@
                             <div class="layui-form-item" style="width: 80%; ">
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 作品名称</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="nameOfWork" required  lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="text" name="nameOfWork" required autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-form-item">
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 作品类别</label>
-                                <div class="layui-input-block">
-                                    <input type="radio" name="classificationOfWork" value="0" title="科技发明制作"checked>
+                                <div class="layui-input-block lay-filter=c1" >
+                                    <input type="radio" name="classificationOfWork" value="0" title="科技发明制作" checked>
                                     <input type="radio" name="classificationOfWork" value="1" title="调查报告和学术论文" >
                                 </div>
                             </div>
@@ -123,6 +121,44 @@
                                     <textarea name="keyWord" placeholder="（4-7个体现作品核心技术和问题的关键词）" class="layui-textarea"></textarea>
                                 </div>
                             </div>
+
+                            <!--                （对于发明制作类）-->
+                            <div class="layui-form-item" style="width: 80%;display: none" id="checkBox_Create" name="checkBox_Create">
+                                <label class="layui-form-label"><font color="#FF0000">*</font> 作品可展示的形式</label>
+                                <div class="layui-input-block" id="c1" style="width: 60%;">
+                                    <input class="checkBox_1" type="checkbox" name="Create2" title="模型">
+                                    <input class="checkBox_1" type="checkbox" name="Create3" title="图纸">
+                                    <input class="checkBox_1" type="checkbox" name="Create4" title="磁盘">
+                                    <input class="checkBox_1" type="checkbox" name="Create6" title="图片">
+                                    <input class="checkBox_1" type="checkbox" name="Create7" title="录像">
+                                    <input class="checkBox_1" type="checkbox" name="Create8" title="样品">
+                                    <input class="checkBox_1" type="checkbox" name="Create1" title="实物、产品">
+                                    <input class="checkBox_1" type="checkbox" name="Create5" title="现场演示">
+                                </div>
+                            </div>
+
+<!--                            作品调查方式-->
+                            <div class="layui-form-item" style="width: 80%;display: none;" id="checkBox_research" name="checkBox_research">
+                                <label class="layui-form-label"><font color="#FF0000">*</font> 作品调查方式</label>
+                                <div class="layui-input-block" id="c2">
+                                    <input class="checkBox_2" type="checkbox" name="research1" title="走访">
+                                    <input class="checkBox_2" type="checkbox" name="research2" title="问卷">
+                                    <input class="checkBox_2" type="checkbox" name="research7" title="会议">
+                                    <input class="checkBox_2" type="checkbox" name="research12" title="文件">
+                                    <input class="checkBox_2" type="checkbox" name="research14" title="自发">
+                                    <input class="checkBox_2" type="checkbox" name="research3" title="现场采访">
+                                    <input class="checkBox_2" type="checkbox" name="research4" title="人员介绍 ">
+                                    <input class="checkBox_2" type="checkbox" name="research5" title="个别交谈">
+                                    <input class="checkBox_2" type="checkbox" name="research6" title="亲临实践">
+                                    <input class="checkBox_2" type="checkbox" name="research9" title="书报刊物">
+                                    <input class="checkBox_2" type="checkbox" name="research10" title="统计报表 ">
+                                    <input class="checkBox_2" type="checkbox" name="research11" title="影视资料">
+                                    <input class="checkBox_2" type="checkbox" name="research13" title="集体组织">
+                                    <input class="checkBox_2" type="checkbox" name="research8" title="图片、照片">
+                                    <input class="checkBox_2" type="checkbox" name="research15" title="其它">
+                                </div>
+                            </div>
+
                         </div>
                         <!--          2.申报人情况-->
                         <div lay-filter="form_2" class="layui-form-item" id="form_2">
@@ -453,10 +489,13 @@
         $("#form_2").css("display","none");
         $("#form_3").css("display","none");
         $("#form_4").css("display","none");
+        $("#checkBox_research").css("display","none")
+        $("#checkBox_Create").css("display","block")
     })
 </script>
 <script>
 		var projectID=JSON.parse(sessionStorage.getItem("projectID")).projectID;
+		var projectStatus=JSON.parse(sessionStorage.getItem("projectID")).status;
 		var user=JSON.parse(sessionStorage.getItem("user"));
 		console.log(projectID);
 		$.ajax({
@@ -484,25 +523,91 @@
 		});
 		layui.use('form',function(){
 			var form=layui.form;
+			var numofcheckbox = 0;
+			//监听提交
 			
-			$.ajax({
-				type:"GET",
-				url: hostIP+"studentProject?studentID="+user.account+"&id="+projectID,
-				dataType:"json",
-				contentType:"application/json", 
-				success:function(data){
-					console.log(data);
-					for(var i=1;i<=data.data[0].partner.length;i++){
-						data.data[0]["nameOfPartner"+i]=data.data[0].partner[i-1].nameOfPartner;
-						data.data[0]["studentIDOfPartner"+i]=data.data[0].partner[i-1].studentIDOfPartner;
-						data.data[0]["phoneOfPartner"+i]=data.data[0].partner[i-1].phoneOfPartner;
-						data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
-						data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
-					}
-					form.val('projectInfo',data.data[0]);
-				}
+			form.on('radio', function(data){
+			    if(data.value==="1")
+			    {
+			        $("#checkBox_research").css("display","block")
+			        $("#checkBox_Create").css("display","none")
+			        $(".checkBox_1").each(function(){
+			            $(this).prop('checked', false);
+			        });
+			        form.val('projectInfo',{
+			            checked:false
+			        })
+			    }
+			    else if(data.value==="0")
+			    {
+			        $("#checkBox_research").css("display","none")
+			        $("#checkBox_Create").css("display","block")
+			        $(".checkBox_2").each(function(){
+			            $(this).prop('checked', false);
+			        });
+			        form.val('projectInfo',{
+			            checked:false
+			        })
+			    }
 			});
+			
+			form.on('checkbox',function (data) {
+			        numofcheckbox=$("input[type='checkbox']:checked").length;
+			})
+			
+			if(projectStatus=="edit"){
+				$.ajax({
+					type:"GET",
+					url: hostIP+"studentProject?studentID="+user.account+"&id="+projectID,
+					dataType:"json",
+					contentType:"application/json", 
+					success:function(data){
+						console.log(data);
+						for(var i=1;i<=data.data[0].partner.length;i++){
+							data.data[0]["nameOfPartner"+i]=data.data[0].partner[i-1].nameOfPartner;
+							data.data[0]["studentIDOfPartner"+i]=data.data[0].partner[i-1].studentIDOfPartner;
+							data.data[0]["phoneOfPartner"+i]=data.data[0].partner[i-1].phoneOfPartner;
+							data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
+							data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
+						}
+						for(var index=1;index<=8;index++)
+							if(data.data[0].display[index-1]){
+								data.data[0]["Create"+index]="on";
+							}
+							else{
+								data.data[0]["Create"+index]="off";
+							}
+						for(var index=1;index<=15;index++)
+							if(data.data[0].research[index-1]){
+								data.data[0]["research"+index]="on";
+							}
+							else{
+								data.data[0]["research"+index]="off";
+							}
+						form.val('projectInfo',data.data[0]);
+					}
+				});
+			}
+			function multiChoiceDataDeal(data){
+				data.display=new Array();
+				data.research=new Array();
+				for(var index=1;index<=8;index++)
+					if(data["Create"+index]=="on"){
+						data.display[index-1]=true;
+					}
+					else{
+						data.display[index-1]=false;
+					}
+				for(var index=1;index<=15;index++)
+					if(data["research"+index]=="on"){
+						data.research[index-1]=true;
+					}
+					else{
+						data.research[index-1]=false;
+					}
+			}
 			form.on('submit(cache)', function(data){
+				multiChoiceDataDeal(data.field);
 				saveProject(data,"未提交");
 				return false;
 			});
@@ -513,6 +618,11 @@
 					layer.msg("请填写完整后再提交！",{time:1000,icon:5});
 					return false;
 				}
+				if (numofcheckbox < 1) {
+				    layer.msg("请填写完整后再提交！",{time:1000,icon:5});
+					return false;
+				}
+				multiChoiceDataDeal(data.field);
 				saveProject(data,"已提交");
 				return false;
 			});
@@ -571,7 +681,7 @@
 				  else{
 				  	$.ajax({
 				  		type:"DELETE",
-				  		url: hostIP+"file?type="+type+"&projectID=26",
+				  		url: hostIP+"file?type="+type+"&projectID="+projectID,
 				  		//url: "http://localhost:3000/register",
 				  		dataType:"json",
 				  		contentType:"application/json", // 指定这个协议很重要
@@ -677,14 +787,15 @@
 					layer.load(); //上传loading
 				}
 		    ,choose: function(obj){   
-						if(imageNum<=0){
-							layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
-							imageListIns.config.elem.next()[0].value = '';
-							return;
-						}
+						
 		      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
 		      //读取本地文件
 		      obj.preview(function(index, file, result){
+				  if(imageNum<=0){
+				  	layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
+				  	imageListIns.config.elem.next()[0].value = '';
+				  	return;
+				  }
 							if(fileStatic[file.name]){
 								layer.msg("重复文件",{time:1000,icon:5});
 								imageListIns.config.elem.next()[0].value = '';
@@ -875,14 +986,15 @@
 						layer.load(); //上传loading
 					}
 				  ,choose: function(obj){   
-						if(videoNum<=0){
-							layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
-				      videoListIns.config.elem.next()[0].value = ''; 
-							return;
-						}
+						
 				    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
 				    //读取本地文件
 				    obj.preview(function(index, file, result){
+						if(videoNum<=0){
+													layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
+						videoListIns.config.elem.next()[0].value = ''; 
+													return;
+												}
 								if(fileStatic[file.name]){
 									layer.msg("重复文件",{time:1000,icon:5});
 									videoListIns.config.elem.next()[0].value = ''; 
@@ -966,15 +1078,9 @@
 				});
 		});
 	}
-	
-    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+
     layui.use('element', function(){
         var element = layui.element;
-    });
-
-    layui.use('form', function(){
-        var form = layui.form;
-        //监听提交
     });
 
     layui.use('carousel', function(){
@@ -991,8 +1097,6 @@
 
     layui.use('element', function(){
         var element = layui.element;
-        //…
-
             $("#tab_1").click(function () {
                 $("#form_1").css("display","block");
                 $("#form_2").css("display","none");
@@ -1011,19 +1115,21 @@
                 $("#form_2").css("display","none");
                 $("#form_3").css("display","block");
                 $("#form_4").css("display","none");
-            })
+            });
             $("#tab_4").click(function () {
                 $("#form_1").css("display","none");
                 $("#form_2").css("display","none");
                 $("#form_3").css("display","none");
                 $("#form_4").css("display","block");
 				loadUpload();
-            })
-            // //监听Tab切换，以改变地址hash值
-            // element.on('tab(tab1)', function(){
-            //     alert("123");
+            });
+    })
+</script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        
 
     });
-
 </script>
 </html>
