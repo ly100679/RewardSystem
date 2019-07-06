@@ -53,9 +53,10 @@
 </div>
 <!--<div  style="width: 100%;height: 40px;margin: 0 0% 0 0%;background: white;"></div>-->
 <div  style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px; border: 1px solid #eeeeee;" id="mainContent">
-    <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;"> 
-		当前正在进行冯如杯知识竞赛：
+    <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;" id="contestTitle"> 
 	</div>
+	
+	<div id="currentContestInfo" style="display: none;">
 	
 	<div style="height: 50%;width: 80%;font-size: 50px;margin:10px 10% 0 10%; border: 1px solid #eeeeee;background: #eeeeee;border-radius: 10px;">
     <div style="height: 90%;width: 95%;margin: auto;position: relative;top: 50%;transform: translate(0,-50%);">
@@ -187,6 +188,7 @@
 		</div>
 	</div>
 
+	</div>
 </div>
 
 
@@ -220,6 +222,12 @@
 		dataType:"json",
 		contentType:"application/json",
 		success:function(data){
+			if(data.error){
+				$("#contestTitle").html("当前无比赛正在进行中！");
+				return;
+			}
+			$("#currentContestInfo").css("display","block");
+			$("#contestTitle").html("当前正在进行："+data.competitionName);
 			if(data.competitionStatus=="团委初审"){
 				$("#statusCircle2").css("color","#5FB878");
 				$("#statusLine1").removeClass("layui-bg-gray");
