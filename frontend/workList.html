@@ -72,6 +72,16 @@
 	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
+		$.ajax({
+			type:"GET",
+			url: hostIP+"currenCompetition",
+			dataType:"json",
+			contentType:"application/json", 
+			success:function(data){
+				if(data.competitionStatus!="作品提交")
+				$("#createProject").attr("disabled","disabled");
+			}
+		});
 		$("#createProject").click(function(){
 			$.ajax({
 				type:"POST",
