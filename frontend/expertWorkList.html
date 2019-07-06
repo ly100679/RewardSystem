@@ -107,6 +107,7 @@
 		}
 		var zipID = new Array();
 		$("#download").click(function(){
+				layer.load();
 				$.ajax({
 					type:"PUT",
 					url: hostIP+"/zipProject?expertID="+user.account,
@@ -115,6 +116,7 @@
 					data:JSON.stringify({id:zipID}),
 					success:function(data){
 						window.open(host+data['filepath']);
+						layer.closeAll('loading');
 						console.log(data);
 					}
 				});

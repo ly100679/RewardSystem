@@ -137,8 +137,8 @@
 		firePeriod["现场答辩"]="未获奖";
 		var user=JSON.parse(sessionStorage.getItem("user"));
 		var zipID = new Array();
-		var tableData = new Array();
 		$("#download").click(function(){
+			layer.load();
 				$.ajax({
 					type:"PUT",
 					url: hostIP+"/zipProject?expertID="+user.account,
@@ -147,6 +147,7 @@
 					data:JSON.stringify({id:zipID}),
 					success:function(data){
 						window.open(host+data['filepath']);
+						layer.closeAll('loading');
 						console.log(data);
 					}
 				});
@@ -177,12 +178,6 @@
 					$("#timeBox").html("阶段时间:无");
 				
 				$("#changeCondition").click(function(){
-					for(var item of tableData)
-						if(item.projectPeriod=="初审中"||item.projectPeriod=="评审中"||item.projectPeriod=="现场答辩")
-						{
-							layer.msg("还有没有操作的作品，无法进入下一阶段",{time:1000,icon:5});
-							return;
-						}
 					layer.confirm('确定进入下一阶段?',{icon: 3, title:'提示'},function (index) {
 						$.ajax({
 							type:"PUT",
@@ -454,7 +449,6 @@
 					for(var i = 0 ;i < data.data.length ; i++ ){
 						zipID.push(data.data[i].id);
 					}
-					tableData=data.data;
 					table.render({
 						elem: '#workTable'
 						,height: $("#listBox").height()-20
@@ -549,22 +543,22 @@
 																				+	"<fieldset class='layui-elem-field layui-field-title'><legend>专家"+expertIndex+"</legend></fieldset>"
 																				+"</div>"
 																				+"<div class='layui-form-item' style='width: 100%;'>"
-																				+	"<div class='layui-form-item' style='width: 40%;display: inline-block;'>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
 																				+		"<label class='layui-form-label'>专家姓名</label>"
 																				+		"<div class='layui-input-block'>"
 																				+			"<input type='text' class='layui-input' value="+data.grades[index].name +">"
 																				+		"</div>"
 																				+	"</div>"
-																				+	"<div class='layui-form-item' style='width: 40%;display: inline-block;'>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
 																				+		"<label class='layui-form-label'>专家给分</label>"
 																				+		"<div class='layui-input-block'>"
 																				+			"<input type='text' class='layui-input' value="+data.grades[index].grade +">"
 																				+		"</div>"
 																				+	"</div>"
-																				+	"<div class='layui-form-item' style='width: 80%;display: inline-block;'>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
 																				+		"<label class='layui-form-label'>专家建议</label>"
 																				+		"<div class='layui-input-block'>"
-																				+			"<textarea class='layui-textarea'>"+data.grades[index].advise +"</textarea>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].advise +">"
 																				+		"</div>"
 																				+	"</div>"
 																				+"</div>");
