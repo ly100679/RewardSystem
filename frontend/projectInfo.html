@@ -477,7 +477,7 @@
 				if(data.data[0].display){
 					data.data[0].display=data.data[0].display.substring(1,data.data[0].display.length-1).split(", ");
 					for(var index=1;index<=8;index++)
-						if(data.data[0].display[index-1]=="true"){
+						if(data.data[0].display[index-1]=="True"||data.data[0].display[index-1]=="true"){
 							data.data[0]["Create"+index]="on";
 							console.log("CreateOn");
 						}
@@ -485,7 +485,7 @@
 				if(data.data[0].research){
 					data.data[0].research=data.data[0].research.substring(1,data.data[0].research.length-1).split(", ");
 					for(var index=1;index<=15;index++)
-						if(data.data[0].research[index-1]=="true"){
+						if(data.data[0].research[index-1]=="True"||data.data[0].research[index-1]=='true'){
 							data.data[0]["research"+index]="on";
 						}
 				}
