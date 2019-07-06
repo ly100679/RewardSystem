@@ -66,8 +66,8 @@
 	</script>
 	<script type="text/html" id="TableBar">
 			<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
-			<a class="layui-btn layui-btn-xs" lay-event="edit" style="display: {{d.projectPeriod=='已提交'?'none':'inline-block'}};">修改</a>
-			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" style="display: {{d.projectPeriod=='已提交'?'none':'inline-block'}};">删除</a>
+			<a class="layui-btn layui-btn-xs" lay-event="edit" style="display: {{d.projectPeriod=='未提交'?'inline-block':'none'}};">修改</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" style="display: {{d.projectPeriod=='未提交'?'inline-block':'none'}};">删除</a>
 			<a class="layui-btn layui-btn-xs" lay-event="export" style="display: {{d.projectPeriod=='已提交'?'inline-block':'none'}};">导出</a>
 	</script>
     <script>

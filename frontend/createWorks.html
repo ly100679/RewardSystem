@@ -74,7 +74,7 @@
                             <div class="layui-form-item" style="width: 80%; ">
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 作品名称</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="nameOfWork" required autocomplete="off" class="layui-input">
+                                    <input type="text" name="nameOfWork" required lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -179,7 +179,7 @@
                             <div class="layui-form-item" style="width: 100%;display: inline-block;" >
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 出生年月</label>
                                 <div class="layui-input-block" style="width: 400px;">
-                                    <input type="text" name="dateOfBirth" id="date" lay-verify="date" autocomplete="off" class="layui-input">
+                                    <input type="text" name="dateOfBirth" id="date" lay-verify="date|required" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -207,7 +207,7 @@
                             <div class="layui-form-item" style="width: 40%;display: inline-block;" >
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 通讯地址</label>
                                 <div class="layui-input-block" style="width: 200px;">
-                                    <input type="text" name="postalAddress"  autocomplete="off" class="layui-input">
+                                    <input type="text" name="postalAddress" lay-verify="required"  autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -228,7 +228,7 @@
                             <div class="layui-form-item" style="width: 50%;">
                                 <label class="layui-form-label"><font color="#FF0000">*</font> 现学历</label>
                                 <div class="layui-input-block">
-                                    <select name="currentEducation">
+                                    <select name="currentEducation" lay-verify="required">
                                         <option value=""></option>
                                         <option value="0">大专</option>
                                         <option value="1">大学本科</option>
