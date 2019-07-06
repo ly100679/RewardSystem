@@ -197,7 +197,7 @@ def project(request):
 					projects.append(tem)
 		elif expert_id is not None:
 			try:
-				expert = Expert.objects.get(pk=expert_id)
+				expert = Expert.objects.get(username=expert_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'expert not found'}), content_type='application/json')
 			projects = Project.objects.filter(expert=expert, competition=competition)
@@ -339,21 +339,6 @@ def student(request):
 		except:
 			return HttpResponse(json.dumps({}), content_type='application/json')
 
-def getCompetitionStatus(competition):
-	current_time = datetime.now()
-	if competition.end < current_time:
-		return 'end'
-	elif competition.oral_defense < current_time:
-		return 'oral_defense'
-	elif competition.review < current_time:
-		return 'review'
-	elif competition.pre_review < current_time:
-		return 'pre_review'
-	elif competition.start < current_time:
-		return 'start'
-	else:
-		return 'before start'
-
 def changeProjectStatus(competition, before_status, after_status):
 	projects = Project.objects.filter(competition=competition, status=before_status)
 	for project in projects:
@@ -374,6 +359,16 @@ def setCompetition(competition, body):
 		changeProjectStatus(competition, '已提交', '初审中')
 	elif competition.status == '团委初审' and body.get('status', None) == '专家评审':
 		changeProjectStatus(competition, '初审通过', '评审中')
+		# send invite email to expert in list
+		expert_list = ExpertList.objects.filter(competition=competition, status=0)
+		expert_info_list = []
+		for expert in expert_list:
+			expert_info_list.append({
+				'name': expert.name,
+				'email': expert.email,
+				'field': expert.field
+			})
+		
 	elif competition.status == '专家评审' and body.get('status', None) == '现场答辩':
 		changeProjectStatus(competition, '进入答辩', '现场答辩')
 	competition.status = body.get('status', competition.status)
@@ -409,16 +404,6 @@ def competition(request):
 		# try:
 		body = json.loads(request.body)
 		competition = Competition()
-		# competition.name = body['competitionName']
-		# competition.acronym = body['acronym']
-		# competition.start = body['startDate']
-		# competition.pre_review = body['submitDDL']
-		# competition.review = body['checkDDL']
-		# competition.oral_defense = body['reviewDDL']
-		# competition.end = body['endDate']
-		# competition.description = body['description']
-		# competition.status = body['status']
-		# competition.save()
 		setCompetition(competition, body)
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 		# except:
@@ -655,7 +640,7 @@ def expertProjectGrade(request):
 	expert_id = request.GET.get('expertID')
 	try:
 		project = Project.objects.get(pk=int(project_id))
-		expert = Expert.objects.get(pk=int(expert_id))
+		expert = Expert.objects.get(username=expert_id)
 	except:
 		return HttpResponse(json.dumps({'error': 'no such expert or project found'}), content_type='application/json')
 	if request.method == 'POST':
@@ -737,9 +722,6 @@ def expertList(request):
 					tem.email = table.row_values(i)[1]
 					tem.field = table.row_values(i)[2]
 					tem.save()
-			# send invite email
-			expert_list = ExpertList.objects.filter(status=0)
-
 			return HttpResponse(json.dumps(expert_data), content_type='application/json')
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
