@@ -401,7 +401,7 @@ def setCompetition(competition, body):
 			'expert_list': expert_info_list,
 			'project_list': project_info_list
 		}
-		project_list = Project.objects.filter(competition=competition, status='已提交')
+		project_list = Project.objects.filter(competition=competition, status='评审中')
 		for project in project_list:
 			project_info_list[project.category].append({
 				'name': project.name
