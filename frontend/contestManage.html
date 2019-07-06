@@ -38,7 +38,7 @@
                         <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
                         <dl class="layui-nav-child">
                             <dd><a href="infoOfStudent.html">个人信息</a></dd>
-                            <dd><a href="../index.html" >登出</a></dd>
+                            <dd><a href="index.html" >登出</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -85,32 +85,6 @@
 				<i class="layui-icon"></i>
 				<p>点击上传，或将文件拖拽到此处(仅允许上传表格)</p>
 			</div>
-                <!--form class="layui-form" id="addExpert-form" action="">
-                    <div style="height:5%"></div>
-                    <div class="layui-form-item" style="width:80%;margin-left:10%">
-                            <input type="text" placeholder="请输入姓名" name="nameOfExpert" required  lay-verify="required" autocomplete="off" class="layui-input">
-                       
-                    </div>
-                    <div class="layui-form-item" style="width:80%;margin-left:10%">
-                            <input type="text" placeholder="请输入邮箱" name="emailOfExpert" required  lay-verify="required" autocomplete="off" class="layui-input">
-                           
-                    </div>
-                    <div class="layui-form-item" style="width:80%;margin-left:10%">
-                    <select name="expertField" lay-verify="required">
-                    <option value="">选择领域</option>
-			        <option value="0">机械与控制</option>
-			        <option value="1">信息技术</option>
-			        <option value="2">数理</option>
-			        <option value="3">生命科学</option>
-			        <option value="4">能源化工</option>
-                    <option value="5">哲学社会科学</option>
-                    </select>
-                  </div>
-                  <div class="layui-form-item" style="text-align: center">
-                        <button class="layui-btn" lay-submit lay-filter="saveExpert" >立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary" id="closeBtn" >重置</button>
-                </div>
-                </form-->
         </div>
                   
 		<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;display: none;" id="fileControllerLayer">
@@ -127,6 +101,10 @@
 		        </table>
 		    </div>
 		    <button type="button" class="layui-btn" id="fileListAction">开始上传</button>
+		</div>
+		
+		<div id="checkGradeLayer">
+		    
 		</div>
              
     </body>
@@ -180,21 +158,23 @@
 					$("#timeBox").html("阶段时间:无");
 				
 				$("#changeCondition").click(function(){
-				    $.ajax({
-				    	type:"PUT",
-				    	url: hostIP+"competition?id="+contestID,
-				    	dataType:"json",
-				    	contentType:"application/json", 
-						data:JSON.stringify({status:nextPeriod[data.competitionStatus]}),
-				    	success:function(data){
-							if(data.status){
-								layer.msg("成功进入下一阶段",{time:1000,icon:6});
-								setTimeout("location.href='contestManage.html';",1000);
-							}
-							else{
-								layer.msg("修改阶段失败",{time:1000,icon:5});
-							}
-						},
+					layer.confirm('确定进入下一阶段?',{icon: 3, title:'提示'},function (index) {
+						$.ajax({
+							type:"PUT",
+							url: hostIP+"competition?id="+contestID,
+							dataType:"json",
+							contentType:"application/json", 
+							data:JSON.stringify({status:nextPeriod[data.competitionStatus]}),
+							success:function(data){
+								if(data.status){
+									layer.msg("成功进入下一阶段",{time:1000,icon:6});
+									setTimeout("location.href='contestManage.html';",1000);
+								}
+								else{
+									layer.msg("修改阶段失败",{time:1000,icon:5});
+								}
+							},
+						});
 					});
 				});
 			},
@@ -452,10 +432,10 @@
 						,cols: [[ //表头
 							{field:'projectID',title:'作品代码',width:150,sort:true},
 							{field:'projectName',title:'作品名'},
-							{field:'projectPeriod',title:'状态',width:200},
-							{field:'avgGrade',title:'平均分',width:200},
+							{field:'projectPeriod',title:'状态',width:100},
+							{field:'avgGrade',title:'平均分',width:100},
 							{field: 'id', title: '数据库编号',hide:true},
-							{width:250,title:'操作',toolbar:'#Bar',align:'center'}
+							{width:300,title:'操作',toolbar:'#Bar',align:'center'}
 						]]
 					});
 					table.on('tool(workTable)', function(obj){
@@ -504,6 +484,69 @@
 								});
 							});
 						}
+						if(obj.event==="checkProject"){
+							sessionStorage.setItem("projectID",JSON.stringify({projectID:obj.data.id}));
+							window.location.href="projectInfo.html";
+						}
+						if(obj.event==="checkGrade"){
+							layui.use('layer',function(){
+							    var layer=layui.layer;
+							    layer.open({
+							        type:1,
+							        title:"查看打分",
+							        shift:2,
+							        area:['800px','500px'],
+							        content:$("#checkGradeLayer"),
+							        success:function(layero,index){
+										$("#checkGradeLayer").css("display","block");
+										$("#checkGradeLayer").empty();
+										$.ajax({
+											type:"GET",
+											url: hostIP+"schoolProjectGrade?id="+obj.data.id,
+											dataType:"json",
+											contentType:"application/json", 
+											success:function(data){
+												$("#checkGradeLayer").append("<div class='layui-form-item' style='width: 30%;display: inline-block;' >"
+																			+	"<label class='layui-form-label'>平均分</label>"
+																			+	"<div class='layui-input-block'>"
+																			+		"<input type='text' class='layui-input' value="+data.avgGrade +">"
+																			+	"</div>"
+																			+"</div>");
+												for(var index in data.grades){
+													var expertIndex=index+1;
+													$("#checkGradeLayer").append("<div style='width: 80%;height: 50px;margin: 0 0 0 1%;' >"
+																				+	"<fieldset class='layui-elem-field layui-field-title'><legend>专家"+expertIndex+"</legend></fieldset>"
+																				+"</div>"
+																				+"<div class='layui-form-item' style='width: 100%;'>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家姓名</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].name +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家给分</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].grade +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+	"<div class='layui-form-item' style='width: 30%;display: inline-block;'>"
+																				+		"<label class='layui-form-label'>专家建议</label>"
+																				+		"<div class='layui-input-block'>"
+																				+			"<input type='text' class='layui-input' value="+data.grades[index].advise +">"
+																				+		"</div>"
+																				+	"</div>"
+																				+"</div>");
+												}
+											}
+										});
+									},
+									end:function(){
+										$("#checkGradeLayer").css("display","none");
+									}
+							    });
+							});
+						}
 					});
 				}
 			});
@@ -532,6 +575,7 @@
 		});
     </script>
 	<script type="text/html" id="Bar">
+		<a class="layui-btn layui-btn-xs" lay-event="checkProject">查看作品</a>
 		{{# if(d.projectPeriod=="已提交"){ }}
 			<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="return">退回</a>
 		{{#  } }}
@@ -540,7 +584,7 @@
 		{{#  } }}
 		{{# if(d.projectPeriod=="初审中"||d.projectPeriod=="评审中"){ }}
 			<a class="layui-btn layui-btn-xs" lay-event="pass">通过</a>
-			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fire">未通过</a>
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fire">不通过</a>
 		{{#  } }}
 		{{# if(d.projectPeriod=="现场答辩"){ }}
 			<a class="layui-btn layui-btn-xs" lay-event="pass">颁奖</a>
