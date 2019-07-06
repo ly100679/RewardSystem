@@ -78,21 +78,26 @@
 			dataType:"json",
 			contentType:"application/json", 
 			success:function(data){
-				if(data.competitionStatus!="作品提交")
-				$("#createProject").attr("disabled","disabled");
-			}
-		});
-		$("#createProject").click(function(){
-			$.ajax({
-				type:"POST",
-				url: hostIP+"studentProject",
-				dataType:"json",
-				contentType:"application/json", 
-				success:function(data){
-					sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
-					window.location.href="createWorks.html";
+				if(data.competitionStatus!="作品提交"){
+					$("#createProject").click(function(){
+						layer.msg("当前不是作品提交阶段！",{time:1000,icon:5});
+					});
 				}
-			});
+				else{
+					$("#createProject").click(function(){
+						$.ajax({
+							type:"POST",
+							url: hostIP+"studentProject",
+							dataType:"json",
+							contentType:"application/json", 
+							success:function(data){
+								sessionStorage.setItem("projectID",JSON.stringify({projectID:data.code,status:"new"}));
+								window.location.href="createWorks.html";
+							}
+						});
+					});
+				}
+			}
 		});
         layui.use('table', function(){
 		  var table = layui.table;
