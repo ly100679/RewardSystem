@@ -207,7 +207,11 @@ def project(request):
 				student = Student.objects.get(student_id=student_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'student not found'}), content_type='application/json')
-			projects = Project.objects.filter(author=student, competition=competition)
+			project_status = ['获奖', '未获奖', '现场答辩', '进入答辩', '未进入答辩', '评审中', '初审通过', '初审未通过', '初审中', '已提交', '未提交']
+			for status in project_status:
+				current_status_project = Project.objects.filter(competition=competition, status=status, author=student)
+				for tem in current_status_project:
+					projects.append(tem)
 		else:
 			return HttpResponse(json.dumps({'error': 'unexpected request url'}), content_type='application/json')
 		resp = {}
