@@ -56,7 +56,7 @@
     <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;" id="contestTitle"> 
 	</div>
 	
-	<div id="currentContestInfo" style="display: none;">
+	<div id="currentContestInfo" style="display: none;height: 90%;">
 	
 	<div style="height: 50%;width: 80%;font-size: 50px;margin:10px 10% 0 10%; border: 1px solid #eeeeee;background: #eeeeee;border-radius: 10px;">
     <div style="height: 90%;width: 95%;margin: auto;position: relative;top: 50%;transform: translate(0,-50%);">
@@ -290,7 +290,8 @@
 				||data.files[i].filename.substring(data.files[i].filename.length-3,data.files[i].filename.length)=="png"))
 					picHref=host+data.files[i].path;
 			}
-			$("#introduction").css("background","url("+picHref+")");
+			if(picHref)
+				$("#introduction").css("background","url("+picHref+")");
 		}
 	});
 	$("#loadMore").click(function(){
