@@ -304,8 +304,8 @@ def setProjectInfo(project, body, student, competition):
 	project.innovation = body['innovationPoint']
 	project.keyword = body['keyWord']
 	project.status = body['status']
-	project.display = body['display']
-	project.research = body['research']
+	project.display = json.dumps(body['display'])
+	project.research = json.dumps(body['research'])
 	project.save()
 
 def setProjectCoAuthorInfo(project, body):
@@ -680,7 +680,10 @@ def expertProjectGrade(request):
 			opinion.expert = expert
 			opinion.save()
 		body = json.loads(request.body)
-		opinion.score = float(body['grade'])
+		try:
+			opinion.score = float(body['grade'])
+		except:
+			opinion.score = 0
 		opinion.opinion = body['advise']
 		opinion.save()
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
