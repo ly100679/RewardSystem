@@ -260,6 +260,9 @@ def project(request):
 				'email': author.email,
 				'currentEducation': author.education
 			}
+			if expert_id is not None:
+				opinion = Opinion.objects.filter(expert=expert, project=project)
+				tem['hasEdit'] = True if opinion.status != '0' else False
 			project_file_info = getProjectFile(project)
 			tem['files'] = project_file_info['files']
 			partner = []
@@ -721,6 +724,7 @@ def expertProjectGrade(request):
 		except:
 			opinion.score = 0
 		opinion.opinion = body['advise']
+		opinion.status = '1'
 		opinion.save()
 		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 	if request.method == 'GET':

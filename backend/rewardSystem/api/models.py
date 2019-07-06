@@ -105,3 +105,4 @@ class Opinion(models.Model):
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE)
     score = models.FloatField(null=True, blank=True)
     opinion = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=100, default='0')
