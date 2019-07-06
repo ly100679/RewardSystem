@@ -26,6 +26,7 @@ class Student(User):
 class Expert(User):
     name = models.CharField(max_length=100)
     field = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100, default='0')
 
 class Committee(User):
     name = models.CharField(max_length=200, null=True, blank=True)
