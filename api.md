@@ -412,6 +412,7 @@
       data:[{
         id:作品id(int),
         projectName:作品名(string),
+        hasEdit: 专家有没有评过这个作品(boolean),
         projectID:作品代码(string),
         projectPeriod:作品所处阶段(string)
         nameOfWork:作品名称(string)
