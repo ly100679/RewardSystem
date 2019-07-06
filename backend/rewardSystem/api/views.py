@@ -368,7 +368,33 @@ def setCompetition(competition, body):
 				'email': expert.email,
 				'field': expert.field
 			})
-		
+			expert.status = 1
+			expert.save()
+		project_info_list = {
+			'A': [],
+			'B': [],
+			'C': [],
+			'D': [],
+			'E': [],
+			'F': []
+		}
+		resp = {
+			'expert_list': expert_info_list,
+			'project_list': project_info_list
+		}
+		project_list = Project.objects.filter(competition=competition, status='已提交')
+		for project in project_list:
+			project_info_list[project.category].append({
+				'name': project.name
+			})
+			# project_info_list['F'].append({
+			# 	'name': project.name
+			# })
+		resp = json.dumps(resp)
+		with open('tem_files/sendEmailToExpert', 'r+') as sendMailInfo:
+			sendMailInfo.seek(0)
+			sendMailInfo.truncate()
+			sendMailInfo.write(resp)
 	elif competition.status == '专家评审' and body.get('status', None) == '现场答辩':
 		changeProjectStatus(competition, '进入答辩', '现场答辩')
 	competition.status = body.get('status', competition.status)
