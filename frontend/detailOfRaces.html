@@ -2,7 +2,7 @@
 <html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
-    <title>冯如杯竞赛系统</title>
+    <title>XX竞赛系统</title>
     <script src="./layui/layui.js"></script>
     <link href="./layui/css/layui.css"  rel="stylesheet"/>
     <script src="./host.js"></script>
@@ -39,12 +39,8 @@
     <div style="width: 35%;height: 80px;display: inline-block;float: right">
         <ul class="layui-nav" style="text-align: right;height: 80px; line-height: 80px">
             <li class="layui-nav-item">
-                <a href="messageReminder.html">消息提醒<span class="layui-badge-dot"></span></a>
-            </li>
-            <li class="layui-nav-item">
                 <a href="javascript:"><img alt="" src="./img/男.png" height="658"width="658" class="layui-nav-img">我</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="infoOfStudent.html">个人信息</a></dd>
                     <dd><a href="index.html" >登出</a></dd>
                 </dl>
             </li>
@@ -232,49 +228,49 @@
 				$("#statusCircle2").css("color","#5FB878");
 				$("#statusLine1").removeClass("layui-bg-gray");
 				$("#statusLine1").addClass("layui-bg-green");
-				$("#statusText2").css("color","#5FB878");
+				$("#statusText2").css("color","#000");
 			}
 			else if(data.competitionStatus=="专家评审"){
 				$("#statusCircle2").css("color","#5FB878");
 				$("#statusLine1").removeClass("layui-bg-gray");
 				$("#statusLine1").addClass("layui-bg-green");
-				$("#statusText2").css("color","#5FB878");
+				$("#statusText2").css("color","#000");
 				$("#statusCircle3").css("color","#5FB878");
 				$("#statusLine2").removeClass("layui-bg-gray");
 				$("#statusLine2").addClass("layui-bg-green");
-				$("#statusText3").css("color","#5FB878");
+				$("#statusText3").css("color","#000");
 			}
 			else if(data.competitionStatus=="现场答辩"){
 				$("#statusCircle2").css("color","#5FB878");
 				$("#statusLine1").removeClass("layui-bg-gray");
 				$("#statusLine1").addClass("layui-bg-green");
-				$("#statusText2").css("color","#5FB878");
+				$("#statusText2").css("color","#000");
 				$("#statusCircle3").css("color","#5FB878");
 				$("#statusLine2").removeClass("layui-bg-gray");
 				$("#statusLine2").addClass("layui-bg-green");
-				$("#statusText3").css("color","#5FB878");
+				$("#statusText3").css("color","#000");
 				$("#statusCircle4").css("color","#5FB878");
 				$("#statusLine3").removeClass("layui-bg-gray");
 				$("#statusLine3").addClass("layui-bg-green");
-				$("#statusText4").css("color","#5FB878");
+				$("#statusText4").css("color","#000");
 			}
 			else if(data.competitionStatus=="奖项公布"){
 				$("#statusCircle2").css("color","#5FB878");
 				$("#statusLine1").removeClass("layui-bg-gray");
 				$("#statusLine1").addClass("layui-bg-green");
-				$("#statusText2").css("color","#5FB878");
+				$("#statusText2").css("color","#000");
 				$("#statusCircle3").css("color","#5FB878");
 				$("#statusLine2").removeClass("layui-bg-gray");
 				$("#statusLine2").addClass("layui-bg-green");
-				$("#statusText3").css("color","#5FB878");
+				$("#statusText3").css("color","#000");
 				$("#statusCircle4").css("color","#5FB878");
 				$("#statusLine3").removeClass("layui-bg-gray");
 				$("#statusLine3").addClass("layui-bg-green");
-				$("#statusText4").css("color","#5FB878");
+				$("#statusText4").css("color","#000");
 				$("#statusCircle5").css("color","#5FB878");
 				$("#statusLine4").removeClass("layui-bg-gray");
 				$("#statusLine4").addClass("layui-bg-green");
-				$("#statusText5").css("color","#5FB878");
+				$("#statusText5").css("color","#000");
 			}
 			$("#startDate").html(data.startDate);
 			$("#submitDDL").html(data.submitDDL);
