@@ -80,8 +80,12 @@
         </div>
         
         <!--手动添加专家的表单-->
-        <div id="addExpert-main" style="display: none;">
-                <form class="layui-form" id="addExpert-form" action="">
+        <div id="addExpert-main" style="display: none;text-align: center;height: 100%;">
+			<div class="layui-upload-drag" id="test10" style="margin:auto;position:relative;top:50%;transform: translateY(-50%);">
+				<i class="layui-icon"></i>
+				<p>点击上传，或将文件拖拽到此处</p>
+			</div>
+                <!--form class="layui-form" id="addExpert-form" action="">
                     <div style="height:5%"></div>
                     <div class="layui-form-item" style="width:80%;margin-left:10%">
                             <input type="text" placeholder="请输入姓名" name="nameOfExpert" required  lay-verify="required" autocomplete="off" class="layui-input">
@@ -106,7 +110,7 @@
                         <button class="layui-btn" lay-submit lay-filter="saveExpert" >立即提交</button>
                         <button type="reset" class="layui-btn layui-btn-primary" id="closeBtn" >重置</button>
                 </div>
-                  </form>
+                </form-->
         </div>
                   
 		<div class="layui-upload" style="margin: 10px;margin-bottom: 50px;display: none;" id="fileControllerLayer">
@@ -195,11 +199,27 @@
 				});
 			},
 		});
+		layui.use('upload',function(){
+			var $ = layui.jquery;
+			var upload = layui.upload;
+			var tuozhuai = upload.render({
+				elem: '#test10'
+				,url: hostIP + 'expertInfo'
+				,accept:'file'
+				,exts:'xls|xlsx|csv'
+				,done: function(res){
+					console.log(res);
+					table.reload('idTest', {
+						data:res
+					});
+				}
+			});
+		});
 		
 		function loadUpload(){
 			layui.use('upload', function(){
 				var $ = layui.jquery;
-			  var upload = layui.upload;
+				var upload = layui.upload;
 				
 				var fileStatic=new Map();
 				
@@ -367,7 +387,7 @@
 					});
 			});
 		}
-		
+			  
 		$("#fileController").click(function(){
 		    layui.use('layer',function(){
 		        var layer=layui.layer;
@@ -394,7 +414,7 @@
                     type:1,
                     title:"添加专家",
                     shift:2,
-                    area:['400px','300px'],
+                    area:['800px','500px'],
                     content:$("#addExpert-main"),
                     success:function(layero,index){},
                     yes:function(index, layero){
