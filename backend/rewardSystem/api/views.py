@@ -175,7 +175,7 @@ def project(request):
 	try:
 		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
 	except:
-		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+		competition = None
 	if request.method == 'GET':
 		projects = []
 		# if request has attr id
