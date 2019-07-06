@@ -50,7 +50,7 @@ class ExpertList(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     field = models.CharField(max_length=500)
-    status = models.IntegerField(default=0)
+    status = models.CharField(max_length=200, default='0')
 
 class Project(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
