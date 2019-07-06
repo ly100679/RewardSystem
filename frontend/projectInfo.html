@@ -383,13 +383,13 @@
 					<div class="layui-form-item"style="width: 80%;">
 					    <label class="layui-form-label">作品得分</label>
 					    <div class="layui-input-block" style="width: 80%; ">
-					        <input type="text" name="score" required  lay-verify="required" autocomplete="off" class="layui-input">
+					        <input type="text" name="grade" required  lay-verify="required" autocomplete="off" class="layui-input">
 					    </div>
 					</div>
 					<div class="layui-form-item layui-form-text" style="width: 80%;">
 					    <label class="layui-form-label">评审意见</label>
 					    <div class="layui-input-block">
-					        <textarea name="opinion"  placeholder="请输入评审意见" class="layui-textarea"></textarea>
+					        <textarea name="advise"  placeholder="请输入评审意见" class="layui-textarea"></textarea>
 					    </div>
 					</div>
 					<div class="layui-row" style="margin: 10px 0;">
@@ -430,6 +430,7 @@
 	var user=JSON.parse(sessionStorage.getItem("user"));
 	if(user.enter=='expert'){
 		$("#author").css('display','none');
+		$("#stureturn").css('display','none');
 	}
 	if(user.enter=='student'){
 		$('#nextWork').css('display','none');
@@ -480,15 +481,30 @@
                     $("#c1").css("display","none");
         	}
 		});
+		$.ajax({
+			type:"GET",
+			url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+			dataType:"json",
+			contentType:"application/json", 
+			success:function(data){
+				console.log(data);
+				form.val('expertScore',data);
+		
+		        /*if(data.data[0].classificationOfWork === 0)
+		            $("#c2").css("display","none");
+		        else
+		            $("#c1").css("display","none");*/
+			}
+		});
 		
 		form.on('submit(reset)', function(data){
 			console.log(data.field);
 			$.ajax({
-				type:"PUT",
+				type:"POST",
 				url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
 				dataType:"json",
 				contentType:"application/json", 
-				data:JSON.JSON.stringify(data.field),
+				data:JSON.stringify(data.field),
 				success:function(data){
 					if(data.status){
 						layer.msg("评分成功！返回",{time:1000,icon:6});

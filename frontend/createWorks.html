@@ -570,19 +570,15 @@
 							data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
 							data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
 						}
+						data.data[0].display=data.data[0].display.substring(1,data.data[0].display.length-1).split(", ");
+						data.data[0].research=data.data[0].research.substring(1,data.data[0].research.length-1).split(", ");
 						for(var index=1;index<=8;index++)
-							if(data.data[0].display[index-1]){
+							if(data.data[0].display[index-1]=="True"){
 								data.data[0]["Create"+index]="on";
 							}
-							else{
-								data.data[0]["Create"+index]="off";
-							}
 						for(var index=1;index<=15;index++)
-							if(data.data[0].research[index-1]){
+							if(data.data[0].research[index-1]=="True"){
 								data.data[0]["research"+index]="on";
-							}
-							else{
-								data.data[0]["research"+index]="off";
 							}
 						form.val('projectInfo',data.data[0]);
 					}
