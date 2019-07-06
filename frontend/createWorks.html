@@ -523,7 +523,7 @@
 		});
 		layui.use('form',function(){
 			var form=layui.form;
-			var numofcheckbox = 0;
+			var numofcheckbox=$(".layui-form-checked").length;
 			//监听提交
 			
 			form.on('radio', function(data){
@@ -552,7 +552,7 @@
 			});
 			
 			form.on('checkbox',function (data) {
-			        numofcheckbox=$("input[type='checkbox']:checked").length;
+			        numofcheckbox=$(".layui-form-checkbox.layui-form-checked").length;
 			})
 			
 			if(projectStatus=="edit"){
@@ -570,17 +570,23 @@
 							data.data[0]["emailOfPartner"+i]=data.data[0].partner[i-1].emailOfPartner;
 							data.data[0]["currenteducationOfPartner"+i]=data.data[0].partner[i-1].currenteducationOfPartner;
 						}
-						data.data[0].display=data.data[0].display.substring(1,data.data[0].display.length-1).split(", ");
-						data.data[0].research=data.data[0].research.substring(1,data.data[0].research.length-1).split(", ");
-						for(var index=1;index<=8;index++)
-							if(data.data[0].display[index-1]=="True"){
-								data.data[0]["Create"+index]="on";
-							}
-						for(var index=1;index<=15;index++)
-							if(data.data[0].research[index-1]=="True"){
-								data.data[0]["research"+index]="on";
-							}
+						if(data.data[0].display){
+							data.data[0].display=data.data[0].display.substring(1,data.data[0].display.length-1).split(", ");
+							for(var index=1;index<=8;index++)
+								if(data.data[0].display[index-1]=="True"||data.data[0].display[index-1]=="true"){
+									data.data[0]["Create"+index]="on";
+									console.log("CreateOn");
+								}
+						}
+						if(data.data[0].research){
+							data.data[0].research=data.data[0].research.substring(1,data.data[0].research.length-1).split(", ");
+							for(var index=1;index<=15;index++)
+								if(data.data[0].research[index-1]=="True"||data.data[0].research[index-1]=='true'){
+									data.data[0]["research"+index]="on";
+								}
+						}
 						form.val('projectInfo',data.data[0]);
+						numofcheckbox=$(".layui-form-checked").length;
 					}
 				});
 			}
@@ -608,6 +614,7 @@
 				return false;
 			});
 			form.on('submit(submit)', function(data){
+				console.log(data.field);
 				if(data.field['declarationOfWork']==''||data.field['overallDescriptionOfWork']==''
 				||data.field['innovationPoint']==''||data.field['keyWord']==''||data.field['dateOfBirth']==''
 				||data.field['fullNameOfwork']==''||data.field['postalAddress']==''||data.field['currentEducation']==''){
