@@ -223,6 +223,8 @@ def project(request):
 			total_score = 0
 			i = 0
 			for opinion in opinions:
+				if opinion.expert.status == '0':
+					continue
 				try:
 					tem_score = float(opinion.score)
 					total_score = total_score + tem_score
@@ -740,6 +742,8 @@ def schoolProjectGrade(request):
 		i = 0
 		grades = []
 		for opinion in opinions:
+			if opinion.expert.status == '0':
+				continue
 			try:
 				tem_score = float(opinion.score)
 				total_score = total_score + tem_score
