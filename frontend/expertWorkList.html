@@ -67,7 +67,7 @@
 				<div class="layui-form-item"style="width: 80%;">
 				    <label class="layui-form-label">作品得分</label>
 				    <div class="layui-input-block" style="width: 80%; ">
-				        <input type="text" name="grade" autocomplete="off" class="layui-input">
+				        <input type="text" name="grade" lay-verify="score" autocomplete="off" class="layui-input">
 				    </div>
 				</div>
 				<div class="layui-form-item layui-form-text" style="width: 80%;">
@@ -169,6 +169,12 @@
 																});
 																form.val('expertScore',{'nameOfWork':data.projectName});
 																
+																form.verify({
+																	score: [
+																		/^(0|[1-9]\d|100)$/
+																		,'请输入0-100的整数'
+																	] 
+																});
 																form.on('submit(reset)', function(data){
 																	console.log(data.field);
 																	$.ajax({
