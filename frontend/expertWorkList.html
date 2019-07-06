@@ -14,6 +14,10 @@
                 margin:2% 0 0 10%;
                 background-color:#ffffff;
             }
+			.layui-nav .layui-nav-item{
+				top:50%;
+				transform: translateY(-50%);
+			}
         </style>
         
     </head>
@@ -103,6 +107,7 @@
 		}
 		var zipID = new Array();
 		$("#download").click(function(){
+				layer.load();
 				$.ajax({
 					type:"PUT",
 					url: hostIP+"/zipProject?expertID="+user.account,
@@ -111,6 +116,7 @@
 					data:JSON.stringify({id:zipID}),
 					success:function(data){
 						window.open(host+data['filepath']);
+						layer.closeAll('loading');
 						console.log(data);
 					}
 				});
