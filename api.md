@@ -21,7 +21,8 @@
   
     {
       status:表示验证是否成功的布尔值,
-      errorCode:错误原因，1表示账号不存在，2表示密码错误
+      errorCode:错误原因，1表示账号不存在，2表示密码错误，
+      canEdit:布尔值（只有专家登录有，表示专家是否提交评审）
     }	
   
   url: "/login/student", "/login/expert", "/login/school"
@@ -667,3 +668,17 @@
     }	
     
   url: "/currenCompetition"
+  
+  # 28 设置专家状态
+  
+  method: PUT
+  
+  上传： 无
+  
+  接受：
+  
+    {
+      status: ture
+    }
+    
+  url: /expert
