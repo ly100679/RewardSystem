@@ -100,12 +100,20 @@
 			<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
 			<a class="layui-btn layui-btn-xs giveMyGrade" lay-event="grade">打分</a>
 	</script>
+	<script type="text/html" id="EditStatus">
+			{{#  if(d.hasEdit){ }}
+				<div>已编辑</div>
+			{{#  } else { }}
+				<div>未编辑</div>
+			{{#  } }}
+	</script>
     <script>
 		var user=JSON.parse(sessionStorage.getItem("user"));
 		if(!user.canEdit){
 			$('#canEdit').css('display','none');
 		}
 		var zipID = new Array();
+		var isEdit = new Array();
 		$("#download").click(function(){
 				layer.load();
 				$.ajax({
@@ -122,6 +130,11 @@
 				});
 		});	
 		$("#canEdit").click(function(){
+			for (var i = 0 ; i < isEdit.length ; i++)
+				if(!isEdit[i]){
+					layer.msg("还有作品未编辑评分!",{time:1000,icon:5});
+					return;
+				}
 				$.ajax({
 					type:"PUT",
 					url: hostIP+"/expert?expertID="+user.account,
@@ -155,12 +168,16 @@
 										for(var i = 0 ;i < data.data.length ; i++ ){
 											zipID.push(data.data[i].id);
 										}
+										for(var i = 0 ;i < data.data.length ; i++ ){
+											isEdit.push(data.data[i].hasEdit);
+										}
 		  								table.render({
 		  										elem: "#workTable",
 		  										cols: [[ //标题栏
 		  												{field: 'projectPeriod', width:150, title: '阶段',sort:true},
 		  												{field: 'projectID', title: '作品代码',sort:true},
 		  												{field: 'projectName', title: '作品名',sort:true},
+														{field:'hasEdit',templet:'#EditStatus',title:'作品状态',sort:true},
 		  												{field: 'id', title: '数据库编号',hide:true},
 		  												{title:'操作', toolbar: '#TableBar', width:200,align:'center' }
 		  										]]
