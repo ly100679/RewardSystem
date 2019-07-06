@@ -13,7 +13,7 @@ def sendMail(expert, expert_email, project_list):
 	email_project_str = ''
 	for project in project_list:
 		email_project_str = email_project_str + project['name'] + '<br>'
-	accept_url = '180.76.111.16/expert?email=%s&code=%s' % (expert_email, expert['code'])
+	accept_url = '180.76.111.16:8003/expert?email=%s&code=%s' % (expert_email, expert['code'])
 	msg = EmailMultiAlternatives(
 		'测试邮件',
 		'''
@@ -24,6 +24,7 @@ def sendMail(expert, expert_email, project_list):
 		<br>
 		接受评审请点击以下链接或复制到浏览器打开<br>
 		<a href="%s">%s</a><br>
+		如不想参与评审请忽略此邮件<br>
 		''' % (expert['name'], email_project_str, accept_url, accept_url),
 		'2086607502@qq.com',
 		[expert_email],
