@@ -135,7 +135,7 @@
 		firePeriod["初审中"]="初审未通过";
 		firePeriod["评审中"]="未进入答辩";
 		firePeriod["现场答辩"]="未获奖";
-		
+		var user=JSON.parse(sessionStorage.getItem("user"));
 		var zipID = new Array();
 		$("#download").click(function(){
 				$.ajax({
