@@ -383,7 +383,7 @@
 					<div class="layui-form-item"style="width: 80%;">
 					    <label class="layui-form-label">作品得分</label>
 					    <div class="layui-input-block" style="width: 80%; ">
-					        <input type="text" name="grade" required  lay-verify="required" autocomplete="off" class="layui-input">
+					        <input type="text" name="grade" autocomplete="off" class="layui-input">
 					    </div>
 					</div>
 					<div class="layui-form-item layui-form-text" style="width: 80%;">
@@ -436,6 +436,10 @@
 		$('#nextWork').css('display','none');
 		$('#expertScore').css('display','none');
 	}
+	if(user.enter=='school'){
+		//$("#stureturn").css('display','none');
+		$("#expertScore").css('display','none');
+	}
     layui.use('form', function(){
         var form = layui.form;
         $.ajax({
@@ -470,15 +474,31 @@
         			data.data[0]["currenteducationOfPartner"+i]=currentEducation[data.data[0].partner[i-1].currenteducationOfPartner];
 					$('#partner_'+i).css('display','inline-block');
         		}
+				if(data.data[0].display){
+					data.data[0].display=data.data[0].display.substring(1,data.data[0].display.length-1).split(", ");
+					for(var index=1;index<=8;index++)
+						if(data.data[0].display[index-1]=="true"){
+							data.data[0]["Create"+index]="on";
+							console.log("CreateOn");
+						}
+				}
+				if(data.data[0].research){
+					data.data[0].research=data.data[0].research.substring(1,data.data[0].research.length-1).split(", ");
+					for(var index=1;index<=15;index++)
+						if(data.data[0].research[index-1]=="true"){
+							data.data[0]["research"+index]="on";
+						}
+				}
+				
+				if(data.data[0].classificationOfWork == "0")
+				    $("#c2").css("display","none");
+				else
+				    $("#c1").css("display","none");
+				
 				data.data[0].classificationOfWork=classificationOfWork[data.data[0].classificationOfWork];
 				data.data[0].declarationOfWork=declarationOfWork[data.data[0].declarationOfWork];
 				data.data[0].currentEducation=currentEducation[data.data[0].currentEducation];
         		form.val('projectInfo',data.data[0]);
-
-                if(data.data[0].classificationOfWork === 0)
-                    $("#c2").css("display","none");
-                else
-                    $("#c1").css("display","none");
         	}
 		});
 		$.ajax({
