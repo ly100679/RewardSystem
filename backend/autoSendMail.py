@@ -37,9 +37,9 @@ def sendMail(expert, expert_email, project_list):
 
 if __name__ == '__main__':
 	if platform.system() == 'Windows':
-    	e_url = 'rewardSystem/tem_files/sendEmailToExpert'
+		e_url = 'rewardSystem/tem_files/sendEmailToExpert'
 	else:
-    	e_url = '/root/RewardSystem/backend/rewardSystem/tem_files/sendEmailToExpert'
+		e_url = '/root/RewardSystem/backend/rewardSystem/tem_files/sendEmailToExpert'
 	while True:
 		with open(e_url, 'r+') as sendMailInfo:
 			if_send_mail = sendMailInfo.read()
