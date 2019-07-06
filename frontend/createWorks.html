@@ -498,6 +498,7 @@
 		var projectStatus=JSON.parse(sessionStorage.getItem("projectID")).status;
 		var user=JSON.parse(sessionStorage.getItem("user"));
 		console.log(projectID);
+		loadUpload();
 		$.ajax({
 				type:"GET",
 				url: hostIP+"studentInfo?studentID="+user.account,
@@ -1124,7 +1125,6 @@
                 $("#form_2").css("display","none");
                 $("#form_3").css("display","none");
                 $("#form_4").css("display","block");
-				loadUpload();
             });
     })
 </script>

@@ -53,9 +53,10 @@
 </div>
 <!--<div  style="width: 100%;height: 40px;margin: 0 0% 0 0%;background: white;"></div>-->
 <div  style="width: 70%;height: 85%;margin: 20px 15% 0 15%;background: white; border-radius: 10px; border: 1px solid #eeeeee;" id="mainContent">
-    <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;"> 
-		当前正在进行冯如杯知识竞赛：
+    <div style="height: 10%;width: 100%;font-size: 30px;text-align: center; margin-top: 20px;" id="contestTitle"> 
 	</div>
+	
+	<div id="currentContestInfo" style="display: none;height: 90%;">
 	
 	<div style="height: 50%;width: 80%;font-size: 50px;margin:10px 10% 0 10%; border: 1px solid #eeeeee;background: #eeeeee;border-radius: 10px;">
     <div style="height: 90%;width: 95%;margin: auto;position: relative;top: 50%;transform: translate(0,-50%);">
@@ -76,47 +77,47 @@
 	<div style="height: 18%;width: 100%;text-align: center;" id="progressBox"> 
 		<div class="layui-row" style="height: 50%">
 			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
-				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+				<i class="layui-icon layui-icon-circle-dot" id="statusCircle1" style="color: #5FB878;font-size: 40px;"></i>
 			</div>
 			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(-40%,-100%);">
-				<hr class="layui-bg-green" style="width: 120%;">
+				<hr class="layui-bg-gray" id="statusLine1" style="width: 120%;">
 			</div>
 			<div class="layui-col-md1" style="transform: translate(0,-100%);position: relative;top: 100%;">
-				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+				<i class="layui-icon layui-icon-circle-dot" id="statusCircle2" style="color: #eee;font-size: 40px;"></i>
 			</div>
 			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(40%,-100%);">
-				<hr class="layui-bg-green" style="width: 120%;float: right;">
+				<hr class="layui-bg-gray" id="statusLine2" style="width: 120%;float: right;">
 			</div>
 			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
-				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+				<i class="layui-icon layui-icon-circle-dot" id="statusCircle3" style="color: #eee;font-size: 40px;"></i>
 			</div>
 			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(-40%,-100%);">
-				<hr class="layui-bg-green" style="width: 120%;">
+				<hr class="layui-bg-gray" id="statusLine3" style="width: 120%;">
 			</div>
 			<div class="layui-col-md1" style="transform: translate(0,-100%);position: relative;top: 100%;">
-				<i class="layui-icon layui-icon-circle-dot" style="color: #5FB878;font-size: 40px;"></i>
+				<i class="layui-icon layui-icon-circle-dot" id="statusCircle4" style="color: #eee;font-size: 40px;"></i>
 			</div>
 			<div class="layui-col-md1" style="position: relative;top: 100%;transform: translate(40%,-100%);">
-				<hr class="layui-bg-gray" style="width: 120%;float: right;">
+				<hr class="layui-bg-gray" id="statusLine4" style="width: 120%;float: right;">
 			</div>
 			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%,-100%);position: relative;top: 100%;">
-				<i class="layui-icon layui-icon-circle-dot" style="color: #eee;font-size: 40px;"></i>
+				<i class="layui-icon layui-icon-circle-dot" id="statusCircle5" style="color: #eee;font-size: 40px;"></i>
 			</div>
 		</div>
 		<div class="layui-row" style="font-size: 20px;">
-			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%);white-space: nowrap; ">
+			<div class="layui-col-md1 layui-col-md-offset1" style="transform: translate(-50%);white-space: nowrap;" id="statusText1">
 				提交作品
 			</div>
-			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;" >
+			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;color: #eee;" id="statusText2">
 				团委初审
 			</div>
-			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);white-space: nowrap;">
+			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);white-space: nowrap;color: #eee;"id="statusText3">
 				专家评审
 			</div>
-			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;" >
+			<div class="layui-col-md1 layui-col-md-offset1" style="white-space: nowrap;color: #eee;" id="statusText4">
 				现场答辩
 			</div>
-			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);color: #eee;white-space: nowrap;">
+			<div class="layui-col-md1 layui-col-md-offset2" style="transform: translate(-50%);color: #eee;white-space: nowrap;"id="statusText5">
 				结果公布
 			</div>
 		</div>
@@ -138,7 +139,7 @@
 	<div style="height: 600px;width: 100%;display: none;margin: auto;" id="specificInfo">
 		<div id="mainContent2" style="width: 100%;height: 100%;margin: 0 0% 0 0%;background: white; border-radius: 10px;">
 			<div style="width:50%;margin-left:5%;height:90%;margin-top:3%;float:left">
-				<div id="introduction" style="width:90%;margin-left:5%;height:90%;margin-top:3%;float:left;background-color: RGB(57,61,73)">
+				<div id="introduction" style="width:90%;margin-left:5%;height:90%;margin-top:3%;float:left;background:url(./img/noPic.jpg)">
 				</div>
 			</div>
 			<div style="width:35%;margin-left:5%;height:90%;margin-top:3%;float:left">
@@ -152,49 +153,34 @@
 							</colgroup>
 							<tr>
 								<td>开始时间</td>
-								<td></td>
+								<td id="startDate"></td>
 							</tr>
 							<tr>
 								<td>提交截至</td>
-								<td></td>
+								<td id="submitDDL"></td>
 							</tr>
 							<tr>
 								<td>初审截至</td>
-								<td></td>
+								<td id="checkDDL"></td>
 							</tr>
 							<tr>
 								<td>评审截至</td>
-								<td></td>
+								<td id="reviewDDL"></td>
 							</tr>
 							<tr>
 								<td>结果公布</td>
-								<td></td>
+								<td id="endDate"></td>
 							</tr>
 						</table>
 					</div>
 				</div>
 				<div style="height:43%;width:90%;margin-top:6%;margin-left:5%;">
 					<div style="width:100%;text-align: center;height:10%"><a style="font-size:18px;">——相关文件——</a></div>
-					<div style="height:88%;margin-top:5%;border:0px solid #cecbcb">
-						<table id="fileTable" class="layui-table" lay-even lay-skin="nob">
+					<div style="height:88%;margin-top:5%;border:0px solid #cecbcb;overflow-y: auto;">
+						<table id="fileList" class="layui-table" lay-even lay-skin="nob">
 							<colgroup>
 								<col width="90%">
 							</colgroup>
-							<tr>
-								<td>文件1</td>
-							</tr>
-							<tr>
-								<td>文件2</td>
-							</tr>
-							<tr>
-								<td>文件3</td>
-							</tr>
-							<tr>
-								<td>文件4</td>
-							</tr>
-							<tr>
-								<td>文件5</td>
-							</tr>
 						</table>
 					</div>
 				</div>
@@ -202,6 +188,7 @@
 		</div>
 	</div>
 
+	</div>
 </div>
 
 
@@ -229,6 +216,84 @@
 			window.location.href="contestList.html";
 	});
 	
+	$.ajax({
+		type:"GET",
+		url: hostIP+"currenCompetition",
+		dataType:"json",
+		contentType:"application/json",
+		success:function(data){
+			if(data.error){
+				$("#contestTitle").html("当前无比赛正在进行中！");
+				return;
+			}
+			$("#currentContestInfo").css("display","block");
+			$("#contestTitle").html("当前正在进行："+data.competitionName);
+			if(data.competitionStatus=="团委初审"){
+				$("#statusCircle2").css("color","#5FB878");
+				$("#statusLine1").removeClass("layui-bg-gray");
+				$("#statusLine1").addClass("layui-bg-green");
+				$("#statusText2").css("color","#5FB878");
+			}
+			else if(data.competitionStatus=="专家评审"){
+				$("#statusCircle2").css("color","#5FB878");
+				$("#statusLine1").removeClass("layui-bg-gray");
+				$("#statusLine1").addClass("layui-bg-green");
+				$("#statusText2").css("color","#5FB878");
+				$("#statusCircle3").css("color","#5FB878");
+				$("#statusLine2").removeClass("layui-bg-gray");
+				$("#statusLine2").addClass("layui-bg-green");
+				$("#statusText3").css("color","#5FB878");
+			}
+			else if(data.competitionStatus=="现场答辩"){
+				$("#statusCircle2").css("color","#5FB878");
+				$("#statusLine1").removeClass("layui-bg-gray");
+				$("#statusLine1").addClass("layui-bg-green");
+				$("#statusText2").css("color","#5FB878");
+				$("#statusCircle3").css("color","#5FB878");
+				$("#statusLine2").removeClass("layui-bg-gray");
+				$("#statusLine2").addClass("layui-bg-green");
+				$("#statusText3").css("color","#5FB878");
+				$("#statusCircle4").css("color","#5FB878");
+				$("#statusLine3").removeClass("layui-bg-gray");
+				$("#statusLine3").addClass("layui-bg-green");
+				$("#statusText4").css("color","#5FB878");
+			}
+			else if(data.competitionStatus=="结果公布"){
+				$("#statusCircle2").css("color","#5FB878");
+				$("#statusLine1").removeClass("layui-bg-gray");
+				$("#statusLine1").addClass("layui-bg-green");
+				$("#statusText2").css("color","#5FB878");
+				$("#statusCircle3").css("color","#5FB878");
+				$("#statusLine2").removeClass("layui-bg-gray");
+				$("#statusLine2").addClass("layui-bg-green");
+				$("#statusText3").css("color","#5FB878");
+				$("#statusCircle4").css("color","#5FB878");
+				$("#statusLine3").removeClass("layui-bg-gray");
+				$("#statusLine3").addClass("layui-bg-green");
+				$("#statusText4").css("color","#5FB878");
+				$("#statusCircle5").css("color","#5FB878");
+				$("#statusLine4").removeClass("layui-bg-gray");
+				$("#statusLine4").addClass("layui-bg-green");
+				$("#statusText5").css("color","#5FB878");
+			}
+			$("#startDate").html(data.startDate);
+			$("#submitDDL").html(data.submitDDL);
+			$("#checkDDL").html(data.checkDDL);
+			$("#reviewDDL").html(data.reviewDDL);
+			$("#endDate").html(data.endDate);
+			var picHref="";
+			for(var i=0;i<data.files.length;i++){
+				$("#fileList").append("<tr>"
+									+	"<td><a target='view_window' href="+host+data.files[i].path+">"+data.files[i].filename+"</a></td>"
+									+"</tr>");
+				if(!picHref&&(data.files[i].filename.substring(data.files[i].filename.length-3,data.files[i].filename.length)=="jpg"
+				||data.files[i].filename.substring(data.files[i].filename.length-3,data.files[i].filename.length)=="png"))
+					picHref=host+data.files[i].path;
+			}
+			if(picHref)
+				$("#introduction").css("background","url("+picHref+")");
+		}
+	});
 	$("#loadMore").click(function(){
 		$("#loadMore").css("display","none");
 		$("#loading").css("display","block");
