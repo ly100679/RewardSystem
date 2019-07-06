@@ -78,6 +78,8 @@ class Project(models.Model):
     description = models.TextField(null=True, blank=True)
     keyword = models.TextField(null=True, blank=True)
     innovation = models.TextField(null=True, blank=True)
+    display = models.CharField(max_length=500, null=True, blank=True)
+    research = models.CharField(max_length=500, null=True, blank=True)
 
 class CoAuthor(models.Model):
     student_id = models.CharField(max_length=50)

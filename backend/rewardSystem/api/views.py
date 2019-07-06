@@ -13,6 +13,7 @@ import platform
 import xlrd
 from . import sendMail
 import zipfile
+import numpy
 
 #unfinish
 
@@ -188,10 +189,15 @@ def project(request):
 				competition = Competition.objects.get(pk=competition_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'competition not found'}), content_type='application/json')
-			projects = Project.objects.filter(competition=competition)
+			# committee required project status
+			project_status = ['获奖', '未获奖', '现场答辩', '进入答辩', '未进入答辩', '评审中', '初审通过', '初审未通过', '初审中', '已提交']
+			for status in project_status:
+				current_status_project = Project.objects.filter(competition=competition, status=status)
+				for tem in current_status_project:
+					projects.append(tem)
 		elif expert_id is not None:
 			try:
-				expert = Expert.objects.get(pk=competition_id)
+				expert = Expert.objects.get(pk=expert_id)
 			except:
 				return HttpResponse(json.dumps({'error': 'expert not found'}), content_type='application/json')
 			projects = Project.objects.filter(expert=expert, competition=competition)
@@ -218,6 +224,8 @@ def project(request):
 				'overallDescriptionOfWork': project.description,
 				'innovationPoint': project.innovation,
 				'keyWord': project.keyword,
+				'display': project.display,
+				'research': project.research,
 				'name': author.name,
 				'account': author.student_id,
 				'dateOfBirth': author.birth_date.strftime('%Y-%m-%d'),
@@ -248,15 +256,6 @@ def project(request):
 		resp['data'] = data
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 	if request.method == 'POST':
-		# body = json.loads(request.body)
-		# # add author info
-		# setProjectAuthorInfo(student, body)
-		# # add project info
-		# project = Project()
-		# setProjectInfo(project, body, student, competition)
-		# # add coauthor info
-		# setProjectCoAuthorInfo(project, body)
-		# return HttpResponse(json.dumps({'status': True, 'id':project.id}), content_type='application/json')
 		project = Project()
 		project.status = '未提交'
 		project.save()
@@ -305,6 +304,8 @@ def setProjectInfo(project, body, student, competition):
 	project.innovation = body['innovationPoint']
 	project.keyword = body['keyWord']
 	project.status = body['status']
+	project.display = body['display']
+	project.research = body['research']
 	project.save()
 
 def setProjectCoAuthorInfo(project, body):
@@ -353,6 +354,12 @@ def getCompetitionStatus(competition):
 	else:
 		return 'before start'
 
+def changeProjectStatus(competition, before_status, after_status):
+	projects = Project.objects.filter(competition=competition, status=before_status)
+	for project in projects:
+		project.status = after_status
+		project.save()
+
 def setCompetition(competition, body):
 	competition.name = body.get('competitionName', competition.name)
 	competition.acronym = body.get('acronym', competition.acronym)
@@ -362,6 +369,13 @@ def setCompetition(competition, body):
 	competition.oral_defense = body.get('reviewDDL', competition.oral_defense)
 	competition.end = body.get('endDate', competition.end)
 	competition.description = body.get('description', competition.description)
+	# change project status when competiton status changed
+	if competition.status == '作品提交' and body.get('status', None) == '团委初审':
+		changeProjectStatus(competition, '已提交', '初审中')
+	elif competition.status == '团委初审' and body.get('status', None) == '专家评审':
+		changeProjectStatus(competition, '初审通过', '评审中')
+	elif competition.status == '专家评审' and body.get('status', None) == '现场答辩':
+		changeProjectStatus(competition, '进入答辩', '现场答辩')
 	competition.status = body.get('status', competition.status)
 	competition.save()
 
