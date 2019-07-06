@@ -454,11 +454,11 @@
 					}
 					else if (data.data[0].files[i-1].type==1){
 						var test = '<p><a href="' + host + data.data[0].files[i-1].path+'">' + data.data[0].files[i-1].filename + '</a></p>';
-						$("#defaultFiles").css('display','none');
+						$("#defaultFiels").css('display','none');
 					}	
 					else{
 						var test = '<video src="' + host + data.data[0].files[i-1].path + '" controls height="500" width="500"><vedio/>';
-						$("#defaultvedios").css('display','none');}
+						$("#defaultVedios").css('display','none');}
 					$('#'+filetype[data.data[0].files[i-1].type]).append(test);
 				}
         		for(var i=1;i<=data.data[0].partner.length;i++){
