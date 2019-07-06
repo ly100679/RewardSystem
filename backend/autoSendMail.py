@@ -5,6 +5,7 @@ from rewardSystem.rewardSystem.settings import PROJECTDIR
 import xlrd
 import json
 import time
+import platform
 
 
 def sendMail(expert, expert_email, project_list):
@@ -22,8 +23,8 @@ def sendMail(expert, expert_email, project_list):
 		%s
 		<br>
 		接受评审请点击以下链接或复制到浏览器打开<br>
-		<a href="#">%s</a><br>
-		''' % (expert['name'], email_project_str, accept_url),
+		<a href="%s">%s</a><br>
+		''' % (expert['name'], email_project_str, accept_url, accept_url),
 		'2086607502@qq.com',
 		[expert_email],
 	)
@@ -35,8 +36,12 @@ def sendMail(expert, expert_email, project_list):
 		print('send %s email fail' % expert['name'])
 
 if __name__ == '__main__':
+	if platform.system() == 'Windows':
+    	e_url = 'rewardSystem/tem_files/sendEmailToExpert'
+	else:
+    	e_url = '/root/RewardSystem/backend/rewardSystem/tem_files/sendEmailToExpert'
 	while True:
-		with open('rewardSystem/tem_files/sendEmailToExpert', 'r+') as sendMailInfo:
+		with open(e_url, 'r+') as sendMailInfo:
 			if_send_mail = sendMailInfo.read()
 			print(if_send_mail)
 			if if_send_mail != '':
