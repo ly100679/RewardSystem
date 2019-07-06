@@ -565,10 +565,23 @@ def projectFile(request):
 
 def getSubmitFile(project):
 	author = project.author
-	s = "form.docx"
+	data = {}
+	display_types_dict = {}
+	if project.project_type == str(0):
+		s = 'invention_form.docx'
+		tem_test = project.display
+		display = json.loads(tem_test)
+		for i in range(8):
+			display_types_dict['isSomething'+str(i)] = u'✓' if display[i] else ''
+	elif project.project_type == str(1):
+		s = 'report_form.docx'
+		research = json.loads(project.research)
+		for i in range(15):
+			display_types_dict['isSomething'+str(i)] = u'✓' if research[i] else ''
+	else:
+		s = "form.docx"
 	document=MailMerge(s)
 	# print(document.get_merge_fields())
-	data = {}
 	coauthors = CoAuthor.objects.filter(project=project)
 	i = 0
 	edu_dict = {
@@ -597,17 +610,14 @@ def getSubmitFile(project):
 	else:
 		data['isInvention'] = ''
 		data['isReport'] = u'✓'
-	data['edu0'] = edu_dict[author.education]
 	# return HttpResponse(json.dumps({'path': project.full_name}), content_type='application/json')
 	document.merge(
 		projectID=getProjectID(project),
 		workName=project.name,
 		department=author.school.name,
-		isInvention=data['isInvention'],
-		isReport=data['isReport'],
 		name=author.name,
 		account=str(author.student_id),
-		dateOfBirth=author.birth_date,
+		dateOfBirth=author.birth_date.strftime('%Y-%m-%d'),
 		overalDescriptionOfWork=project.description,
 		innovationPoint=project.innovation,
 		keyword=project.keyword,
@@ -619,27 +629,9 @@ def getSubmitFile(project):
 		postalAddress=author.contact_address,
 		phoneNumber=author.tel,
 		email=author.email,
-		currentEducation=data['edu0'],
-		name1=data['name1'],
-		name2=data['name2'],
-		name3=data['name3'],
-		name4=data['name4'],
-		acc1=data['acc1'],
-		acc2=data['acc2'],
-		acc3=data['acc3'],
-		acc4=data['acc4'],
-		edu1=data['edu1'],
-		edu2=data['edu2'],
-		edu3=data['edu3'],
-		edu4=data['edu4'],
-		phoneno1=data['phoneno1'],
-		phoneno2=data['phoneno2'],
-		phoneno3=data['phoneno3'],
-		phoneno4=data['phoneno4'],
-		email1=data['email1'],
-		email2=data['email2'],
-		email3=data['email3'],
-		email4=data['email4'],
+		currentEducation=edu_dict[author.education],
+		**data,
+		**display_types_dict
 	)
 	form_path = 'submit_file/%sform1.docx' % str(project.id)
 	form_full_path = PROJECTDIR + form_path
@@ -795,6 +787,12 @@ def zipProject(request):
 	print(os.sep)
 	resp = []
 	# handle submit file
+	try:
+		for project_id in project_ids:
+			project = Project.objects.get(pk=project_id)
+			getSubmitFile(project)
+	except:
+		return HttpResponse(json.dumps({'filepath': 'project not exist'}), content_type='application/json')
 	for dirpath, dirnames, filenames in os.walk('submit_file'):
 		for filename in filenames:
 			if filename == '.gitkeep':
