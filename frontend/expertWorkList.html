@@ -48,9 +48,14 @@
                 <div id="workListBox" style="margin-top:10px;width:90%;margin: auto;height:80%">
                     <table id="workTable" lay-filter="workTable"></table>
                 </div>
+				<div class="layui-row" style="margin: 10px 0;">
+					<div class="layui-col-md2 layui-col-md-offset5" style="text-align: center;">
+						<button class="layui-btn" lay-submit lay-filter="download" id="download" style="width:100%;margin:auto;">下载全部作品</button>
+					</div>
+				</div>
         </div>
 		
-		<div id="expertScore">
+		<div id="expertScore" style="display:none">
 			<fieldset class="layui-elem-field layui-field-title"><legend>评分</legend><div class="layui-field-box"></div></fieldset>
 			<div class="layui-form" lay-filter="expertScore" style="height: 80%;">
 				<div class="layui-form-item"style="width: 80%;">
@@ -91,9 +96,22 @@
 	<script type="text/html" id="TableBar">
 			<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
 			<a class="layui-btn layui-btn-xs" lay-event="grade">打分</a>
-			<a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
 	</script>
     <script>
+		var zipID = new Array();
+		$("#download").click(function(){
+				$.ajax({
+					type:"PUT",
+					url: hostIP+"/zipProject?expertID="+user.account,
+					dataType:"json",
+					contentType:"application/json", 
+					data:JSON.stringify({id:zipID}),
+					success:function(data){
+						window.open(host+data['filepath']);
+						console.log(data);
+					}
+				});
+		});	
 		var user=JSON.parse(sessionStorage.getItem("user"));
         layui.use(['table','form'], function(){
 		  var table = layui.table;
@@ -104,6 +122,9 @@
 		  				dataType:"json",
 		  				contentType:"application/json", 
 		  				success:function(data){
+										for(var i = 0 ;i < data.data.length ; i++ ){
+											zipID.push(data.data[i].id);
+										}
 		  								table.render({
 		  										elem: "#workTable",
 		  										cols: [[ //标题栏
@@ -111,7 +132,7 @@
 		  												{field: 'projectID', title: '作品代码',sort:true},
 		  												{field: 'projectName', title: '作品名',sort:true},
 		  												{field: 'id', title: '数据库编号',hide:true},
-		  												{title:'操作', toolbar: '#TableBar', width:200 }
+		  												{title:'操作', toolbar: '#TableBar', width:200,align:'center' }
 		  										]]
 		  										,data:data.data,
 												height:$("#workListBox").height()-20
@@ -138,7 +159,7 @@
 		  														$('#expertScore').css("display","block");
 																$.ajax({
 																	type:"GET",
-																	url: hostIP+"expertProjectGrade?id="+obj.data.id,
+																	url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+obj.data.id,
 																	dataType:"json",
 																	contentType:"application/json", 
 																	success:function(data){
@@ -152,7 +173,7 @@
 																	console.log(data.field);
 																	$.ajax({
 																		type:"POST",
-																		url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+projectID,
+																		url: hostIP+"expertProjectGrade?expertID="+user.account+"&id="+obj.data.id,
 																		dataType:"json",
 																		contentType:"application/json", 
 																		data:JSON.stringify(data.field),
@@ -174,28 +195,7 @@
 		  													}
 		  											    });
 		  											});
-		  										}
-												if(obj.event==='download'){
-													var zipID = new Array();
-													zipID.push(data.id);
-													$.ajax({
-														type:"PUT",
-														url: hostIP+"/zipProject?expertID="+user.account,
-														dataType:"json",
-														contentType:"application/json", 
-														data:JSON.stringify({id:zipID}),
-														success:function(data){
-															/*if(data.status){
-																layer.msg("保存成功！返回",{time:1000,icon:6});
-															}
-															else{
-																layer.msg("保存失败！返回",{time:1000,icon:5});
-															}
-															window.history.back(-1);*/
-															console.log(data);
-														}
-													});
-												}
+		  										}	
 		  								});
 		  				},
 		  				error:function(){

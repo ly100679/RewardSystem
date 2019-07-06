@@ -179,9 +179,10 @@
 				});
 			},
 		});
-		layui.use('upload',function(){
+		layui.use(['upload','table'],function(){
 			var $ = layui.jquery;
 			var upload = layui.upload;
+			var table = layui.table;
 			var tuozhuai = upload.render({
 				elem: '#test10'
 				,url: hostIP + 'expertInfo'
@@ -189,9 +190,10 @@
 				,exts:'xls|xlsx|csv'
 				,done: function(res){
 					console.log(res);
-					table.reload('idTest', {
+					table.reload('expertTable', {
 						data:res
 					});
+					layer.close(layer.index);
 				}
 			});
 		});

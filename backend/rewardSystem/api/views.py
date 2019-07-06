@@ -213,13 +213,28 @@ def project(request):
 		resp = {}
 		data = []
 		for project in projects:
-			author = project.author
+			author = project.author # asdfasdf
+			opinions = Opinion.objects.filter(project=project)
+			total_score = 0
+			i = 0
+			for opinion in opinions:
+				try:
+					tem_score = float(opinion.score)
+					total_score = total_score + tem_score
+					i = i + 1
+				except:
+					pass
+			try:
+				total_score = float(total_score) / i
+			except:
+				total_score = ''
 			tem = {
 				'id': project.id,
 				'projectName': project.name,
 				'projectID': getProjectID(project),
 				'projectPeriod': project.status,
 				'nameOfWork': project.name,
+				'avgGrade': total_score,
 				'classificationOfWork': project.project_type,
 				'declarationOfWork': project.category,
 				'overallDescriptionOfWork': project.description,
@@ -711,15 +726,24 @@ def schoolProjectGrade(request):
 		project = Project.objects.get(pk=int(request.GET.get('id')))
 		opinions = Opinion.objects.filter(project=project)
 		total_score = 0
+		i = 0
 		grades = []
 		for opinion in opinions:
-			total_score = total_score + opinion.score
+			try:
+				tem_score = float(opinion.score)
+				total_score = total_score + tem_score
+				i = i + 1
+			except:
+				pass
 			grades.append({
 				'name': opinion.expert.name,
 				'grade': opinion.score,
 				'advise': opinion.opinion
 			})
-		total_score = total_score / len(opinions)
+		try:
+			total_score = float(total_score) / i
+		except:
+			total_score = ''
 		resp = {
 			'avgGrade': total_score,
 			'grades': grades
