@@ -91,12 +91,12 @@
                                 <div class="layui-input-block">
                                     <select name="declarationOfWork">
                                         <option value=""></option>
-                                        <option name="declarationOfWork" value="A" title=""checked>A.机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)</option>
-                                        <option name="declarationOfWork" value="B" title="">B.信息技术(包括计算机、电信、通讯、电子等)</option>
-                                        <option name="declarationOfWork" value="C" title="" >C.数理(包括数学、物理、地球与空间科学等)</option>
-                                        <option name="declarationOfWork" value="D" title="" >D.生命科学(包括生物､农学､药学､医学､健康､卫生､食品等)</option>
-                                        <option name="declarationOfWork" value="E" title="">E.能源化工(包括能源、材料、石油、化学、化工、生态、环保等)</option>
-                                        <option name="declarationOfWork" value="F" title="" >F.哲学社会科学(包括哲学、经济、社会、法律、教育、管理)</option>
+                                        <option value="A" title=""checked>A.机械与控制(包括机械、仪器仪表、自动化控制、工程、交通、建筑等)</option>
+                                        <option value="B" title="">B.信息技术(包括计算机、电信、通讯、电子等)</option>
+                                        <option value="C" title="" >C.数理(包括数学、物理、地球与空间科学等)</option>
+                                        <option value="D" title="" >D.生命科学(包括生物､农学､药学､医学､健康､卫生､食品等)</option>
+                                        <option value="E" title="">E.能源化工(包括能源、材料、石油、化学、化工、生态、环保等)</option>
+                                        <option value="F" title="" >F.哲学社会科学(包括哲学、经济、社会、法律、教育、管理)</option>
                                     </select>
                                 </div>
                             </div>
@@ -429,6 +429,7 @@
                                     </table>
                                 </div>
                                 <button type="button" class="layui-btn" id="imageListAction">开始上传</button>
+								<div style="color: #FF5722;display:none;" id="imageAlert">超过限制无法上传，请先删除部分文件</div>
                             </div>
 
                             <div class="layui-upload" style="margin: 10px;margin-bottom: 50px;">
@@ -461,6 +462,7 @@
                                     </table>
                                 </div>
                                 <button type="button" class="layui-btn" id="videoListAction">开始上传</button>
+								<div style="color: #FF5722;display:none;" id="videoAlert">超过限制无法上传，请先删除部分文件</div>
                             </div>
                         </div>
                 </div>
@@ -564,6 +566,10 @@
 					contentType:"application/json", 
 					success:function(data){
 						console.log(data);
+						if(data.data[0].classificationOfWork==1){
+							$("#checkBox_research").css("display","block")
+							$("#checkBox_Create").css("display","none")
+						}
 						for(var i=1;i<=data.data[0].partner.length;i++){
 							data.data[0]["nameOfPartner"+i]=data.data[0].partner[i-1].nameOfPartner;
 							data.data[0]["studentIDOfPartner"+i]=data.data[0].partner[i-1].studentIDOfPartner;
@@ -695,10 +701,14 @@
 				  			if(data.code){
 									fileStatic[filename]=false;
 				  				layer.msg("删除成功",{time:1000,icon:6});
-									if(type==0)
+									if(type==0){
 										imageNum++;
-									else
-										videoNum++;
+										imageLimit();
+									}
+									else{
+										
+										videoNum++;videoLimit();
+									}
 				  				tr.remove();
 				  			}
 				  			else{
@@ -740,6 +750,7 @@
 											imagedemoListView.append(tr);
 											
 											imageNum--;
+											imageLimit();
 									}
 									if(file[i].type==1){
 											var tr = $(['<tr id="upload-'+ i +'">'
@@ -771,13 +782,22 @@
 											
 											videodemoListView.append(tr);
 											
-											videoNum--;
+											videoNum--;videoLimit();
 									}
 								}
 						}
 				});
 			}
-			
+			function imageLimit(){
+				if(imageNum<0){
+					$("#imageListAction").css("display","none");
+					$("#imageAlert").css("display","block");
+				}
+				else{
+					$("#imageAlert").css("display","none");
+					$("#imageListAction").css("display","block");
+				}
+			}
 		
 			var imagedemoListView = $('#imagedemoList')
 		  ,imageListIns = upload.render({
@@ -791,15 +811,10 @@
 					layer.load(); //上传loading
 				}
 		    ,choose: function(obj){   
-						
-		      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+		      var files=this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+			  
 		      //读取本地文件
 		      obj.preview(function(index, file, result){
-				  if(imageNum<=0){
-				  	layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
-				  	imageListIns.config.elem.next()[0].value = '';
-				  	return;
-				  }
 							if(fileStatic[file.name]){
 								layer.msg("重复文件",{time:1000,icon:5});
 								imageListIns.config.elem.next()[0].value = '';
@@ -826,6 +841,7 @@
 							,tds = tr.children();
 							if(tds.eq(2).html()=='等待上传'){
 								imageNum++;
+								imageLimit();
 								fileStatic[file.name]=false;
 								delete files[index]; //删除对应的文件
 								tr.remove();
@@ -843,6 +859,7 @@
 										console.log(data);
 										if(data.code){
 											imageNum++;
+											imageLimit();
 											fileStatic[file.name]=false;
 											layer.msg("删除成功",{time:1000,icon:6});
 											delete files[index]; //删除对应的文件
@@ -858,6 +875,7 @@
 							}
 		        });
 		        imageNum--;
+				imageLimit();
 				    fileStatic[file.name]=true;
 		        imagedemoListView.append(tr);
 		      });
@@ -977,6 +995,16 @@
 				  }
 				});
 				
+				function videoLimit(){
+					if(videoNum<0){
+						$("#videoListAction").css("display","none");
+						$("#videoAlert").css("display","block");
+					}
+					else{
+						$("#videoAlert").css("display","none");
+						$("#videoListAction").css("display","block");
+					}
+				}
 				var videodemoListView = $('#videodemoList')
 				,videoListIns = upload.render({
 				  elem: '#videoList'
@@ -994,11 +1022,6 @@
 				    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
 				    //读取本地文件
 				    obj.preview(function(index, file, result){
-						if(videoNum<=0){
-													layer.msg("选择文件数已达最大限度",{time:1000,icon:5});
-						videoListIns.config.elem.next()[0].value = ''; 
-													return;
-												}
 								if(fileStatic[file.name]){
 									layer.msg("重复文件",{time:1000,icon:5});
 									videoListIns.config.elem.next()[0].value = ''; 
@@ -1024,7 +1047,7 @@
 				        var tr = videodemoListView.find('tr#upload-'+ index)
 				        ,tds = tr.children();
 				        if(tds.eq(2).html()=='等待上传'){
-									videoNum++;
+									videoNum++;videoLimit();
 									fileStatic[file.name]=false;
 				        	delete files[index]; //删除对应的文件
 				        	tr.remove();
@@ -1041,7 +1064,7 @@
 				        		success:function(data){
 				        			console.log(data);
 				        			if(data.code){
-												videoNum++;
+												videoNum++;videoLimit();
 												fileStatic[file.name]=false;
 				        				layer.msg("删除成功",{time:1000,icon:6});
 				        				delete files[index]; //删除对应的文件
@@ -1057,7 +1080,7 @@
 				        }
 				      });
 				      fileStatic[file.name]=true;
-				      	videoNum--;
+				      	videoNum--;videoLimit();
 				      videodemoListView.append(tr);
 				    });
 				  }
