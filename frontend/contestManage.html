@@ -67,11 +67,14 @@
 					<div class="layui-tab-content" style="padding: 0;">
 						<div class="layui-tab-item layui-show">
 							<table id="workTable" lay-filter="workTable"></table>
+							<div style="text-align: center;margin-top: 10px;">
+								<button class="layui-btn" lay-filter="download" id="download" style="width:100%;margin:auto;">下载全部作品</button>
+							</div>
 						</div>
 						<div class="layui-tab-item">
 							<table id="expertTable" lay-filter="expertTable"></table>
 							<div style="text-align: center;margin-top: 10px;">
-								<button class="layui-btn layui-btn-primary" id="importExpert" lay-filter="importExpert">导入专家</button>
+								<button class="layui-btn" id="importExpert" lay-filter="importExpert">导入专家</button>
 							</div>
 						</div>
 					</div>
@@ -132,6 +135,21 @@
 		firePeriod["初审中"]="初审未通过";
 		firePeriod["评审中"]="未进入答辩";
 		firePeriod["现场答辩"]="未获奖";
+		
+		var zipID = new Array();
+		$("#download").click(function(){
+				$.ajax({
+					type:"PUT",
+					url: hostIP+"/zipProject?expertID="+user.account,
+					dataType:"json",
+					contentType:"application/json", 
+					data:JSON.stringify({id:zipID}),
+					success:function(data){
+						window.open(host+data['filepath']);
+						console.log(data);
+					}
+				});
+		});	
 		
 		var contestID=JSON.parse(sessionStorage.getItem("contestManage")).contestID;
 		$.ajax({
@@ -426,6 +444,9 @@
 				dataType:"json",
 				contentType:"application/json", 
 				success:function(data){
+					for(var i = 0 ;i < data.data.length ; i++ ){
+						zipID.push(data.data[i].id);
+					}
 					table.render({
 						elem: '#workTable'
 						,height: $("#listBox").height()-20
