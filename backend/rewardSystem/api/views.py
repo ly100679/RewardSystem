@@ -583,12 +583,12 @@ def getSubmitFile(project):
 		tem_test = project.display
 		display = json.loads(tem_test)
 		for i in range(8):
-			display_types_dict['isSomething'+str(i)] = u'✓' if display[i] else ''
+			display_types_dict['isSomething'+str(i)] = '\u2611' if display[i] else '\u25a1'
 	elif project.project_type == str(1):
 		s = 'report_form.docx'
 		research = json.loads(project.research)
 		for i in range(15):
-			display_types_dict['isSomething'+str(i)] = u'✓' if research[i] else ''
+			display_types_dict['isSomething'+str(i)] = '\u2611' if research[i] else '\u25a1'
 	else:
 		s = "form.docx"
 	document=MailMerge(s)
@@ -616,11 +616,11 @@ def getSubmitFile(project):
 		data['phoneno'+str(i)] = ''
 		data['email'+str(i)] = ''
 	if project.project_type == '0':
-		data['isInvention'] = u'✓'
-		data['isReport'] = ''
+		data['isInvention'] = '\u2611'
+		data['isReport'] = '\u25a1'
 	else:
-		data['isInvention'] = ''
-		data['isReport'] = u'✓'
+		data['isInvention'] = '\u25a1'
+		data['isReport'] = '\u2611'
 	# return HttpResponse(json.dumps({'path': project.full_name}), content_type='application/json')
 	document.merge(
 		projectID=getProjectID(project),
