@@ -83,6 +83,7 @@ def loginExpert(request):
 		try:
 			user = Expert.objects.get(pk=user['user'].id)
 			resp['status'] = True
+			resp['canEdit'] = True if user.status == '0' else False
 		except:
 			resp['status'] = False
 			resp['errorCode'] = 1
@@ -175,7 +176,7 @@ def project(request):
 	try:
 		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
 	except:
-		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+		competition = None
 	if request.method == 'GET':
 		projects = []
 		# if request has attr id
@@ -374,13 +375,19 @@ def setCompetition(competition, body):
 	competition.oral_defense = body.get('reviewDDL', competition.oral_defense)
 	competition.end = body.get('endDate', competition.end)
 	competition.description = body.get('description', competition.description)
+	# reset expertlist when start a competition
+	if competition.status == '未开始' and body.get('status', None) == '作品提交':
+		expert_list = ExpertList.objects.all()
+		for expert in expert_list:
+			expert.status = '0'
+			expert.save()
 	# change project status when competiton status changed
 	if competition.status == '作品提交' and body.get('status', None) == '团委初审':
 		changeProjectStatus(competition, '已提交', '初审中')
 	elif competition.status == '团委初审' and body.get('status', None) == '专家评审':
 		changeProjectStatus(competition, '初审通过', '评审中')
 		# send invite email to expert in list
-		expert_list = ExpertList.objects.filter(competition=competition, status=0)
+		expert_list = ExpertList.objects.filter(status=0)
 		expert_info_list = []
 		for expert in expert_list:
 			md5 = hashlib.md5()
@@ -755,11 +762,6 @@ def schoolProjectGrade(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def expertList(request):
-	# if at least one competition
-	try:
-		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审', '现场答辩', '奖项公布'])[0]
-	except:
-		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
 	if request.method == 'POST':
 		try:
 			expert_list_file = request.FILES.get('file')
@@ -779,10 +781,9 @@ def expertList(request):
 				})
 			for i in range(table.nrows):
 				try:
-					tem = ExpertList.objects.get(email=table.row_values(i)[1], competition=competition)
+					tem = ExpertList.objects.get(email=table.row_values(i)[1])
 				except:
 					tem = ExpertList()
-					tem.competition = competition
 					tem.name = table.row_values(i)[0]
 					tem.email = table.row_values(i)[1]
 					tem.field = table.row_values(i)[2]
@@ -791,7 +792,7 @@ def expertList(request):
 		except:
 			return HttpResponse(json.dumps({'code': False}), content_type='application/json')
 	if request.method == 'GET':
-		expert_list = ExpertList.objects.filter(competition=competition)
+		expert_list = ExpertList.objects.all()
 		resp = []
 		for expert in expert_list:
 			resp.append({
@@ -802,34 +803,41 @@ def expertList(request):
 		return HttpResponse(json.dumps(resp), content_type='application/json')
 
 def expert(request):
-	try:
-		competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审'])[0]
-	except:
-		return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
-	expert_username = request.GET.get('email')
-	expert_code = request.GET.get('code')
-	try:
-		expert_info = ExpertList.objects.get(status=expert_code)
-	except:
-		return HttpResponse(json.dumps({'error': 'no such code'}), content_type='application/json')
-	try:
-		expert = Expert.objects.get(username=expert_info.email)
-	except:
-		expert = Expert.objects.create_user(expert_info.email, expert_info.email, '123456')
-		expert.name = expert_info.name
-		expert.field = expert_info.field
-		expert.save()
-	projects = Project.objects.filter(competition=competition, category=expert.field, status='评审中')
-	for project in projects:
+	if request.method == 'GET':
 		try:
-			opinion = Opinion.objects.get(expert=expert, project=project)
+			competition = Competition.objects.filter(status__in=['作品提交', '团委初审', '专家评审'])[0]
 		except:
-			opinion = Opinion()
-			opinion.expert = expert
-			opinion.project = project
-			opinion.save()
-	sendMail.sendExpertAccountEmail(expert.name, expert.username)
-	return HttpResponse('success! You will recieve an email contains your account info shortly')
+			return HttpResponse(json.dumps({'error': 'competition number is 0'}), content_type='application/json')
+		expert_username = request.GET.get('email')
+		expert_code = request.GET.get('code')
+		try:
+			expert_info = ExpertList.objects.get(status=expert_code)
+		except:
+			return HttpResponse(json.dumps({'error': 'no such code'}), content_type='application/json')
+		try:
+			expert = Expert.objects.get(username=expert_info.email)
+		except:
+			expert = Expert.objects.create_user(expert_info.email, expert_info.email, '123456')
+			expert.name = expert_info.name
+			expert.field = expert_info.field
+			expert.save()
+		projects = Project.objects.filter(competition=competition, category=expert.field, status='评审中')
+		for project in projects:
+			try:
+				opinion = Opinion.objects.get(expert=expert, project=project)
+			except:
+				opinion = Opinion()
+				opinion.expert = expert
+				opinion.project = project
+				opinion.save()
+		sendMail.sendExpertAccountEmail(expert.name, expert.username)
+		return HttpResponse('success! You will recieve an email contains your account info shortly')
+	if request.method == 'PUT':
+		expert_id = request.GET.get('expertID')
+		expert = Expert.objects.get(username=expert_id)
+		expert.status = '1'
+		expert.save()
+		return HttpResponse(json.dumps({'status': True}), content_type='application/json')
 
 def zipProject(request):
 	expert_id = request.GET.get('expertID')
