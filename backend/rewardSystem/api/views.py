@@ -224,7 +224,10 @@ def project(request):
 					i = i + 1
 				except:
 					pass
-			total_score = float(total_score) / i
+			try:
+				total_score = float(total_score) / i
+			except:
+				total_score = ''
 			tem = {
 				'id': project.id,
 				'projectName': project.name,
@@ -737,7 +740,10 @@ def schoolProjectGrade(request):
 				'grade': opinion.score,
 				'advise': opinion.opinion
 			})
-		total_score = float(total_score) / i
+		try:
+			total_score = float(total_score) / i
+		except:
+			total_score = ''
 		resp = {
 			'avgGrade': total_score,
 			'grades': grades
