@@ -1,4 +1,4 @@
-import os
+﻿import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'rewardSystem.rewardSystem.settings'
 from django.core.mail import EmailMultiAlternatives
 from rewardSystem.rewardSystem.settings import PROJECTDIR
@@ -15,10 +15,10 @@ def sendMail(expert, expert_email, project_list):
 		email_project_str = email_project_str + project['name'] + '<br>'
 	accept_url = '180.76.111.16:8003/expert?email=%s&code=%s' % (expert_email, expert['code'])
 	msg = EmailMultiAlternatives(
-		'测试邮件',
+		'T2-中年魔法兄贵的专家邀请邮件',
 		'''
 		%s，你好。<br>
-		是否要参加本届的评审？<br>
+		是否要参加本届比赛的评审？<br>
 		需要评审的参赛作品如下：<br>
 		%s
 		<br>
