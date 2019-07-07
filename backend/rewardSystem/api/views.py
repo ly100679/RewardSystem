@@ -384,9 +384,14 @@ def setCompetition(competition, body):
 	competition.end = body.get('endDate', competition.end)
 	competition.description = body.get('description', competition.description)
 	# reset expertlist when start a competition
+	# reset expert status
 	if competition.status == '未开始' and body.get('status', None) == '作品提交':
 		expert_list = ExpertList.objects.all()
 		for expert in expert_list:
+			expert.status = '0'
+			expert.save()
+		experts = Expert.objects.all()
+		for expert in experts:
 			expert.status = '0'
 			expert.save()
 	# change project status when competiton status changed
